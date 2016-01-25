@@ -13,7 +13,7 @@
 #pragma comment (lib, "Ws2_32.lib")
 // #pragma comment (lib, "Mswsock.lib")
 
-#define DEFAULT_BUFLEN 65
+#define DEFAULT_BUFLEN 60
 #define DEFAULT_PORT "80"
 
 Traffic::Traffic()
@@ -102,10 +102,7 @@ Traffic::Traffic()
 		iResult = recv(ClientSocket, recvbuf, DEFAULT_BUFLEN, 0);
 		if (iResult > 0)
 		{
-			if (recvbuf[2] == '0')
-				flag = false;
-			else
-				p.orderPackets(string(recvbuf));
+			p.addPacket(Packet(string(recvbuf)));
 		}
 		else
 		{
@@ -114,7 +111,7 @@ Traffic::Traffic()
 	} 
 	while (flag);
 	p.packetsDetails();
-
+	p.begin();
 	// --------------------------------------------------------------------
 	// shutdown the connection since we're done
 	iResult = shutdown(ClientSocket, SD_SEND);

@@ -3,19 +3,18 @@
 Packet::Packet(string str)
 {
 	//P(1-5)
-	this->_pressFingers[0] = atoi(str.substr(5, 3).c_str());     // P1
-	this->_pressFingers[1] = atoi(str.substr(8, 3).c_str());     // P2
-	this->_pressFingers[2] = atoi(str.substr(11, 3).c_str());    // P3
-	this->_pressFingers[3] = atoi(str.substr(14, 3).c_str());    // P4
-	this->_pressFingers[4] = atoi(str.substr(17, 3).c_str());    // P5
+	this->_pressFingers[0] = atoi(str.substr(0, 3).c_str());     // P1
+	this->_pressFingers[1] = atoi(str.substr(3, 3).c_str());     // P2
+	this->_pressFingers[2] = atoi(str.substr(6, 3).c_str());     // P3
+	this->_pressFingers[3] = atoi(str.substr(9, 3).c_str());     // P4
+	this->_pressFingers[4] = atoi(str.substr(12, 3).c_str());    // P5
 
 	//G(1-5)
-	this->_gyroFingers[0].setValues(str.substr(20, 9).c_str());  // G1
-	this->_gyroFingers[1].setValues(str.substr(29, 9).c_str());  // G2
-	this->_gyroFingers[2].setValues(str.substr(38, 9).c_str());  // G3
-	this->_gyroFingers[3].setValues(str.substr(47, 9).c_str());  // G4
-	this->_gyroFingers[4].setValues(str.substr(56, 9).c_str());  // G5
-
+	this->_gyroFingers[0].setValues(str.substr(15, 9).c_str());  // G1
+	this->_gyroFingers[1].setValues(str.substr(24, 9).c_str());  // G2
+	this->_gyroFingers[2].setValues(str.substr(33, 9).c_str());  // G3
+	this->_gyroFingers[3].setValues(str.substr(42, 9).c_str());  // G4
+	this->_gyroFingers[4].setValues(str.substr(51, 9).c_str());  // G5
 }
 Packet::~Packet()
 {

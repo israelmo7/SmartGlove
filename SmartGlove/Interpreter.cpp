@@ -1,7 +1,8 @@
 #include "Interpreter.h"
 #include "Order.h"
+#include <Windows.h>
 
-
+#define PAGE_UP      0
 #define OPEN_CALC    1
 #define OPEN_NOTEPAD 2
 #define OPEN_CMD     3
@@ -18,19 +19,6 @@ void Interpreter::addPacket(Packet p)
 {
 	this->_packetsList.push_back(p);
 }
-void Interpreter::orderPackets(string str)
-{
-	if (str.length() % 65 == 0)
-	{
-		for (unsigned int i = 0; i < str.length(); i += 65)
-		{
-			this->addPacket(str.substr(i, 65));
-		}
-
-	}
-	else
-		this->addPacket(Packet(str));
-}
 void Interpreter::packetsDetails()
 {
 	int cnt = 1;
@@ -45,6 +33,21 @@ void Interpreter::runCommand(int i)
 {
 	switch (i)
 	{
+	case PAGE_UP:
+		INPUT i;
+		i.type = INPUT_KEYBOARD;
+		i.ki.wScan = 0;
+		i.ki.time = 0;
+		i.ki.wVk = VK_PRIOR;
+		i.ki.dwExtraInfo = 0;
+		i.ki.dwFlags = 0;
+
+		INPUT arr[2];
+		arr[0] = i;
+		arr[1] = i;
+		cout << (SendInput(1, arr, sizeof(INPUT)) ? "Success" : "Failed") << "\n";
+		break;
+
 	case OPEN_CALC:
 		// OPEN CALCULATOR
 		break;

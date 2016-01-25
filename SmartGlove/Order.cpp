@@ -1,19 +1,53 @@
 #include <vector>
 #include "Order.h"
 
-
+/*
+	Ctor.
+	Input:
+		arr - array of Packets.
+	Output:
+		none
+*/
 Order::Order(vector<Packet> arr)
 {
 	this->_arr = arr;
+	this->_commandNumber = 0;
 }
+
+/*
+	Dtor.
+	Input:
+		none
+	Output:
+		none
+*/
 Order::~Order()
 {
 
 }
+
+/*
+	The function Return the CommandNumber.
+	Input:
+		none
+	Output:
+		int - the comamndNumber
+*/
 int Order::getCommandNumber()
 {
 	return this->_commandNumber;
 }
+
+/*
+	The function Checks if the finger open or close.
+	Input:
+		int finger - the number of the finger [0-4]
+		int begin - Where the Check begins
+		int end -  the end place check
+		bool open - if True - it checks if the finger opend, else - close.  
+	Output:
+		bool - check if it True.
+*/
 bool Order::opencloseFinger(int finger, int begin, int end, bool open)
 {
 	bool flag;
@@ -43,6 +77,15 @@ bool Order::opencloseFinger(int finger, int begin, int end, bool open)
 
 	return flag;
 }
+
+/*
+	The function Checks if the finger (open And close) or (close And open).
+	Input:
+		int finger - the number of the finger [0-4]
+		bool firstOpen - if True - it checks if the finger opendAndClose, else - closeAndOpen.
+	Output:
+		bool - check if it True.
+*/
 bool Order::openAndClose(int finger, bool firstOpen)
 {
 	bool flag;
@@ -60,6 +103,15 @@ bool Order::openAndClose(int finger, bool firstOpen)
 	
 	return flag;
 }
+
+/*
+	The function return the smaller or the higher value in the array.
+	Input:
+		int finger - the number of the finger [0-4]
+		bool small - if True - it return the smallest value, else - the higher value.
+	Output:
+		bool - check if it True.
+*/
 int Order::getValueIndex(int finger, bool small)
 {
 	const int arrLen = this->_arr.size();

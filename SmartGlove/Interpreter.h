@@ -13,7 +13,6 @@ public:
 	~Interpreter();
 	void addPacket(Packet p);
 	void packetsDetails();
-	void orderPackets(string str);
 	void runCommand(int i);
 	void begin();
 private:
