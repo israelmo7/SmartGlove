@@ -1,14 +1,39 @@
 #include "Gyro.h"
 #include <sstream>
 
+/*
+	Ctor.
+	Input:
+		x - x value
+		y - y value
+		z - z value
+	Output:
+		none
+*/
 Gyro::Gyro(int x, int y, int z) :_x(x), _y(y), _z(z)
 {
 
 }
+
+/*
+	Dtor.
+	Input:
+		none
+	Output:
+		none
+*/
 Gyro::~Gyro()
 {
 
 }
+
+/*
+	Set the three values from string.
+	Input:												 x         y        z
+		str - Contains the three values of the Gyro. [3 digits|3 digits|3 digits], eg "012098000" 
+	Output:
+		none
+*/
 void Gyro::setValues(string str)
 {
 	this->_x = atoi(str.substr(0, 3).c_str());
@@ -16,6 +41,14 @@ void Gyro::setValues(string str)
 	this->_z = atoi(str.substr(6, 3).c_str());
 
 }
+
+/*
+	Set the three values from string.
+	Input:
+		none
+	Output:
+		string - Contains the three values "x - [x] \n .. "
+*/
 string Gyro::getValues()
 {
 	ostringstream str;

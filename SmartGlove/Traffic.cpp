@@ -93,15 +93,17 @@ Traffic::Traffic()
 	printf("Connected ...\n");
 	// No longer need server socket
 	closesocket(ListenSocket);
-	// --------------------------------------------------------------------
+
+
+// *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
 	
 	flag = true;
-	//send(ClientSocket, "Hello", strlen("Hello"), 0);
 	do
 	{
 		iResult = recv(ClientSocket, recvbuf, DEFAULT_BUFLEN, 0);
 		if (iResult > 0)
 		{
+			// Add the packet to the Interpreter object.
 			p.addPacket(Packet(string(recvbuf)));
 		}
 		else
@@ -110,9 +112,16 @@ Traffic::Traffic()
 		}
 	} 
 	while (flag);
+
+	// Print the packets.
 	p.packetsDetails();
+
+	// Translating the packets to some command.
 	p.begin();
-	// --------------------------------------------------------------------
+
+// *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
+
+
 	// shutdown the connection since we're done
 	iResult = shutdown(ClientSocket, SD_SEND);
 	if (iResult == SOCKET_ERROR) {

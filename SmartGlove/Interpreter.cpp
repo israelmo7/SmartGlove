@@ -7,18 +7,50 @@
 #define OPEN_NOTEPAD 2
 #define OPEN_CMD     3
 
+
+/*
+	Ctor.
+	Input:
+		p - The first Packet in the packet list.
+	Output:
+		none
+*/
 Interpreter::Interpreter(Packet p)
 {
 	this->_packetsList.push_back(p);
 }
+
+/*
+	Dtor.
+	Input:
+		none
+	Output:
+		none
+*/
 Interpreter::~Interpreter()
 {
 	//
 }
+
+/*
+	The function adds p(Packet) to the packet list.
+	Input:
+		p - packet.
+	Output:
+		none
+*/
 void Interpreter::addPacket(Packet p)
 {
 	this->_packetsList.push_back(p);
 }
+
+/*
+	The function prints the packets.
+	Input:
+		none
+	Output:
+		none
+*/
 void Interpreter::packetsDetails()
 {
 	int cnt = 1;
@@ -29,6 +61,14 @@ void Interpreter::packetsDetails()
 		cout << endl;
 	}
 }
+
+/*
+The function is executing the appropriate command.
+	Input:
+		i - the command number
+	Output:
+		none
+*/
 void Interpreter::runCommand(int i)
 {
 	switch (i)
@@ -64,6 +104,13 @@ void Interpreter::runCommand(int i)
 		break;
 	}
 }
+/*
+	The function starts the translation
+	Input:
+		i - the command number
+	Output:
+		none
+*/
 void Interpreter::begin()
 {
 	Order o = Order(this->_packetsList);
