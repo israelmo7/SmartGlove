@@ -9,6 +9,7 @@ public:
 	~Gyro();
 	void setValues(string str);
 	string getValues();
+	int* getVal();
 private:
 	int _x,
 		_y,

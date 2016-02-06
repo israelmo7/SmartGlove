@@ -1,12 +1,18 @@
 #include "Interpreter.h"
 #include "Order.h"
-#include <Windows.h>
 
 #define PAGE_UP      0
-#define OPEN_CALC    1
-#define OPEN_NOTEPAD 2
-#define OPEN_CMD     3
-
+#define PAGE_DOWN    1
+#define REFRESH		 2
+#define SNAPSHOT	 3
+#define PSMUSIC		 4
+#define PSONG		 5
+#define NSONG		 6
+#define BPAGE		 7
+#define FPAGE		 8
+#define VOLUMEM		 9
+#define VOLUMEU		 10
+#define VOLUMED		 11
 
 /*
 	Ctor.
@@ -69,35 +75,56 @@ The function is executing the appropriate command.
 	Output:
 		none
 */
-void Interpreter::runCommand(int i)
+void Interpreter::runCommand(int c)
 {
-	switch (i)
+	switch (c)
 	{
 	case PAGE_UP:
-		INPUT i;
-		i.type = INPUT_KEYBOARD;
-		i.ki.wScan = 0;
-		i.ki.time = 0;
-		i.ki.wVk = VK_PRIOR;
-		i.ki.dwExtraInfo = 0;
-		i.ki.dwFlags = 0;
-
-		INPUT arr[2];
-		arr[0] = i;
-		arr[1] = i;
-		cout << (SendInput(1, arr, sizeof(INPUT)) ? "Success" : "Failed") << "\n";
+		printf("%s\n",(sendInput(VK_PRIOR))?"Page up success":"Page up failed");
 		break;
 
-	case OPEN_CALC:
-		// OPEN CALCULATOR
+	case PAGE_DOWN:
+		printf("%s\n", (sendInput(VK_NEXT)) ? "Page down success" : "Page down failed");
 		break;
 
-	case OPEN_NOTEPAD:
-		// OPEN NOTEPAD
+	case REFRESH:
+		printf("%s\n", (sendInput(VK_F5)) ? "Refresh success" : "Refresh failed");
 		break;
 
-	case OPEN_CMD:
-		// OPEN CMD 
+	case SNAPSHOT:
+		printf("%s\n", (sendInput(VK_SNAPSHOT)) ? "PrintScreen success" : "PrintScreen failed");
+		break;
+		
+	case PSMUSIC:
+		printf("%s\n", (sendInput(VK_MEDIA_PLAY_PAUSE)) ? "ToggleMusic success" : "ToggleMusic failed");
+		break;
+		
+	case PSONG:
+		printf("%s\n", (sendInput(VK_MEDIA_PREV_TRACK)) ? "PreviousSong success" : "PreviousSong failed");
+		break;
+
+	case NSONG:
+		printf("%s\n", (sendInput(VK_MEDIA_NEXT_TRACK)) ? "NextSong success" : "NextSong failed");
+		break;
+
+	case BPAGE:
+		printf("%s\n", (sendInput(VK_BROWSER_BACK)) ? "PreviousPage success" : "PreviousPage failed");
+		break;
+
+	case FPAGE:
+		printf("%s\n", (sendInput(VK_BROWSER_FORWARD)) ? "ForwardPage success" : "ForwardPage failed");
+		break;
+
+	case VOLUMEM:
+		printf("%s\n", (sendInput(VK_VOLUME_MUTE)) ? "MuteVolume success" : "MuteVolume failed");
+		break;
+
+	case VOLUMEU:
+		printf("%s\n", (sendInput(VK_VOLUME_UP)) ? "UpVolume success" : "UpVolume failed");
+		break;
+
+	case VOLUMED:
+		printf("%s\n", (sendInput(VK_VOLUME_DOWN)) ? "DownVolume success" : "DownVolume failed");
 		break;
 
 	default:
@@ -115,4 +142,19 @@ void Interpreter::begin()
 {
 	Order o = Order(this->_packetsList);
 	this->runCommand(o.getCommandNumber());
+}
+bool Interpreter::sendInput(WORD vk)
+{
+	INPUT i;
+	i.type = INPUT_KEYBOARD;
+	i.ki.wScan = 0;
+	i.ki.time = 5000;
+
+	
+	i.ki.wVk = vk;
+
+	i.ki.dwExtraInfo = 0;
+	i.ki.dwFlags = 0;
+
+	return (SendInput(1, &i, sizeof(INPUT)) != 0);
 }

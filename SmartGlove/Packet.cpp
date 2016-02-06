@@ -1,15 +1,15 @@
 #include "Packet.h"
 
 /*
-	Ctor.
-	Input:
-		str - containing all the values (gyro and pressure).
-		P = [3 digits] = "001"
-		G = [9 digits] = [(3 digits)(3 digits)(3 digits)] = [(x)(Y)(z)] = "001123856987"
-		1 - 5 = five fingers.
+Ctor.
+Input:
+str - containing all the values (gyro and pressure).
+P = [3 digits] = "001"
+G = [9 digits] = [(3 digits)(3 digits)(3 digits)] = [(x)(Y)(z)] = "001123856987"
+1 - 5 = five fingers.
 
-	Output:
-		none
+Output:
+none
 */
 Packet::Packet(string str)
 {
@@ -29,11 +29,11 @@ Packet::Packet(string str)
 }
 
 /*
-	Dtor.
-	Input:
-		none
-	Output:
-		none
+Dtor.
+Input:
+none
+Output:
+none
 */
 Packet::~Packet()
 {
@@ -41,30 +41,45 @@ Packet::~Packet()
 }
 
 /*
-	The functios prints the details about every finger.
-	Input:
-		none
-	Output:
-		none
+The functios prints the details about every finger.
+Input:
+none
+Output:
+none
 */
 void Packet::showDetails()
 {
-	cout << "Finger 1: \nPressure = " << _pressFingers[0] << "%\n" << _gyroFingers[0].getValues().c_str() << "\n";
-	cout << "Finger 2: \nPressure = " << _pressFingers[1] << "%\n" << _gyroFingers[1].getValues().c_str() << "\n";
-	cout << "Finger 3: \nPressure = " << _pressFingers[2] << "%\n" << _gyroFingers[2].getValues().c_str() << "\n";
-	cout << "Finger 4: \nPressure = " << _pressFingers[3] << "%\n" << _gyroFingers[3].getValues().c_str() << "\n";
-	cout << "Finger 5: \nPressure = " << _pressFingers[4] << "%\n" << _gyroFingers[4].getValues().c_str() << "\n";
+	cout << "Finger 1: \nPressure = " << _pressFingers[0].getValue() << "%\n" << _gyroFingers[0].getValues().c_str() << "\n";
+	cout << "Finger 2: \nPressure = " << _pressFingers[1].getValue() << "%\n" << _gyroFingers[1].getValues().c_str() << "\n";
+	cout << "Finger 3: \nPressure = " << _pressFingers[2].getValue() << "%\n" << _gyroFingers[2].getValues().c_str() << "\n";
+	cout << "Finger 4: \nPressure = " << _pressFingers[3].getValue() << "%\n" << _gyroFingers[3].getValues().c_str() << "\n";
+	cout << "Finger 5: \nPressure = " << _pressFingers[4].getValue() << "%\n" << _gyroFingers[4].getValues().c_str() << "\n";
 
 }
 
-/*
-	The functios returns the pressure of some finger.
-	Input:
-		finger - the finger number.
-	Output:
-		int - if finger exist return the finger pressure, otherwise return -1
-*/
-int Packet::getPressure(int finger)
+Gyro* Packet::getGyro(int finger)
 {
-	return ((finger >= 0 && finger < NUM_FINGERS) ? this->_pressFingers[finger] : -1);
+	if (finger){
+		return &(this->_gyroFingers[finger]);
+	}
+	return this->_gyroFingers;
 }
+
+Pressure* Packet::getPress(int finger)
+{
+	if (finger){
+		return &(this->_pressFingers[finger]);
+	}
+	return this->_pressFingers;
+}
+/*
+The functios returns the pressure of some finger.
+Input:
+finger - the finger number.
+Output:
+int - if finger exist return the finger pressure, otherwise return -1
+*/
+//int Packet::getPressure(int finger)
+//{
+//	return ((finger >= 0 && finger < NUM_FINGERS) ? this->_pressFingers[finger] : -1);
+//}

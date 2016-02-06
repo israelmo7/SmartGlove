@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include "Gyro.h"
+#include "Pressure.h"
 #define NUM_FINGERS 5
 using namespace std;
 
@@ -11,8 +12,10 @@ public:
 	Packet(string str);
 	~Packet();
 	void showDetails();
-	int getPressure(int finger);
+	Gyro* getGyro(int finger = 0);
+	Pressure* getPress(int finger = 0);
+	//int getPressure(int finger);
 private:
-	int _pressFingers[NUM_FINGERS];
+	Pressure _pressFingers[NUM_FINGERS];
 	Gyro _gyroFingers[NUM_FINGERS];
 };
