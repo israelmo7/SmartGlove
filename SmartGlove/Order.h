@@ -10,12 +10,9 @@ class Order
 public:
 	Order(vector<Packet> arr);
 	int getCommandNumber();
-	int getValueIndex(int finger, bool smaller = true);
+	void setCommandNumber(int c);
 	vector<Packet> getArr();
-	//bool opencloseFinger(int finger, int begin = 0, int end = 0, bool open = true);
-	//bool openAndClose(int finger, bool firstOpen = true);
-
-
+	void packetsArrayToCharsArray(string a[NUM_FINGERS]);
 	~Order();
 
 private:

@@ -33,9 +33,6 @@
     <ClCompile Include="Order.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Actions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Pressure.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -56,11 +53,13 @@
     <ClInclude Include="Order.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Actions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Pressure.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Profile.txt">
+      <Filter>Source Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

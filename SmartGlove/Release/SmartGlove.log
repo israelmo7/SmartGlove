@@ -1,11 +1,11 @@
-﻿Build started 2/6/2016 10:18:27 PM.
-     1>Project "D:\Users\user-pc\Documents\Visual Studio 2013\Projects\SmartGlove\SmartGlove\SmartGlove.vcxproj" on node 2 (Build target(s)).
+﻿Build started 2/21/2016 8:56:06 PM.
+     1>Project "d:\Users\user-pc\documents\visual studio 2013\Projects\SmartGlove\SmartGlove\SmartGlove.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Pressure.cpp
-         Pressure.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Interpreter.cpp Order.cpp
+         Interpreter.cpp
+         Order.cpp
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Users\user-pc\Documents\Visual Studio 2013\Projects\SmartGlove\Release\SmartGlove.exe" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\Users\user-pc\Documents\Visual Studio 2013\Projects\SmartGlove\Release\SmartGlove.pdb" /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Users\user-pc\Documents\Visual Studio 2013\Projects\SmartGlove\Release\SmartGlove.lib" /MACHINE:X86 /SAFESEH Release\Actions.obj
-         Release\Gyro.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"d:\users\user-pc\documents\visual studio 2013\Projects\SmartGlove\Release\SmartGlove.exe" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"d:\users\user-pc\documents\visual studio 2013\Projects\SmartGlove\Release\SmartGlove.pdb" /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"d:\users\user-pc\documents\visual studio 2013\Projects\SmartGlove\Release\SmartGlove.lib" /MACHINE:X86 /SAFESEH Release\Gyro.obj
          Release\Interpreter.obj
          Release\Order.obj
          Release\Packet.obj
@@ -14,9 +14,9 @@
          Release\Traffic.obj
          Generating code
          Finished generating code
-         SmartGlove.vcxproj -> D:\Users\user-pc\Documents\Visual Studio 2013\Projects\SmartGlove\Release\SmartGlove.exe
-     1>Done Building Project "D:\Users\user-pc\Documents\Visual Studio 2013\Projects\SmartGlove\SmartGlove\SmartGlove.vcxproj" (Build target(s)).
+         SmartGlove.vcxproj -> d:\users\user-pc\documents\visual studio 2013\Projects\SmartGlove\Release\SmartGlove.exe
+     1>Done Building Project "d:\Users\user-pc\documents\visual studio 2013\Projects\SmartGlove\SmartGlove\SmartGlove.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:01.78
+Time Elapsed 00:00:02.84

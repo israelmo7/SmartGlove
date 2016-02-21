@@ -1,5 +1,7 @@
 #include "Interpreter.h"
 #include "Order.h"
+#include <fstream>
+#include <string>
 
 #define PAGE_UP      0
 #define PAGE_DOWN    1
@@ -128,21 +130,65 @@ void Interpreter::runCommand(int c)
 		break;
 
 	default:
+		printf("The command not found\n");
 		break;
 	}
 }
 /*
 	The function starts the translation
 	Input:
-		i - the command number
+		none
 	Output:
 		none
 */
 void Interpreter::begin()
 {
+	string fingerState[NUM_FINGERS];
+
 	Order o = Order(this->_packetsList);
+	o.packetsArrayToCharsArray(fingerState);
+
+	//
+	ifstream file;
+	file.open("Profile.txt");
+
+	if (file.is_open())
+	{
+
+		string line;
+
+		while (getline(file,line))
+		{
+			string a[NUM_FINGERS + 1] = { " " };
+
+			this->fileLineToStringArray(a, line);
+
+			if (sameChecks(fingerState,a))
+			{
+				int c = atoi(a[0].c_str());
+				o.setCommandNumber(c);
+			}
+			
+		}
+
+		file.close();
+	}
+	else
+	{
+		cout << "Cant find the Profile file \n";
+	}
+
+
+	//
 	this->runCommand(o.getCommandNumber());
 }
+/*
+	The Functionsend input to the computer (simulate)
+	Input:
+		WORD vk - the Virtual Key you want to send
+	Output:
+		bool - true if success and false if not
+*/
 bool Interpreter::sendInput(WORD vk)
 {
 	INPUT i;
@@ -150,11 +196,62 @@ bool Interpreter::sendInput(WORD vk)
 	i.ki.wScan = 0;
 	i.ki.time = 5000;
 
-	
+
 	i.ki.wVk = vk;
 
 	i.ki.dwExtraInfo = 0;
 	i.ki.dwFlags = 0;
 
 	return (SendInput(1, &i, sizeof(INPUT)) != 0);
+}
+
+/*
+	The Function get the values from the line and save it in 'a'
+	Input:
+		string a[NUM_FINGERS+1] - 5 fingers pressure[0-4] and  one "gyro"[5]
+		string line - the line from the text file
+	Output:
+		none
+*/
+void Interpreter::fileLineToStringArray(string a[NUM_FINGERS + 1], string line)
+{
+	int cnt = 0;
+
+	for (unsigned int i = 3; i < line.length()-1; i++)
+	{
+		if (line[i] == '*')
+		{
+			cnt++;
+		}
+		else
+		{
+			if (a[cnt].length() == 1 && a[cnt][0] == ' ')
+			{
+				a[cnt][0] = line[i];
+			}
+			else
+			{
+				a[cnt].push_back(line[i]);
+			}
+		}
+	}
+}
+/*
+	The Function checks if the strings array are the same
+	Input:
+		string a[NUM_FINGERS] - number one
+		string b[NUM_FINGERS] - number two
+	Output:
+		bool - true if same and false if not.
+*/
+bool Interpreter::sameChecks(string a[NUM_FINGERS], string b[NUM_FINGERS])
+{
+	for (int i = 0; i < NUM_FINGERS; i++)
+	{
+		if (a[i] != b[i])
+		{
+			return false;
+		}
+	}
+	return true;
 }

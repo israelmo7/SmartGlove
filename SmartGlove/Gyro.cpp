@@ -29,7 +29,7 @@ Gyro::~Gyro()
 
 /*
 Set the three values from string.
-Input:												 x         y        z
+Input:											 x         y        z
 str - Contains the three values of the Gyro. [3 digits|3 digits|3 digits], eg "012098000"
 Output:
 none
@@ -54,7 +54,7 @@ string Gyro::getValues()
 	ostringstream str;
 
 
-	str << "x - " << this->_x << "\ny - " << this->_y << "\nz - " << this->_z << "\n";
+	str << "X - " << this->_x << "\nY - " << this->_y << "\nZ - " << this->_z << "\n";
 
 	return str.str();
 }
@@ -65,8 +65,9 @@ none
 Output:
 int*- x,y and z
 */
-int* Gyro::getVal()
+void Gyro::getVal(int vals[3])
 {
-	int vals[3] = { this->_x, this->_y, this->_z };
-	return vals;
+	vals[0] = this->_x;
+	vals[1] = this->_y;
+	vals[2] = this->_z;
 }

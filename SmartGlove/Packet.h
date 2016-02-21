@@ -12,10 +12,10 @@ public:
 	Packet(string str);
 	~Packet();
 	void showDetails();
-	Gyro* getGyro(int finger = 0);
+	Gyro getGyro();
 	Pressure* getPress(int finger = 0);
 	//int getPressure(int finger);
 private:
 	Pressure _pressFingers[NUM_FINGERS];
-	Gyro _gyroFingers[NUM_FINGERS];
+	Gyro _gyroFingers;
 };

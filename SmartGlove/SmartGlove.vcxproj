@@ -64,7 +64,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Actions.cpp" />
     <ClCompile Include="Gyro.cpp" />
     <ClCompile Include="Interpreter.cpp" />
     <ClCompile Include="Order.cpp" />
@@ -74,13 +73,15 @@
     <ClCompile Include="Traffic.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Actions.h" />
     <ClInclude Include="Gyro.h" />
     <ClInclude Include="Interpreter.h" />
     <ClInclude Include="Order.h" />
     <ClInclude Include="Packet.h" />
     <ClInclude Include="Pressure.h" />
     <ClInclude Include="Traffic.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Profile.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

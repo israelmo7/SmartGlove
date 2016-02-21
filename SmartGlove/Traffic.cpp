@@ -13,7 +13,7 @@
 #pragma comment (lib, "Ws2_32.lib")
 // #pragma comment (lib, "Mswsock.lib")
 
-#define DEFAULT_BUFLEN 60
+#define DEFAULT_BUFLEN 24
 #define DEFAULT_PORT "80"
 
 Traffic::Traffic()
