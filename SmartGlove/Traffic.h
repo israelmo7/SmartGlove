@@ -8,7 +8,7 @@ class Traffic
 public:
 	Traffic();
 	~Traffic(){};
-
+	SOCKET getSocket() const;
 private:
-
+	SOCKET _sock;
 };

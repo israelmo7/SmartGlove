@@ -163,7 +163,7 @@ void Interpreter::begin()
 
 			this->fileLineToStringArray(a, line);
 
-			if (sameChecks(fingerState,a))
+			if (sameChecks(fingerState,a) && a[5] == )
 			{
 				int c = atoi(a[0].c_str());
 				o.setCommandNumber(c);

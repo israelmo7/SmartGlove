@@ -17,9 +17,7 @@
 #define DEFAULT_PORT "80"
 
 Traffic::Traffic()
-{
-	bool flag;
-	Interpreter p;
+{	
 	WSADATA wsaData;
 	int iResult;
 
@@ -28,8 +26,6 @@ Traffic::Traffic()
 
 	struct addrinfo *result = NULL;
 	struct addrinfo hints;
-
-	char recvbuf[DEFAULT_BUFLEN];
 
 	// Initialize Winsock
 	iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
@@ -94,45 +90,9 @@ Traffic::Traffic()
 	// No longer need server socket
 	closesocket(ListenSocket);
 
-
-// *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
-	
-	flag = true;
-	do
-	{
-		iResult = recv(ClientSocket, recvbuf, DEFAULT_BUFLEN, 0);
-		if (iResult > 0)
-		{
-			// Add the packet to the Interpreter object.
-			p.addPacket(Packet(string(recvbuf)));
-		}
-		else
-		{
-			flag = false;
-		}
-	} 
-	while (flag);
-
-	// Print the packets.
-	p.packetsDetails();
-
-	// Translating the packets to some command.
-	p.begin();
-
-// *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
-
-
-	// shutdown the connection since we're done
-	iResult = shutdown(ClientSocket, SD_SEND);
-	if (iResult == SOCKET_ERROR) {
-		printf("shutdown failed with error: %d\n", WSAGetLastError());
-		closesocket(ClientSocket);
-		WSACleanup();
-		return;
-	}
-
-	// cleanup
-	closesocket(ClientSocket);
-	WSACleanup();
-	return;
+	this->_sock = ClientSocket;
+}
+SOCKET Traffic::getSocket() const
+{
+	return this->_sock;
 }
