@@ -21,7 +21,7 @@ Packet::Packet(string str)
 	this->_pressFingers[4] = atoi(str.substr(12, 3).c_str());    // P5
 
 	//G(1-5)
-	this->_gyroFingers.setValues(str.substr(15, 9).c_str());     // G1
+	this->_gyroFinger.setValues(str.substr(15, 9).c_str());     // G1
 
 }
 
@@ -46,7 +46,7 @@ none
 */
 void Packet::showDetails()
 {
-	cout << "Accelerometer: \n" << _gyroFingers.getValues().c_str();
+	cout << "Accelerometer: \n" << _gyroFinger.getValues().c_str();
 	cout << "Finger 1: \nPressure = " << _pressFingers[0].getValue() << "%\n";
 	cout << "Finger 2: \nPressure = " << _pressFingers[1].getValue() << "%\n";
 	cout << "Finger 3: \nPressure = " << _pressFingers[2].getValue() << "%\n";
@@ -56,7 +56,7 @@ void Packet::showDetails()
 
 Gyro Packet::getGyro()
 {
-	return this->_gyroFingers;
+	return this->_gyroFinger;
 }
 
 Pressure* Packet::getPress(int finger)

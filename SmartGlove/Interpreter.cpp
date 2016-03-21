@@ -15,6 +15,9 @@
 #define VOLUMEM		 9
 #define VOLUMEU		 10
 #define VOLUMED		 11
+#define X			 1
+#define Y			 2
+#define Z			 3
 
 /*
 	Ctor.
@@ -143,11 +146,15 @@ void Interpreter::runCommand(int c)
 */
 void Interpreter::begin()
 {
-	string fingerState[NUM_FINGERS];
+	string fingerState[NUM_FINGERS+1];
 
 	Order o = Order(this->_packetsList);
 	o.packetsArrayToCharsArray(fingerState);
+	char gyroXState = o.gyroToChar(X);
+	char gyroYState = o.gyroToChar(Y);
+	char gyroZState = o.gyroToChar(Z);
 
+	fingerState[NUM_FINGERS] = gyroXState;
 	//
 	ifstream file;
 	file.open("Profile.txt");
@@ -244,9 +251,9 @@ void Interpreter::fileLineToStringArray(string a[NUM_FINGERS + 1], string line)
 	Output:
 		bool - true if same and false if not.
 */
-bool Interpreter::sameChecks(string a[NUM_FINGERS], string b[NUM_FINGERS])
+bool Interpreter::sameChecks(string a[], string b[])
 {
-	for (int i = 0; i < NUM_FINGERS; i++)
+	for (int i = 0; i < NUM_FINGERS+1; i++)
 	{
 		if (a[i] != b[i])
 		{

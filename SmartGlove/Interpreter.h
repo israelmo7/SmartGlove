@@ -17,7 +17,7 @@ public:
 	void runCommand(int c);
 	bool sendInput(WORD vk);
 	void fileLineToStringArray(string a[NUM_FINGERS + 1], string line);
-	bool sameChecks(string a[NUM_FINGERS], string b[NUM_FINGERS]);
+	bool sameChecks(string a[], string b[]);
 	void begin();
 private:
 	vector<Packet> _packetsList;

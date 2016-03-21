@@ -13,6 +13,7 @@ public:
 	void setCommandNumber(int c);
 	vector<Packet> getArr();
 	void packetsArrayToCharsArray(string a[NUM_FINGERS]);
+	char gyroToChar(int what);
 	~Order();
 
 private:

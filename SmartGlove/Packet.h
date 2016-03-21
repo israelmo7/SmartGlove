@@ -17,5 +17,5 @@ public:
 	//int getPressure(int finger);
 private:
 	Pressure _pressFingers[NUM_FINGERS];
-	Gyro _gyroFingers;
+	Gyro _gyroFinger;
 };

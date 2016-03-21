@@ -100,6 +100,58 @@ void Order::packetsArrayToCharsArray(string a[NUM_FINGERS])
 		}
 	}
 }
+
+/*
+*/
+char Order::gyroToChar(int what)
+{
+	if (this->_arr.size() < 2){
+		return 'n';
+	}
+	int vals[3];
+	this->_arr.end()->getGyro().getVal(vals);
+	int oldvals[3];
+	this->_arr.at(this->_arr.size() - 2).getGyro().getVal(oldvals);
+	switch (what){
+	case 1:
+		int x = vals[0] - oldvals[0];
+		if (x > 0){
+			return 'f';
+		}
+		else if (x < 0){
+			return 'b';
+		}
+		else{
+			return 'n';
+		}
+		break;
+	case 2:
+		int y = vals[1] - oldvals[1];
+		if (y > 0){
+			return 'r';
+		}
+		else if (y < 0){
+			return 'l';
+		}
+		else{
+			return 'n';
+		}
+		break;
+	case 3:
+		int z = vals[2] - oldvals[2];
+		if (y > 0){
+			return 'u';
+		}
+		else if (y < 0){
+			return 'd';
+		}
+		else{
+			return 'n';
+		}
+		break;
+	}
+}
+
 /*
 	This Function set the command number
 	Input:

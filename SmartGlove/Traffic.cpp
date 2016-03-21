@@ -13,8 +13,8 @@
 #pragma comment (lib, "Ws2_32.lib")
 // #pragma comment (lib, "Mswsock.lib")
 
-#define DEFAULT_BUFLEN 24
-#define DEFAULT_PORT "80"
+#define DEFAULT_BUFLEN 25
+#define DEFAULT_PORT "999"
 
 Traffic::Traffic()
 {
@@ -103,8 +103,13 @@ Traffic::Traffic()
 		iResult = recv(ClientSocket, recvbuf, DEFAULT_BUFLEN, 0);
 		if (iResult > 0)
 		{
+			string s(recvbuf);
+			
 			// Add the packet to the Interpreter object.
-			p.addPacket(Packet(string(recvbuf)));
+			p.addPacket(Packet(s.substr(0, 24)));
+
+			if (s[24] == '2')
+				flag = false;
 		}
 		else
 		{
