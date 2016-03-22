@@ -1,15 +1,16 @@
 #pragma once
-#include <iostream>
+#include "Hardware.h"
 using namespace std;
 
-class Gyro
+class Gyro : public Hardware
 {
 public:
-	Gyro(int x = 0, int y = 0, int z = 0);
+	Gyro();
+	Gyro(int* xyz);
 	~Gyro();
 	void setValues(string str);
-	string getValues();
-	void getVal(int vals[3]);
+	string PrintValues();
+	//void getVal(int vals[3]);
 private:
 	int _x,
 		_y,

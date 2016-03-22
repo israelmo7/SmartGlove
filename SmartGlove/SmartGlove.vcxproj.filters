@@ -30,10 +30,13 @@
     <ClCompile Include="Interpreter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Order.cpp">
+    <ClCompile Include="Pressure.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Pressure.cpp">
+    <ClCompile Include="Functions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Hardware.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -50,10 +53,13 @@
     <ClInclude Include="Interpreter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Order.h">
+    <ClInclude Include="Pressure.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Pressure.h">
+    <ClInclude Include="Functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Hardware.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

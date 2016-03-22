@@ -7,6 +7,7 @@ class Traffic
 {
 public:
 	Traffic();
+	Traffic(Interpreter p);
 	~Traffic(){};
 	SOCKET getSocket() const;
 private:

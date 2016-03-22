@@ -7,15 +7,17 @@ void closeSocket(SOCKET s);
 
 int main()
 {
-	SOCKET sock = Traffic().getSocket();
-		
+	//SOCKET sock = Traffic().getSocket();
+	Interpreter p;
+	Traffic(p);
+	string* fingersState = p.begin();
 	/*
 		
 		The Loop and all the code.
 
 	*/
 
-	closeSocket(sock);
+	//closeSocket(sock);
 	return 0;
 }
 

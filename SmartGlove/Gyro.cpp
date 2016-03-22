@@ -1,16 +1,17 @@
 #include "Gyro.h"
 #include <sstream>
 
+
+Gyro::Gyro(){}
+
 /*
 Ctor.
 Input:
-x - x value
-y - y value
-z - z value
+xyz - x,y,z values
 Output:
 none
 */
-Gyro::Gyro(int x, int y, int z) :_x(x), _y(y), _z(z)
+Gyro::Gyro(int* xyz) : Hardware(xyz)
 {
 
 }
@@ -43,13 +44,13 @@ void Gyro::setValues(string str)
 }
 
 /*
-Set the three values from string.
+print the three values as string.
 Input:
 none
 Output:
 string - Contains the three values "x - [x] \n .. "
 */
-string Gyro::getValues()
+string Gyro::PrintValues()
 {
 	ostringstream str;
 
@@ -65,9 +66,9 @@ none
 Output:
 int*- x,y and z
 */
-void Gyro::getVal(int vals[3])
-{
-	vals[0] = this->_x;
-	vals[1] = this->_y;
-	vals[2] = this->_z;
-}
+//void Gyro::getVal(int vals[3])
+//{
+//	vals[0] = this->_x;
+//	vals[1] = this->_y;
+//	vals[2] = this->_z;
+//}

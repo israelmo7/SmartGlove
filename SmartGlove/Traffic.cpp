@@ -17,9 +17,12 @@
 #define DEFAULT_PORT "999"
 
 Traffic::Traffic()
+{}
+
+Traffic::Traffic(Interpreter p)
 {
 	bool flag;
-	Interpreter p;
+	//Interpreter p;
 	WSADATA wsaData;
 	int iResult;
 
@@ -121,8 +124,8 @@ Traffic::Traffic()
 	// Print the packets.
 	p.packetsDetails();
 
-	// Translating the packets to some command.
-	p.begin();
+//	// Translating the packets to some command.
+//	p.begin();
 
 // *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
 
