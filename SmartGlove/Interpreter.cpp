@@ -1,15 +1,21 @@
 #include "Interpreter.h"
+#include "Order.h"
+#include <fstream>
+#include <string>
+#include <time.h>
+
+
 
 /*
 	Ctor.
 	Input:
-		p - The first Packet in the packet list.
+		p - The first InfoPacket in the InfoPacket list.
 	Output:
 		none
 */
-Interpreter::Interpreter(Packet p)
+Interpreter::Interpreter(InfoPacket p)
 {
-	this->_packetsList.push_back(p);
+	this->_InfoPacketsList.push_back(p);
 }
 
 /*
@@ -25,30 +31,30 @@ Interpreter::~Interpreter()
 }
 
 /*
-	The function adds p(Packet) to the packet list.
+	The function adds p(InfoPacket) to the InfoPacket list.
 	Input:
-		p - packet.
+		p - InfoPacket.
 	Output:
 		none
 */
-void Interpreter::addPacket(Packet p)
+void Interpreter::addInfoPacket(InfoPacket p)
 {
-	this->_packetsList.push_back(p);
+	this->_InfoPacketsList.push_back(p);
 }
 
 /*
-	The function prints the packets.
+	The function prints the InfoPackets.
 	Input:
 		none
 	Output:
 		none
 */
-void Interpreter::packetsDetails()
+void Interpreter::InfoPacketsDetails()
 {
 	int cnt = 1;
-	for each (Packet i in this->_packetsList)
+	for each (InfoPacket i in this->_InfoPacketsList)
 	{
-		cout << "Packet " << cnt++ << ": \n";
+		cout << "InfoPacket " << cnt++ << ": \n";
 		i.showDetails();
 		cout << endl;
 	}
@@ -61,48 +67,74 @@ void Interpreter::packetsDetails()
 	Output:
 		none
 */
-string* Interpreter::begin()
+void Interpreter::begin()
 {
-	string fingerState[NUM_FINGERS+1];
+	string fingerState[NUM_FINGERS];
+	
+	this->InfoPacketsArrayToCharsArray(fingerState);
 
-	Functions funcs = Functions(this->_packetsList);
-	funcs.packetsArrayToCharsArray(fingerState);
-	char gyroXState = funcs.gyroToChar(X);
-	char gyroYState = funcs.gyroToChar(Y);
-	char gyroZState = funcs.gyroToChar(Z);
+	Order o = Order();
+	
+	o.TheComparetion(fingerState);
 
-	fingerState[NUM_FINGERS] = gyroXState;
-	//
-	ifstream file;
-	file.open("Profile.txt");
+}
 
-	if (file.is_open())
+/*
+	This Function change the InfoPacket array to char array.
+	*	if the values in some finger is 90 , 80 , 70 , 60.
+		then i see "jump" of negative and i write in the char array, - - -
+	*	if the values in some finger is 60, 75, 83, 92
+		then i see "jump" of postivie and i write in the char array, + + +
+	*	if the values in some finger is 90 , 90 , 90 , 90.
+		then i see "jump" of 0 and i write in the char array, = = =
+	*	if the values in some finger is 60, 75, 75, 50
+		then i see several positive jump, zero jump and negative jump and i write in the char array, + = -
+
+	Input:
+		string a[NUM_FINGERS] - Save here the chars array.
+	Output:
+		none
+*/
+
+void Interpreter::InfoPacketsArrayToCharsArray(string a[NUM_FINGERS])
+{
+	for (int j = 0; j < NUM_FINGERS; j++)
 	{
-
-		string line;
-
-		while (getline(file,line))
+		int count = 0;
+		for (unsigned int i = 0; i < this->_InfoPacketsList.size() - 1; i++)
 		{
-			string a[NUM_FINGERS + 1] = { " " };
-			funcs.fileLineToStringArray(a, line);
+			int sum = _InfoPacketsList[j].getPress(i).getValue() - this->_InfoPacketsList[j + 1].getPress(i).getValue();
 
-			if (funcs.sameChecks(fingerState, a) && a[5] == )
+			if (sum > 0) // _arr[i] > _arr[i+1]
 			{
-				int c = atoi(a[0].c_str());
-				funcs.setCommandNumber(c);
+				if (i)
+				{
+					if (a[j][i - 1] != '-')
+						a[j].push_back('-');
+				}
+				else
+					a[j].push_back('-');
 			}
-			
+			else if (sum < 0) // _arr[i] < _arr[i+1]
+			{
+				if (i)
+				{
+					if (a[j][i - 1] != '+')
+						a[j].push_back('+');
+				}
+				else
+					a[j].push_back('+');
+			}
+			else // _arr[i] == _arr[i+1]
+			{
+				if (i)
+				{
+					if (a[j][i - 1] != '=')
+					a[j].push_back('=');
+				}
+				else
+					a[j].push_back('=');
+			}
 		}
-
-		file.close();
 	}
-	else
-	{
-		cout << "Cant find the Profile file \n";
-	}
-
-
-	//
-	funcs.runCommand(funcs.getCommandNumber());
-	return fingerState;
 }

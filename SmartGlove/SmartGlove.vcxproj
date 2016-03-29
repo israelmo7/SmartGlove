@@ -65,20 +65,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Gyro.cpp" />
-    <ClCompile Include="Hardware.cpp" />
     <ClCompile Include="Interpreter.cpp" />
-    <ClCompile Include="Functions.cpp" />
-    <ClCompile Include="Packet.cpp" />
+    <ClCompile Include="Order.cpp" />
+    <ClCompile Include="InfoPacket.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pressure.cpp" />
     <ClCompile Include="Traffic.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Gyro.h" />
-    <ClInclude Include="Hardware.h" />
     <ClInclude Include="Interpreter.h" />
-    <ClInclude Include="Functions.h" />
-    <ClInclude Include="Packet.h" />
+    <ClInclude Include="Order.h" />
+    <ClInclude Include="InfoPacket.h" />
     <ClInclude Include="Pressure.h" />
     <ClInclude Include="Traffic.h" />
   </ItemGroup>

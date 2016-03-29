@@ -2,14 +2,8 @@
 #include <iostream>
 #include <vector>
 #include <Windows.h>
-#include <fstream>
-#include <string>
-#include "Packet.h"
-#include "Functions.h"
+#include "InfoPacket.h"
 
-#define X			 1
-#define Y			 2
-#define Z			 3
 
 using namespace std;
 
@@ -17,15 +11,13 @@ class Interpreter
 {
 public:
 	Interpreter() {}
-	Interpreter(Packet p);
+	Interpreter(InfoPacket p);
 	~Interpreter();
-	void addPacket(Packet p);
-	void packetsDetails();
-	//void runCommand(int c);			
-	//bool sendInput(WORD vk);
-	//void fileLineToStringArray(string a[NUM_FINGERS + 1], string line);
-	//bool sameChecks(string a[], string b[]);
-	string* begin();
+	void addInfoPacket(InfoPacket p);
+	void InfoPacketsDetails();
+
+	void InfoPacketsArrayToCharsArray(string a[NUM_FINGERS]);
+	void begin();
 private:
-	vector<Packet> _packetsList;
+	vector<InfoPacket> _InfoPacketsList;
 };

@@ -1,15 +1,14 @@
 #pragma once
-#include "Hardware.h"
+#include <iostream>
 using namespace std;
 
-class Pressure : public Hardware
+class Pressure
 {
 public:
-	Pressure();
-	Pressure(int* stats);
+	Pressure(int press = 0);
 	~Pressure();
-	//int getValue();
-//private:
-	//int _p;
+	int getValue();
+private:
+	int _value;
 
 };

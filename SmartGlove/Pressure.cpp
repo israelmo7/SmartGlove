@@ -1,17 +1,14 @@
 #include "Pressure.h"
 #include <sstream>
 
-
-Pressure::Pressure(){}
-
 /*
 	Ctor.
 	Input:
-		stats - p value
+		press - p value
 	Output:
 		none
 */
-Pressure::Pressure(int* stats) : Hardware(stats)
+Pressure::Pressure(int press) :_value(press)
 {
 
 }
@@ -35,7 +32,7 @@ Pressure::~Pressure()
 	Output
 		int - the value
 */
-//int Pressure::getValue()
-//{
-//	return this->_p;
-//}
+int Pressure::getValue()
+{
+	return this->_value;
+}

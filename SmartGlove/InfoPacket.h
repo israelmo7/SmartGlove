@@ -5,17 +5,17 @@
 #define NUM_FINGERS 5
 using namespace std;
 
-class Packet
+class InfoPacket
 {
 public:
-	Packet(){};
-	Packet(string str);
-	~Packet();
+	InfoPacket(){};
+	InfoPacket(string str);
+	~InfoPacket();
 	void showDetails();
 	Gyro getGyro();
-	Pressure* getPress(int finger = 0);
-	//int getPressure(int finger);
+	Pressure getPress(int fingerNum = 0);
+
 private:
 	Pressure _pressFingers[NUM_FINGERS];
-	Gyro _gyroFinger;
+	Gyro _gyroFingers;
 };

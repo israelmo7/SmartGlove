@@ -1,19 +1,21 @@
-﻿Build started 3/2/2016 18:16:38.
-     1>Project "D:\Users\user-pc\Documents\GitHub\SmartGlove\SmartGlove\SmartGlove.vcxproj" on node 2 (Build target(s)).
+﻿Build started 2/5/2016 1:26:03 PM.
+     1>Project "d:\Users\user-pc\documents\visual studio 2013\Projects\SmartGlove\SmartGlove\SmartGlove.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Traffic.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Gyro.cpp Interpreter.cpp Order.cpp Packet.cpp main.cpp Traffic.cpp
          Traffic.cpp
-       Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Users\user-pc\Documents\GitHub\SmartGlove\SmartGlove\Debug\SmartGlove.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\Users\user-pc\Documents\GitHub\SmartGlove\SmartGlove\Debug\SmartGlove.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Users\user-pc\Documents\GitHub\SmartGlove\SmartGlove\Debug\SmartGlove.lib" /MACHINE:X86 Debug\Gyro.obj
-         Debug\Interpreter.obj
-         Debug\Order.obj
-         Debug\Packet.obj
-         Debug\main.obj
-         Debug\Pressure.obj
-         Debug\Traffic.obj
-         SmartGlove.vcxproj -> D:\Users\user-pc\Documents\GitHub\SmartGlove\SmartGlove\Debug\SmartGlove.exe
-     1>Done Building Project "D:\Users\user-pc\Documents\GitHub\SmartGlove\SmartGlove\SmartGlove.vcxproj" (Build target(s)).
+     1>d:\users\user-pc\documents\visual studio 2013\projects\smartglove\smartglove\traffic.cpp : fatal error C1041: cannot open program database 'd:\users\user-pc\documents\visual studio 2013\projects\smartglove\smartglove\debug\vc120.idb'; if multiple CL.EXE write to the same .PDB file, please use /FS
+         Packet.cpp
+     1>d:\users\user-pc\documents\visual studio 2013\projects\smartglove\smartglove\packet.cpp : fatal error C1041: cannot open program database 'd:\users\user-pc\documents\visual studio 2013\projects\smartglove\smartglove\debug\vc120.pdb'; if multiple CL.EXE write to the same .PDB file, please use /FS
+         Order.cpp
+         Interpreter.cpp
+     1>d:\users\user-pc\documents\visual studio 2013\projects\smartglove\smartglove\interpreter.cpp(124): warning C4800: 'UINT' : forcing value to bool 'true' or 'false' (performance warning)
+         Gyro.cpp
+         Generating Code...
+         Compiling...
+         main.cpp
+         Generating Code...
+     1>Done Building Project "d:\Users\user-pc\documents\visual studio 2013\Projects\SmartGlove\SmartGlove\SmartGlove.vcxproj" (Build target(s)) -- FAILED.
 
-Build succeeded.
+Build FAILED.
 
-Time Elapsed 00:00:02.54
+Time Elapsed 00:00:02.65

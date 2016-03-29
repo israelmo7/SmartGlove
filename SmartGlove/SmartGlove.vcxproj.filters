@@ -24,19 +24,16 @@
     <ClCompile Include="Gyro.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Packet.cpp">
+    <ClCompile Include="Interpreter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Interpreter.cpp">
+    <ClCompile Include="Order.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Pressure.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Functions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Hardware.cpp">
+    <ClCompile Include="InfoPacket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -47,19 +44,16 @@
     <ClInclude Include="Gyro.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Packet.h">
+    <ClInclude Include="Interpreter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Interpreter.h">
+    <ClInclude Include="Order.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Pressure.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Functions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Hardware.h">
+    <ClInclude Include="InfoPacket.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
