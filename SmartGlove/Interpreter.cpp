@@ -3,7 +3,23 @@
 #include <fstream>
 #include <string>
 
+#define MIN_GRAVITY			7
+#define  MAX_NON_GRAVITY    2
 
+#define X val[0]
+#define Y val[1]
+#define Z val[2]
+
+#define ABS(a) ((a < 0)? a*-1: a)
+
+#define A_BIGGER_THAN_B(a,b) ((ABS(a) > ABS(b))? true: false)
+#define A_BIGGER_THAN_B_AND_C(a,b,c) ((A_BIGGER_THAN_B(a,b) && A_BIGGER_THAN_B(a,c))?true:false)
+
+
+#define CHECK_NON_GRAVITY(a) ((a > MAX_NON_GRAVITY)? false: true)
+#define CHECK_ZERO(a, b) ((CHECK_NON_GRAVITY(ABS(a)) && CHECK_NON_GRAVITY(ABS(b)))? true: false)
+#define CHECK_GRAVITY(c) ((ABS(c) > MIN_GRAVITY)? true: false)
+#define IS_POSITIVE(a) ((a > 0)? true: false)
 
 /*
 	Ctor.
@@ -14,6 +30,7 @@
 */
 Interpreter::Interpreter()
 {
+	this->_stateA = NONE;
 	this->_first = true;
 	for (short int i = 0; i < NUM_FINGERS; i++)
 		this->_equalsSeq[i] = '0';
@@ -27,6 +44,7 @@ Interpreter::Interpreter()
 */
 Interpreter::Interpreter(InfoPacket p)
 {
+	this->_stateA = NONE;
 	this->_first = true;
 	this->_lastPacket = p;
 
@@ -73,7 +91,7 @@ void Interpreter::InfoPacketsDetails()
 {
 	for (unsigned int i = 0; i < NUM_FINGERS; i++)
 	{
-		cout << i+1 << ") " << this->_symbol[i] << endl;
+		cout << i+1 << ") " << this->_symbolF[i] << endl;
 	}
 }
 
@@ -89,8 +107,9 @@ void Interpreter::clearAll()
 	for (int i = 0; i < NUM_FINGERS; i++)
 	{
 		this->_equalsSeq[i] = '0';
-		this->_symbol[i].clear();
+		this->_symbolF[i].clear();
 	}
+	this->_stateA.clear();
 	this->_first = true;
 	//this->_lastPacket = 
 }
@@ -105,9 +124,6 @@ void Interpreter::clearAll()
 		then i see "jump" of 0 and i write in the char array, = = =
 	*	if the values in some finger is 60, 75, 75, 50
 		then i see several positive jump, zero jump and negative jump and i write in the char array, + = -
-	*	if the value of a certain axis (x/y/z) is increasing/decreasing
-		then for each axis, if it increasing/decreasing it will change for example:
-		if in X axis the values are 30, 40, 70, 100 then the char for this axis would be 'f' [forward]
 
 	Input:
 		string a[NUM_FINGERS] - Save here the chars array.
@@ -134,96 +150,59 @@ bool Interpreter::InfoPacketsArrayToCharsArray(InfoPacket newPacket)
 		{
 			this->_equalsSeq[i] = '0';
 
-			if (this->_symbol[i].length())
+			if (this->_symbolF[i].length())
 			{
-				if (this->_symbol[i][this->_symbol[i].length() - 1] != '-')
-					this->_symbol[i].push_back('-');
+				if (this->_symbolF[i][this->_symbolF[i].length() - 1] != '-')
+					this->_symbolF[i].push_back('-');
 			}
 			else
-				this->_symbol[i].push_back('-');
+				this->_symbolF[i].push_back('-');
 		}
 		else if (sum < 0)
 		{
 			this->_equalsSeq[i] = '0';
 
-			if (this->_symbol[i].length())
+			if (this->_symbolF[i].length())
 			{
-				if (this->_symbol[i][this->_symbol[i].length() - 1] != '+')
-					this->_symbol[i].push_back('+');
+				if (this->_symbolF[i][this->_symbolF[i].length() - 1] != '+')
+					this->_symbolF[i].push_back('+');
 			}
 			else
-				this->_symbol[i].push_back('+');
+				this->_symbolF[i].push_back('+');
 		}
 		else
 		{
 			this->_equalsSeq[i] += 1;
-			if (this->_symbol[i].length())
+			if (this->_symbolF[i].length())
 			{
-				if (this->_symbol[i][this->_symbol[i].length() - 1] != '=')
+				if (this->_symbolF[i][this->_symbolF[i].length() - 1] != '=')
 				{
-					this->_symbol[i].push_back('=');
+					this->_symbolF[i].push_back('=');
 				}
 			}
 		}
 	}
-	
-	int axis[AXIS], newAxis[AXIS];
-	this->_lastPacket.getGyro().getVal(axis);
-	newPacket.getGyro().getVal(newAxis);
-	int axisSum[AXIS] = { axis[0] - newAxis[0], axis[1] - newAxis[1], axis[2] - newAxis[2] };
-	//Check for X axis:
-	if (axisSum[0] > 0){
-		_gyroSymbol[0]->push_back('f');
-	}
-	else if(axisSum[0] < 0){
-		_gyroSymbol[0]->push_back('b');
-	}
-	else{
-		_gyroSymbol[0]->push_back(' ');
-	}
-	//Check for Y axis:
-	if (axisSum[1] > 0){
-		_gyroSymbol[1]->push_back('l');
-	}
-	else if (axisSum[1] < 0){
-		_gyroSymbol[1]->push_back('r');
-	}
-	else{
-		_gyroSymbol[1]->push_back(' ');
-	}
-	//Check for Z axis:
-	if (axisSum[2] > 0){
-		_gyroSymbol[2]->push_back('u');
-	}
-	else if (axisSum[2] < 0){
-		_gyroSymbol[2]->push_back('d');
-	}
-	else{
-		_gyroSymbol[2]->push_back(' ');
-	}
 
-	if(this->checkToEnd())
+	this->checkAccel(newPacket);
+	
+	if (this->checkToEnd())
 	{
 		for (int i = 0; i < NUM_FINGERS; i++)
 		{
-			if (this->_symbol[i].length() > 1)
-				this->_symbol[i].pop_back();
-		}
-		for (int i = 0; i < AXIS; i++){
-			if (_gyroSymbol[i]->length() > 1){
-				_gyroSymbol[i]->pop_back();
-			}
+			if (this->_symbolF[i].length() > 1)
+				this->_symbolF[i].pop_back();
 		}
 		return true;
 	}
 	return false;
 }
-void Interpreter::saveTheSymbol(string arr[NUM_FINGERS])
+void Interpreter::saveTheSymbol(string *arr)
 {
 	for (unsigned int i = 0; i < NUM_FINGERS; i++)
 	{
-		arr[i] = this->_symbol[i];
+		arr[i] = this->_symbolF[i];
 	}
+	arr[5] = this->_stateA;
 }
 bool Interpreter::checkToEnd()
 {
@@ -238,6 +217,98 @@ void Interpreter::showSeq()
 {
 	for (int i = 0; i < NUM_FINGERS; i++)
 	{
-		cout << i+1 << ") " << this->_equalsSeq[i] << "\n";
+		cout << i + 1 << ") " << this->_equalsSeq[i] << "\n";
+	}
+
+}
+void Interpreter::checkAccel(InfoPacket pack)
+{
+	//val[0] = x
+	//val[1] = y
+	//val[2] = z
+
+	int val[3];
+	pack.getGyro().getVal(val);
+
+	if (A_BIGGER_THAN_B_AND_C(X,Y,Z))								//(CHECK_ZERO(Y, Z) && CHECK_GRAVITY(X))
+	{
+		if (IS_POSITIVE(X))
+		{
+			this->_stateA = PALM_TO_ME;
+		}
+		else
+		{
+			this->_stateA = NE_PALM_TO_ME;
+		}
+	}
+	else if (A_BIGGER_THAN_B_AND_C(Y, X, Z))						//(CHECK_ZERO(X, Z) && CHECK_GRAVITY(Y))
+	{
+		if (IS_POSITIVE(Y))
+		{
+			this->_stateA = NE_PALM_TO_LEFT;
+		}
+		else
+		{
+			this->_stateA = PALM_TO_LEFT;
+		}
+	}
+	else if (A_BIGGER_THAN_B_AND_C(Z, Y, X))						//((CHECK_ZERO(X, Y) && CHECK_GRAVITY(Z)))
+	{
+		if (IS_POSITIVE(Z))
+		{
+			this->_stateA = NE_PALM_TO_SKY;
+		}
+		else
+		{
+			this->_stateA = PALM_TO_SKY;
+		}
+	}
+}
+void Interpreter::showAccel()
+{
+	switch (this->_stateA[1])
+	{
+	case 's':
+	{
+		if (_stateA[0] == '+')
+		{
+			cout << "Palm to Sky. \n";
+		}
+		else
+		{
+			cout << "Palm to Ground. \n";
+		}
+		break;
+	}
+
+	case 'l':
+	{
+		if (_stateA[0] == '+')
+		{
+			cout << "Palm to Left. \n";
+		}
+		else
+		{
+			cout << "Palm to Right. \n";
+		}
+		break;
+	}
+
+	case 'm':
+	{
+		if (_stateA[0] == '+')
+		{
+			cout << "Palm to Me. \n";
+		}
+		else
+		{
+			cout << "Palm not to Me. \n";
+		}
+		break;
+	}
+
+	default:
+		cout << "None\n";
+		break;
 	}
 }

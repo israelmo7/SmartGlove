@@ -31,7 +31,7 @@ Order::Order()
 			string tempStr[6] = {""};
 			int commandNumber;
 			commandNumber = this->fileLineToStringArray(line, tempStr);
-			this->_lines.push_back(new Gesture(tempStr, commandNumber, 'n'));
+			this->_lines.push_back(new Gesture(tempStr, commandNumber, "n"));
 		}
 
 		file.close();
@@ -57,12 +57,13 @@ Order::~Order()
 }
 
 
-void Order::TheComparetion(string infoPackets[NUM_FINGERS])
+void Order::TheComparetion(string* infoPackets)
 {
 
 	for (unsigned int i = 0; i < this->_lines.size(); i++)
 	{
-		if (sameChecks(this->_lines[i]->_fingers, infoPackets)) // && this->_filesLines[i][5] == accelemotetrrrtrerfdgtyer.
+		cout << infoPackets[5] << " - " << this->_lines[i]->_acceleration << endl;
+		if (sameChecks(this->_lines[i]->_fingers, infoPackets) && infoPackets[5] == this->_lines[i]->_acceleration)
 		{
 			this->runCommand(this->_lines[i]->_commandNumber);
 		}
@@ -178,8 +179,6 @@ void Order::runCommand(int c)
 
 	case VOLUMED:
 		printf("%s\n", (sendInput(VK_VOLUME_DOWN)) ? "DownVolume success" : "DownVolume failed");
-		break;
-	case NONE:
 		break;
 	default:
 		printf("The command not found\n");

@@ -1,15 +1,20 @@
 #include "Gesture.h"
+#include <string>
 
+/*
+	Ctor.
+	The function init the vars.
+*/
 Gesture::Gesture()
 {
 	for (int i = 0; i < NUM_FINGERS; i++)
 	{
 		this->_fingers[i] = "";
 	}
-	this->_acceleration = 'n';
+	this->_acceleration = "n";
 	this->_commandNumber = -1;
 }
-Gesture::Gesture(string fingers[NUM_FINGERS], int commandNumber, char acceleration)
+Gesture::Gesture(string fingers[NUM_FINGERS], int commandNumber, string acceleration)
 {
 	this->_fingers = new string[NUM_FINGERS];
 	this->_acceleration = acceleration;

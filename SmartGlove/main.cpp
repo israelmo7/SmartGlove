@@ -4,44 +4,46 @@
 #include "Order.h"
 #include <ctime>
 
-//clock_t timerStart;
 
-#define DEFAULT_BUFLEN 19
-//#define SECONDS ((timerStart) / (float)(CLOCKS_PER_SEC))
+#define DEFAULT_BUFLEN 19 // Size of The packet
+#define FULL_SIZE 6 // 5 fingers + 1 Accel'
 
 using namespace std;
+
 void closeSocket(SOCKET s);
-void sendToOrder(string temp[NUM_FINGERS]);
+void sendToOrder(string temp[FULL_SIZE]);
 
 int main()
 {
 	Interpreter interPreter = Interpreter();
-	char recvbuf[DEFAULT_BUFLEN+1];
+	char recvbuf[DEFAULT_BUFLEN+1]; // More one for the NULL byte.
 	int iResult;
 	SOCKET ClientSocket = Traffic().getSocket();
 		
 
-	//timerStart = clock();
 	// Receive until the peer shuts down the connection
 	do {
 
-		iResult = recv(ClientSocket, recvbuf, DEFAULT_BUFLEN, 0);
+		iResult = recv(ClientSocket, recvbuf, DEFAULT_BUFLEN, 0); // Recv Data from Client.
 		recvbuf[19] = NULL;
 		cout << recvbuf << endl;
 		if (iResult > 0) 
 		{
-			InfoPacket temPacket = InfoPacket(recvbuf);
+			InfoPacket temPacket = InfoPacket(recvbuf); // Make InfoPacket from the Data.
 
-			if (interPreter.addInfoPacket(temPacket))
+			if (interPreter.addInfoPacket(temPacket)) // Check if the Gesture is done.
 			{
-				string toSend[NUM_FINGERS];
-				interPreter.saveTheSymbol(toSend);
+				cout << "In !\n";
+				string toSend[FULL_SIZE];
+				interPreter.saveTheSymbol(toSend); // Save the "Symbol" in 'toSend'.
 				sendToOrder(toSend);
-				interPreter.clearAll();
+				interPreter.clearAll();				// Clear the InterPreter.
 			}
-			interPreter.InfoPacketsDetails();
+			//interPreter.InfoPacketsDetails();
 
-			interPreter.showSeq();
+			//interPreter.showSeq();
+			//system("cls");
+			interPreter.showAccel();
 		}
 		else if (iResult == 0)
 		{		
@@ -64,13 +66,18 @@ int main()
 	} while (iResult > 0);
 
 
-	closeSocket(ClientSocket);
-
-	//cout << "Seconds: " << SECONDS << endl;
+	closeSocket(ClientSocket); // Close The socket.
 	system("pause");
 	return 0;
 }
-
+/*
+	The Function Closes the Socket.
+		
+		Input:
+			SOCKET s - The socket.
+		Output:
+			none
+*/
 void closeSocket(SOCKET s)
 {
 	int iResult;
@@ -88,7 +95,17 @@ void closeSocket(SOCKET s)
 	WSACleanup();
 	return;
 }
-void sendToOrder(string temp[NUM_FINGERS])
+/*
+	The function sends the temp(5 fingers state and accel') to the Order.
+		
+		Input:
+			string temp[6] - 5 fingers state and accel'
+
+		Output:
+			none
+
+*/
+void sendToOrder(string temp[FULL_SIZE])
 {
 	Order doTheCommands;
 	doTheCommands.TheComparetion(temp);

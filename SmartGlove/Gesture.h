@@ -6,13 +6,13 @@ class Gesture
 {
 public:
 	Gesture();
-	Gesture(string fingers[NUM_FINGERS], int commandNumber, char acceleration);
+	Gesture(string fingers[NUM_FINGERS], int commandNumber, string acceleration);
 	~Gesture();
 	void printGesture();
 
 	//private:
 	string* _fingers = new string[NUM_FINGERS];
 	int _commandNumber;
-	char _acceleration;
+	string _acceleration;
 
 };

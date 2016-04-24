@@ -4,7 +4,13 @@
 #include <Windows.h>
 #include "InfoPacket.h"
 
-#define AXIS 3
+#define PALM_TO_SKY      "+s"
+#define NE_PALM_TO_SKY   "-s"
+#define PALM_TO_LEFT     "+l"
+#define NE_PALM_TO_LEFT  "-l"
+#define PALM_TO_ME       "+m"
+#define NE_PALM_TO_ME    "-m"
+#define NONE             "null"
 
 using namespace std;
 
@@ -16,18 +22,18 @@ public:
 	~Interpreter();
 	bool addInfoPacket(InfoPacket p);
 	void InfoPacketsDetails();
-	//void clearList(){ this->_InfoPacketsList.clear(); }
 	bool InfoPacketsArrayToCharsArray(InfoPacket newPacket);
-	void saveTheSymbol(string arr[NUM_FINGERS]);
+	void saveTheSymbol(string *arr);
 	bool checkToEnd();
 	void showSeq();
 	void clearAll();
-
+	void checkAccel(InfoPacket pack);
+	void showAccel();
 private:
-	//vector<InfoPacket> _InfoPacketsList;
-	InfoPacket _lastPacket;
-	string _symbol[NUM_FINGERS];
-	string* _gyroSymbol[AXIS];
-	char _equalsSeq[NUM_FINGERS];
-	bool _first;
+	InfoPacket _lastPacket;			    // The last packet
+	string _symbolF[NUM_FINGERS];      // f = flex
+	string _stateA;					  // the Accel' state.
+	char _equalsSeq[NUM_FINGERS];    // check for the end of the gesture.
+	bool _first;                    // check if its the first packet
+
 };

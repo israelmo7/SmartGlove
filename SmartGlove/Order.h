@@ -5,7 +5,6 @@
 #include "InfoPacket.h"
 #include "Gesture.h"
 
-#define NONE        0
 #define PAGE_UP      1
 #define PAGE_DOWN    2
 #define REFRESH		 3
@@ -25,7 +24,7 @@ class Order
 {
 public:
 	Order();
-	void TheComparetion(string infoPackets[NUM_FINGERS]);
+	void TheComparetion(string *infoPackets);
 	void runCommand(int c);
 	bool sendInput(WORD vk);
 	void printLines();
@@ -35,5 +34,5 @@ public:
 
 private:
 
-	vector<Gesture*> _lines;
+	vector<Gesture*> _lines; // The file lines.
 };
