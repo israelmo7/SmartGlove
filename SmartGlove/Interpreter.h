@@ -4,20 +4,30 @@
 #include <Windows.h>
 #include "InfoPacket.h"
 
+#define AXIS 3
 
 using namespace std;
 
 class Interpreter
 {
 public:
-	Interpreter() {}
+	Interpreter();
 	Interpreter(InfoPacket p);
 	~Interpreter();
-	void addInfoPacket(InfoPacket p);
+	bool addInfoPacket(InfoPacket p);
 	void InfoPacketsDetails();
+	//void clearList(){ this->_InfoPacketsList.clear(); }
+	bool InfoPacketsArrayToCharsArray(InfoPacket newPacket);
+	void saveTheSymbol(string arr[NUM_FINGERS]);
+	bool checkToEnd();
+	void showSeq();
+	void clearAll();
 
-	void InfoPacketsArrayToCharsArray(string a[NUM_FINGERS]);
-	void begin();
 private:
-	vector<InfoPacket> _InfoPacketsList;
+	//vector<InfoPacket> _InfoPacketsList;
+	InfoPacket _lastPacket;
+	string _symbol[NUM_FINGERS];
+	string* _gyroSymbol[AXIS];
+	char _equalsSeq[NUM_FINGERS];
+	bool _first;
 };

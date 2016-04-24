@@ -1,21 +1,18 @@
-﻿Build started 3/27/2016 3:16:50 AM.
-     1>Project "d:\Users\user-pc\documents\visual studio 2013\Projects\SmartGlove\SmartGlove\SmartGlove.vcxproj" on node 2 (Build target(s)).
+﻿Build started 4/15/2016 3:18:34 PM.
+     1>Project "D:\Users\user-pc\Documents\Visual Studio 2013\Projects\SmartGlove\SmartGlove\SmartGlove.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Order.cpp
-         Order.cpp
-       Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"d:\users\user-pc\documents\visual studio 2013\Projects\SmartGlove\Release\SmartGlove.exe" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"d:\users\user-pc\documents\visual studio 2013\Projects\SmartGlove\Release\SmartGlove.pdb" /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"d:\users\user-pc\documents\visual studio 2013\Projects\SmartGlove\Release\SmartGlove.lib" /MACHINE:X86 /SAFESEH Release\Gyro.obj
-         Release\Interpreter.obj
-         Release\Order.obj
-         Release\InfoPacket.obj
-         Release\main.obj
-         Release\Pressure.obj
-         Release\Traffic.obj
-         Generating code
-         Finished generating code
-         SmartGlove.vcxproj -> d:\users\user-pc\documents\visual studio 2013\Projects\SmartGlove\Release\SmartGlove.exe
-     1>Done Building Project "d:\Users\user-pc\documents\visual studio 2013\Projects\SmartGlove\SmartGlove\SmartGlove.vcxproj" (Build target(s)).
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Interpreter.cpp
+         Interpreter.cpp
+     1>Interpreter.cpp(163): error C2059: syntax error : 'if'
+     1>Interpreter.cpp(164): error C2143: syntax error : missing ';' before '{'
+     1>Interpreter.cpp(164): error C2447: '{' : missing function header (old-style formal list?)
+     1>Interpreter.cpp(172): error C2059: syntax error : 'return'
+     1>Interpreter.cpp(214): error C2059: syntax error : '}'
+     1>Interpreter.cpp(214): error C2143: syntax error : missing ';' before '}'
+     1>Interpreter.cpp(216): error C2143: syntax error : missing ';' before '{'
+     1>Interpreter.cpp(216): error C2447: '{' : missing function header (old-style formal list?)
+     1>Done Building Project "D:\Users\user-pc\Documents\Visual Studio 2013\Projects\SmartGlove\SmartGlove\SmartGlove.vcxproj" (Build target(s)) -- FAILED.
 
-Build succeeded.
+Build FAILED.
 
-Time Elapsed 00:00:02.31
+Time Elapsed 00:00:01.43

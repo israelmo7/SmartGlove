@@ -1,5 +1,5 @@
 #include <vector>
-#include "Order.h"
+#include "Functions.h"
 #include <string>
 #include <fstream>
 
@@ -11,11 +11,11 @@
 /*
 	Ctor.
 	Input:
-		arr - array of InfoPackets.
+		none
 	Output:
 		none
 */
-Order::Order()
+Functions::Functions()
 {
 	ifstream file;
 	
@@ -28,10 +28,8 @@ Order::Order()
 
 		while (getline(file, line))
 		{
-			string tempStr[6] = {""};
-			int commandNumber;
-			commandNumber = this->fileLineToStringArray(line, tempStr);
-			this->_lines.push_back(new Gesture(tempStr, commandNumber, 'n'));
+			int c = this->FileLineToStringArray(this->_fileLines[cnt++], line);
+			this->_fileCommands.push_back(c);
 		}
 
 		file.close();
@@ -48,39 +46,40 @@ Order::Order()
 	Output:
 		none
 */
-Order::~Order()
+Functions::~Functions()
 {
-	/*for (unsigned int i = 0; i < this->_lines.size();i++)
-	{
-		delete this->_lines[i];
-	}*/
+	//
 }
 
 
-void Order::TheComparetion(string infoPackets[NUM_FINGERS])
+void Functions::Comparation(string infoPackets[NUM_FINGERS])
 {
-
-	for (unsigned int i = 0; i < this->_lines.size(); i++)
+	int command = NONE;
+	
+	for (unsigned int i = 0; i < this->_fileLines.size(); i++)
 	{
-		if (sameChecks(this->_lines[i]->_fingers, infoPackets)) // && this->_filesLines[i][5] == accelemotetrrrtrerfdgtyer.
+		if (SameChecks(this->_fileLines[i], infoPackets)) // && this->_filesLines[i][5] == accelemotetrrrtrerfdgtyer.
 		{
-			this->runCommand(this->_lines[i]->_commandNumber);
+			command = this->_fileCommands[i];
 		}
 	}
+
+	this->RunCommand(command);
 }
+
 /*
-	The Function get the values from the line and save it in 'a'
+	The function get the values from the line and save it in 'a'
 	Input:
 		string a[NUM_FINGERS+1] - 5 fingers pressure[0-4] and  one "gyro"[5]
 		string line - the line from the text file
 	Output:
 		int - the command
 */
-int Order::fileLineToStringArray(string line, string* save)
+int Functions::FileLineToStringArray(string a[NUM_FINGERS + 1], string line)
 {
 	int cnt = 0;
 
-	for (unsigned int i = 3; i < line.length() - 1; i++)
+	for (unsigned int i = 4; i < line.length() - 1; i++)
 	{
 		if (line[i] == '*')
 		{
@@ -88,18 +87,19 @@ int Order::fileLineToStringArray(string line, string* save)
 		}
 		else
 		{
-			if (save[cnt].length() == 1 && save[cnt][0] == ' ')
+			if (a[cnt].length() == 1 && a[cnt][0] == ' ')
 			{
-				save[cnt][0] = line[i];
+				a[cnt][0] = line[i];
 			}
 			else
 			{
-				save[cnt].push_back(line[i]);
+				a[cnt].push_back(line[i]);
 			}
 		}
 	}
-	return atoi(line.substr(0, 3).c_str());
+	return atoi(line.substr(1, 3).c_str());
 }
+
 /*
 	The function checks if both sames.
 	Input:
@@ -108,11 +108,10 @@ int Order::fileLineToStringArray(string line, string* save)
 	Output:
 		true if same and false if not.
 */
-bool Order::sameChecks(string a[NUM_FINGERS], string b[NUM_FINGERS])
+bool Functions::SameChecks(string a[NUM_FINGERS], string b[NUM_FINGERS])
 {
 	for (int i = 0; i < NUM_FINGERS; i++)
 	{
-//		cout << a[i] << " == " << b[i] << "\n";
 		if (a[i] != b[i])
 		{
 			return false;
@@ -120,6 +119,7 @@ bool Order::sameChecks(string a[NUM_FINGERS], string b[NUM_FINGERS])
 	}
 	return true;
 }
+
 /*
 	The function runs the command by the int 'c'
 	Input:
@@ -127,7 +127,7 @@ bool Order::sameChecks(string a[NUM_FINGERS], string b[NUM_FINGERS])
 	Output:
 		none
 */
-void Order::runCommand(int c)
+void Functions::RunCommand(int c)
 {
 	switch (c)
 	{
@@ -159,7 +159,7 @@ void Order::runCommand(int c)
 	case NSONG:
 		printf("%s\n", (sendInput(VK_MEDIA_NEXT_TRACK)) ? "NextSong success" : "NextSong failed");
 		break;
-		
+
 	case BPAGE:
 		printf("%s\n", (sendInput(VK_BROWSER_BACK)) ? "PreviousPage success" : "PreviousPage failed");
 		break;
@@ -179,21 +179,21 @@ void Order::runCommand(int c)
 	case VOLUMED:
 		printf("%s\n", (sendInput(VK_VOLUME_DOWN)) ? "DownVolume success" : "DownVolume failed");
 		break;
-	case NONE:
-		break;
+
 	default:
 		printf("The command not found\n");
 		break;
 	}
 }
+
 /*
-	The Functionsend input to the computer (simulate)
+	The Function sends input to the computer (simulate)
 	Input:
 		WORD vk - the Virtual Key you want to send
 	Output:
 		bool - true if success and false if not
 */
-bool Order::sendInput(WORD vk)
+bool Functions::sendInput(WORD vk)
 {
 	INPUT i;
 	i.type = INPUT_KEYBOARD;
@@ -207,12 +207,4 @@ bool Order::sendInput(WORD vk)
 	i.ki.dwFlags = 0;
 
 	return (SendInput(1, &i, sizeof(INPUT)) != 0);
-}
-void Order::printLines()
-{
-	for (unsigned int i = 0; i < this->_lines.size(); i++)
-	{
-		cout << "Gesture - " <<  i + 1 << endl;
-		this->_lines[i]->printGesture();
-	}
 }

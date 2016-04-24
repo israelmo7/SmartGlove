@@ -24,22 +24,16 @@
     <ClCompile Include="Gyro.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Interpreter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Order.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Pressure.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="InfoPacket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Gesture.cpp">
+    <ClCompile Include="Translation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Mouse.cpp">
+    <ClCompile Include="Functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -50,25 +44,16 @@
     <ClInclude Include="Gyro.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Interpreter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Order.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Pressure.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="InfoPacket.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Gesture.h">
+    <ClInclude Include="Translation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Mouse.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Point.h">
+    <ClInclude Include="Functions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -64,24 +64,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Gesture.cpp" />
     <ClCompile Include="Gyro.cpp" />
-    <ClCompile Include="Interpreter.cpp" />
-    <ClCompile Include="Mouse.cpp" />
-    <ClCompile Include="Order.cpp" />
+    <ClCompile Include="Translation.cpp" />
+    <ClCompile Include="Functions.cpp" />
     <ClCompile Include="InfoPacket.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pressure.cpp" />
     <ClCompile Include="Traffic.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Gesture.h" />
     <ClInclude Include="Gyro.h" />
-    <ClInclude Include="Interpreter.h" />
-    <ClInclude Include="Mouse.h" />
-    <ClInclude Include="Order.h" />
+    <ClInclude Include="Translation.h" />
+    <ClInclude Include="Functions.h" />
     <ClInclude Include="InfoPacket.h" />
-    <ClInclude Include="Point.h" />
     <ClInclude Include="Pressure.h" />
     <ClInclude Include="Traffic.h" />
   </ItemGroup>

@@ -1,35 +1,27 @@
 #include "InfoPacket.h"
-#define SIZE_OF_VALUE 2
 
 /*
 Ctor.
 Input:
 str - containing all the values (gyro and pressure).
-P = [4 digits] = "-001"
-G = [12 digits] = [(4 digits)(4 digits)(4 digits)] = [(x)(Y)(z)] = "-001+123+856-987"
+P = [3 digits] = "001"
+G = [9 digits] = [(3 digits)(3 digits)(3 digits)] = [(x)(Y)(z)] = "001123856987"
 1 - 5 = five fingers.
-4*5+12=32
+
 Output:
 none
 */
 InfoPacket::InfoPacket(string str)
 {
-	//cout << str.substr(0, 4).c_str() << "\n";
-	//cout << str.substr(4, 4).c_str() << "\n";
-	//cout << str.substr(8, 4).c_str() << "\n";
-	//cout << str.substr(12, 4).c_str() << "\n";
-	//cout << str.substr(16, 4).c_str() << "\n";
-	//cout << str.substr(20, 12).c_str() << "\n";
-
 	//P(1-5)
-	this->_pressFingers[0] = atoi(str.substr(0, SIZE_OF_VALUE).c_str());     // P1
-	this->_pressFingers[1] = atoi(str.substr(2, SIZE_OF_VALUE).c_str());     // P2
-	this->_pressFingers[2] = atoi(str.substr(4, SIZE_OF_VALUE).c_str());     // P3
-	this->_pressFingers[3] = atoi(str.substr(6, SIZE_OF_VALUE).c_str());     // P4
-	this->_pressFingers[4] = atoi(str.substr(8, SIZE_OF_VALUE).c_str());    // P5
+	this->_pressFingers[0] = atoi(str.substr(0, 3).c_str());     // P1
+	this->_pressFingers[1] = atoi(str.substr(3, 3).c_str());     // P2
+	this->_pressFingers[2] = atoi(str.substr(6, 3).c_str());     // P3
+	this->_pressFingers[3] = atoi(str.substr(9, 3).c_str());     // P4
+	this->_pressFingers[4] = atoi(str.substr(12, 3).c_str());    // P5
 
 	//G(1-5)
-	this->_gyroFingers.setValues(str.substr(10 , 9).c_str());     // G1
+	this->_gyroFingers.setValues(str.substr(15, 9).c_str());     // G1
 
 }
 

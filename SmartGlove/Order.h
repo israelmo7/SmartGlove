@@ -3,20 +3,21 @@
 #include <iostream>
 #include <vector>
 #include "InfoPacket.h"
+#include "Gesture.h"
 
-#define NONE        -1
-#define PAGE_UP      0
-#define PAGE_DOWN    1
-#define REFRESH		 2
-#define SNAPSHOT	 3
-#define PSMUSIC		 4
-#define PSONG		 5
-#define NSONG		 6
-#define BPAGE		 7
-#define FPAGE		 8
-#define VOLUMEM		 9
-#define VOLUMEU		 10
-#define VOLUMED		 11
+#define NONE        0
+#define PAGE_UP      1
+#define PAGE_DOWN    2
+#define REFRESH		 3
+#define SNAPSHOT	 4
+#define PSMUSIC		 5
+#define PSONG		 6
+#define NSONG		 7
+#define BPAGE		 8
+#define FPAGE		 9
+#define VOLUMEM		 10
+#define VOLUMEU		 11
+#define VOLUMED		 12
 
 using namespace std;
 
@@ -27,12 +28,12 @@ public:
 	void TheComparetion(string infoPackets[NUM_FINGERS]);
 	void runCommand(int c);
 	bool sendInput(WORD vk);
-	int fileLineToStringArray(string a[NUM_FINGERS + 1], string line);
+	void printLines();
+	int fileLineToStringArray (string line, string* save);
 	bool sameChecks(string a[NUM_FINGERS], string b[NUM_FINGERS]);
 	~Order();
 
 private:
 
-	vector<string*> _fileLines;
-	vector<int> _fileCommands;
+	vector<Gesture*> _lines;
 };

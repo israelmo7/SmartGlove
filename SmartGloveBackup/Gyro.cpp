@@ -30,16 +30,16 @@ Gyro::~Gyro()
 /*
 Set the three values from string.
 Input:											 x         y        z
-str - Contains the three values of the Gyro. [4 digits|4 digits|4 digits], eg "-012+098-000"
+str - Contains the three values of the Gyro. [3 digits|3 digits|3 digits], eg "012098000"
 Output:
 none
 */
 void Gyro::setValues(string str)
 {
-
 	this->_x = atoi(str.substr(0, 3).c_str());
 	this->_y = atoi(str.substr(3, 3).c_str());
 	this->_z = atoi(str.substr(6, 3).c_str());
+
 }
 
 /*
