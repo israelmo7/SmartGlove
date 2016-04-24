@@ -5,10 +5,21 @@
 
 #define MIN_GRAVITY			7
 #define  MAX_NON_GRAVITY    2
+#define AXIS 3
 
-#define X val[0]
-#define Y val[1]
-#define Z val[2]
+//#define X val[0]
+//#define Y val[1]
+//#define Z val[2]
+
+#define X axis[0]
+#define Y axis[1]
+#define Z axis[2]
+#define NEW_X newAxis[0]
+#define NEW_Y newAxis[1]
+#define NEW_Z newAxis[2]
+#define X_STATE _stateA[0]
+#define Y_STATE _stateA[1]
+#define Z_STATE _stateA[2]
 
 #define ABS(a) ((a < 0)? a*-1: a)
 
@@ -30,7 +41,9 @@
 */
 Interpreter::Interpreter()
 {
-	this->_stateA = NONE;
+	this->X_STATE = NONE;
+	this->Y_STATE = NONE;
+	this->Z_STATE = NONE;
 	this->_first = true;
 	for (short int i = 0; i < NUM_FINGERS; i++)
 		this->_equalsSeq[i] = '0';
@@ -44,7 +57,9 @@ Interpreter::Interpreter()
 */
 Interpreter::Interpreter(InfoPacket p)
 {
-	this->_stateA = NONE;
+	this->X_STATE = NONE;
+	this->Y_STATE = NONE;
+	this->Z_STATE = NONE;
 	this->_first = true;
 	this->_lastPacket = p;
 
@@ -109,7 +124,9 @@ void Interpreter::clearAll()
 		this->_equalsSeq[i] = '0';
 		this->_symbolF[i].clear();
 	}
-	this->_stateA.clear();
+	this->X_STATE.clear();
+	this->Y_STATE.clear();
+	this->Z_STATE.clear();
 	this->_first = true;
 	//this->_lastPacket = 
 }
@@ -202,7 +219,9 @@ void Interpreter::saveTheSymbol(string *arr)
 	{
 		arr[i] = this->_symbolF[i];
 	}
-	arr[5] = this->_stateA;
+	arr[5] = this->X_STATE;
+	arr[6] = this->Y_STATE;
+	arr[7] = this->Z_STATE;
 }
 bool Interpreter::checkToEnd()
 {
@@ -227,46 +246,107 @@ void Interpreter::checkAccel(InfoPacket pack)
 	//val[1] = y
 	//val[2] = z
 
-	int val[3];
-	pack.getGyro().getVal(val);
+	//int val[3];
+	//pack.getGyro().getVal(val);
 
-	if (A_BIGGER_THAN_B_AND_C(X,Y,Z))								//(CHECK_ZERO(Y, Z) && CHECK_GRAVITY(X))
-	{
-		if (IS_POSITIVE(X))
-		{
-			this->_stateA = PALM_TO_ME;
+	//if (A_BIGGER_THAN_B_AND_C(X,Y,Z))								//(CHECK_ZERO(Y, Z) && CHECK_GRAVITY(X))
+	//{
+	//	if (IS_POSITIVE(X))
+	//	{
+	//		this->_stateA = PALM_TO_ME;
+	//	}
+	//	else
+	//	{
+	//		this->_stateA = NE_PALM_TO_ME;
+	//	}
+	//}
+	//else if (A_BIGGER_THAN_B_AND_C(Y, X, Z))						//(CHECK_ZERO(X, Z) && CHECK_GRAVITY(Y))
+	//{
+	//	if (IS_POSITIVE(Y))
+	//	{
+	//		this->_stateA = NE_PALM_TO_LEFT;
+	//	}
+	//	else
+	//	{
+	//		this->_stateA = PALM_TO_LEFT;
+	//	}
+	//}
+	//else if (A_BIGGER_THAN_B_AND_C(Z, Y, X))						//((CHECK_ZERO(X, Y) && CHECK_GRAVITY(Z)))
+	//{
+	//	if (IS_POSITIVE(Z))
+	//	{
+	//		this->_stateA = NE_PALM_TO_SKY;
+	//	}
+	//	else
+	//	{
+	//		this->_stateA = PALM_TO_SKY;
+	//	}
+	//}
+	int axis[AXIS], newAxis[AXIS];
+	this->_lastPacket.getGyro().getVal(axis);
+	pack.getGyro().getVal(newAxis);
+	int axisSum[AXIS] = { X - NEW_X, Y - NEW_Y, Z - NEW_Z };
+	//Check for X axis:
+	if (axisSum[0] > 0){
+		if (X_STATE[0]){
+			X_STATE.pop_back();
 		}
-		else
-		{
-			this->_stateA = NE_PALM_TO_ME;
-		}
+		X_STATE.push_back('f');
 	}
-	else if (A_BIGGER_THAN_B_AND_C(Y, X, Z))						//(CHECK_ZERO(X, Z) && CHECK_GRAVITY(Y))
-	{
-		if (IS_POSITIVE(Y))
-		{
-			this->_stateA = NE_PALM_TO_LEFT;
+	else if (axisSum[0] < 0){
+		if (X_STATE[0]){
+			X_STATE.pop_back();
 		}
-		else
-		{
-			this->_stateA = PALM_TO_LEFT;
-		}
+		X_STATE.push_back('b');
 	}
-	else if (A_BIGGER_THAN_B_AND_C(Z, Y, X))						//((CHECK_ZERO(X, Y) && CHECK_GRAVITY(Z)))
-	{
-		if (IS_POSITIVE(Z))
-		{
-			this->_stateA = NE_PALM_TO_SKY;
+	else{
+		if (X_STATE[0]){
+			X_STATE.pop_back();
 		}
-		else
-		{
-			this->_stateA = PALM_TO_SKY;
+		X_STATE.push_back(' ');
+	}
+	//Check for Y axis:
+	if (axisSum[1] > 0){
+		if (Y_STATE[0]){
+			Y_STATE.pop_back();
 		}
+		Y_STATE.push_back('l');
+	}
+	else if (axisSum[1] < 0){
+		if (Y_STATE[0]){
+			Y_STATE.pop_back();
+		}
+		Y_STATE.push_back('r');
+	}
+	else{
+		if (Y_STATE[0]){
+			Y_STATE.pop_back();
+		}
+		Y_STATE.push_back(' ');
+	}
+	//Check for Z axis:
+	if (axisSum[2] > 0){
+		if (Z_STATE[0]){
+			Z_STATE.pop_back();
+		}
+		Z_STATE.push_back('u');
+	}
+	else if (axisSum[2] < 0){
+		if (Z_STATE[0]){
+			Z_STATE.pop_back();
+		}
+		Z_STATE.push_back('d');
+	}
+	else{
+		if (Z_STATE[0]){
+			Z_STATE.pop_back();
+		}
+		Z_STATE.push_back(' ');
 	}
 }
 void Interpreter::showAccel()
 {
-	switch (this->_stateA[1])
+	/*switch (this->_stateA[1])
 	{
 	case 's':
 	{
@@ -310,5 +390,35 @@ void Interpreter::showAccel()
 	default:
 		cout << "None\n";
 		break;
+	}*/
+	//Show for X axis:
+	if (X_STATE[0] == 'f'){
+		cout << "X Axis: Palm Forward." << endl;
+	}
+	else if (X_STATE[0] == 'b'){
+		cout << "X Axis: Palm Backwards." << endl;
+	}
+	else{
+		cout << "X Axis: None." << endl;
+	}
+
+	//Show for Y axis:
+	if (Y_STATE[0] == 'l'){
+		cout << "Y Axis: Palm Left." << endl;
+	}
+	else if (Y_STATE[0] == 'r'){
+		cout << "Y Axis: Palm Right." << endl;
+	}
+	else{
+		cout << "Y Axis: None." << endl;
+	}
+	if (Z_STATE[0] == 'u'){
+		cout << "Z Axis: Palm Up." << endl;
+	}
+	else if (Z_STATE[0] == 'd'){
+		cout << "Z Axis: Palm Down." << endl;
+	}
+	else{
+		cout << "Z Axis: None." << endl;
 	}
 }

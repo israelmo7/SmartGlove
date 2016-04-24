@@ -32,7 +32,7 @@ public:
 private:
 	InfoPacket _lastPacket;			    // The last packet
 	string _symbolF[NUM_FINGERS];      // f = flex
-	string _stateA;					  // the Accel' state.
+	string _stateA[3];				  // the Accel' state.
 	char _equalsSeq[NUM_FINGERS];    // check for the end of the gesture.
 	bool _first;                    // check if its the first packet
 
