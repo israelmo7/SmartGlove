@@ -29,6 +29,7 @@ public:
 	void clearAll();
 	void checkAccel(InfoPacket pack);
 	void showAccel();
+	void showPress();
 private:
 	InfoPacket _lastPacket;			    // The last packet
 	string _symbolF[NUM_FINGERS];      // f = flex

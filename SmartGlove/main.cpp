@@ -44,6 +44,7 @@ int main()
 			//interPreter.showSeq();
 			//system("cls");
 			interPreter.showAccel();
+			interPreter.showPress();
 		}
 		else if (iResult == 0)
 		{		

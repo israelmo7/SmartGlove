@@ -32,6 +32,7 @@
 #define CHECK_GRAVITY(c) ((ABS(c) > MIN_GRAVITY)? true: false)
 #define IS_POSITIVE(a) ((a > 0)? true: false)
 
+
 /*
 	Ctor.
 	Input:
@@ -153,7 +154,7 @@ bool Interpreter::InfoPacketsArrayToCharsArray(InfoPacket newPacket)
 	if (this->_first)
 	{
 		this->_first = false;
-		//return false;
+		return false;
 	}
 	for (unsigned int i = 0; i < NUM_FINGERS; i++)
 	{
@@ -420,5 +421,12 @@ void Interpreter::showAccel()
 	}
 	else{
 		cout << "Z Axis: None." << endl;
+	}
+}
+
+void Interpreter::showPress()
+{
+	for (int i = 0; i < 5; i++){
+		cout << "Press " << i << ": " << this->_symbolF[i] << endl;
 	}
 }
