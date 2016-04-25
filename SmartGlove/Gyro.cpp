@@ -1,6 +1,8 @@
 #include "Gyro.h"
 #include <sstream>
 
+#define SIZE_OF_VALUE 3
+
 /*
 Ctor.
 Input:
@@ -37,9 +39,9 @@ none
 void Gyro::setValues(string str)
 {
 
-	this->_x = atoi(str.substr(0, 3).c_str());
-	this->_y = atoi(str.substr(3, 3).c_str());
-	this->_z = atoi(str.substr(6, 3).c_str());
+	this->_x = atoi(str.substr(0, SIZE_OF_VALUE).c_str());
+	this->_y = atoi(str.substr(3, SIZE_OF_VALUE).c_str());
+	this->_z = atoi(str.substr(6, SIZE_OF_VALUE).c_str());
 }
 
 /*

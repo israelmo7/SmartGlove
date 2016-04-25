@@ -6,7 +6,7 @@
 
 
 #define DEFAULT_BUFLEN 19 // Size of The packet
-#define FULL_SIZE 6 // 5 fingers + 1 Accel'
+#define FULL_SIZE 8 // 5 fingers + 3 Accel'
 
 using namespace std;
 
@@ -19,13 +19,13 @@ int main()
 	char recvbuf[DEFAULT_BUFLEN+1]; // More one for the NULL byte.
 	int iResult;
 	SOCKET ClientSocket = Traffic().getSocket();
-		
+	
 
 	// Receive until the peer shuts down the connection
 	do {
 
 		iResult = recv(ClientSocket, recvbuf, DEFAULT_BUFLEN, 0); // Recv Data from Client.
-		recvbuf[19] = NULL;
+		recvbuf[DEFAULT_BUFLEN] = NULL;
 		cout << recvbuf << endl;
 		if (iResult > 0) 
 		{

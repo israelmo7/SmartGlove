@@ -41,9 +41,9 @@
 */
 Interpreter::Interpreter()
 {
-	this->X_STATE = NONE;
-	this->Y_STATE = NONE;
-	this->Z_STATE = NONE;
+	this->X_STATE = "";
+	this->Y_STATE = "";
+	this->Z_STATE = "";
 	this->_first = true;
 	for (short int i = 0; i < NUM_FINGERS; i++)
 		this->_equalsSeq[i] = '0';
@@ -57,9 +57,9 @@ Interpreter::Interpreter()
 */
 Interpreter::Interpreter(InfoPacket p)
 {
-	this->X_STATE = NONE;
-	this->Y_STATE = NONE;
-	this->Z_STATE = NONE;
+	this->X_STATE = "";
+	this->Y_STATE = "";
+	this->Z_STATE = "";
 	this->_first = true;
 	this->_lastPacket = p;
 
@@ -153,7 +153,7 @@ bool Interpreter::InfoPacketsArrayToCharsArray(InfoPacket newPacket)
 	if (this->_first)
 	{
 		this->_first = false;
-		return false;
+		//return false;
 	}
 	for (unsigned int i = 0; i < NUM_FINGERS; i++)
 	{
@@ -285,7 +285,7 @@ void Interpreter::checkAccel(InfoPacket pack)
 	int axis[AXIS], newAxis[AXIS];
 	this->_lastPacket.getGyro().getVal(axis);
 	pack.getGyro().getVal(newAxis);
-	int axisSum[AXIS] = { X - NEW_X, Y - NEW_Y, Z - NEW_Z };
+	int axisSum[AXIS] = { NEW_X - X, NEW_Y - Y, NEW_Z - Z };
 	//Check for X axis:
 	if (axisSum[0] > 0){
 		if (X_STATE[0]){
