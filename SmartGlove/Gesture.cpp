@@ -11,18 +11,21 @@ Gesture::Gesture()
 	{
 		this->_fingers[i] = "";
 	}
-	this->_acceleration = "n";
+	*this->_acceleration = "n";
 	this->_commandNumber = -1;
 }
 Gesture::Gesture(string fingers[NUM_FINGERS], int commandNumber, string acceleration)
 {
 	this->_fingers = new string[NUM_FINGERS];
-	this->_acceleration = acceleration;
+	*this->_acceleration = acceleration;
 	this->_commandNumber = commandNumber;
 
 	for (int i = 0; i < NUM_FINGERS; i++)
 	{
 		this->_fingers[i] = fingers[i];
+	}
+	for (int i = 0; i < 5; i++){
+		cout << this->_fingers[i] << " ";
 	}
 }
 Gesture::~Gesture()

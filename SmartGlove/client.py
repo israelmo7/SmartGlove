@@ -22,7 +22,7 @@ def main():
 	#values6 = ("10", "20", "10", "90", "80", "+90+45-78")
 	
 
-	arr = ["".join(values1), "".join(values2), "".join(values3)]#\
+	arr = ["".join(values1), "".join(values2), "".join(values3), "".join(values3), "".join(values3), "".join(values3)]
 	#, "".join(values4), "".join(values5), "".join(values6),"".join(values6),"".join(values6),"".join(values6)]
 
 

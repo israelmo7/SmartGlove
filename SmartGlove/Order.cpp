@@ -29,9 +29,11 @@ Order::Order()
 		while (getline(file, line))
 		{
 			string tempStr[6] = {""};
+			string accel = { "" };
 			int commandNumber;
 			commandNumber = this->fileLineToStringArray(line, tempStr);
-			this->_lines.push_back(new Gesture(tempStr, commandNumber, "n"));
+			accel = this->fileLineToAccel(line);
+			this->_lines.push_back(new Gesture(tempStr, commandNumber, accel));
 		}
 
 		file.close();
@@ -63,7 +65,21 @@ void Order::TheComparetion(string* infoPackets)
 	for (unsigned int i = 0; i < this->_lines.size(); i++)
 	{
 		cout << infoPackets[5] << " - " << this->_lines[i]->_acceleration << endl;
-		if (sameChecks(this->_lines[i]->_fingers, infoPackets) && infoPackets[5] == this->_lines[i]->_acceleration)
+		//string* a[2] = { this->_lines[i]->_fingers, this->_lines[i]->_acceleration };
+		//string* b[2];
+		//for (int i = 0; i < infoPackets->length(); i++){
+		//	if ((*infoPackets)[i] > 'a' && (*infoPackets)[i] < 'z'){
+
+		//	}
+		//}
+		string a;
+		for (int j = 0; i < this->_lines[j]->_fingers->length(); j++){
+			a.push_back(this->_lines[i]->_fingers->at(j));
+		}
+		for (int j = 0; i < this->_lines[j]->_acceleration->length(); j++){
+			a.push_back(this->_lines[i]->_acceleration->at(j));
+		}
+		if (sameChecks(a, *infoPackets) && infoPackets[5] == *this->_lines[i]->_acceleration)
 		{
 			this->runCommand(this->_lines[i]->_commandNumber);
 		}
@@ -81,8 +97,11 @@ int Order::fileLineToStringArray(string line, string* save)
 {
 	int cnt = 0;
 
-	for (unsigned int i = 3; i < line.length() - 1; i++)
+	for (unsigned int i = 3; i < line.length(); i++)
 	{
+		if (line[i]  > 'a' && line[i] < 'z'){	//FOR THE ACCEL
+			break;
+		}
 		if (line[i] == '*')
 		{
 			cnt++;
@@ -101,22 +120,35 @@ int Order::fileLineToStringArray(string line, string* save)
 	}
 	return atoi(line.substr(0, 3).c_str());
 }
+
+string Order::fileLineToAccel(string line)
+{
+	string ret = { "" };
+	for (int i = 3; i < line.length(); i++){
+		if (line[i] > 'a' && line[i] < 'z'){
+			ret.push_back(line[i]);
+		}
+	}
+	return ret;
+}
 /*
 	The function checks if both sames.
 	Input:
-		string a[NUM_FINGERS] - the first
-		string b[NUM_FINGERS] - the seconed
+		string a[NUM_FINGERS+NUM_ACCEL] - the first
+		string b[NUM_FINGERS+NUM_ACCEL] - the seconed
 	Output:
 		true if same and false if not.
 */
-bool Order::sameChecks(string a[NUM_FINGERS], string b[NUM_FINGERS])
+bool Order::sameChecks(string a, string b)
 {
-	for (int i = 0; i < NUM_FINGERS; i++)
-	{
-//		cout << a[i] << " == " << b[i] << "\n";
-		if (a[i] != b[i])
+	if (a.length() == b.length()){
+		for (int i = 0; i < a.length(); i++)
 		{
-			return false;
+			//		cout << a[i] << " == " << b[i] << "\n";
+			if (a[i] != b[i])
+			{
+				return false;
+			}
 		}
 	}
 	return true;

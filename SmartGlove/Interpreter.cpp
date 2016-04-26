@@ -42,9 +42,9 @@
 */
 Interpreter::Interpreter()
 {
-	this->X_STATE = "";
-	this->Y_STATE = "";
-	this->Z_STATE = "";
+	this->X_STATE = "n";
+	this->Y_STATE = "n";
+	this->Z_STATE = "n";
 	this->_first = true;
 	for (short int i = 0; i < NUM_FINGERS; i++)
 		this->_equalsSeq[i] = '0';
@@ -58,9 +58,9 @@ Interpreter::Interpreter()
 */
 Interpreter::Interpreter(InfoPacket p)
 {
-	this->X_STATE = "";
-	this->Y_STATE = "";
-	this->Z_STATE = "";
+	this->X_STATE = "n";
+	this->Y_STATE = "n";
+	this->Z_STATE = "n";
 	this->_first = true;
 	this->_lastPacket = p;
 
@@ -304,7 +304,7 @@ void Interpreter::checkAccel(InfoPacket pack)
 		if (X_STATE[0]){
 			X_STATE.pop_back();
 		}
-		X_STATE.push_back(' ');
+		X_STATE.push_back('n');
 	}
 	//Check for Y axis:
 	if (axisSum[1] > 0){
@@ -323,7 +323,7 @@ void Interpreter::checkAccel(InfoPacket pack)
 		if (Y_STATE[0]){
 			Y_STATE.pop_back();
 		}
-		Y_STATE.push_back(' ');
+		Y_STATE.push_back('n');
 	}
 	//Check for Z axis:
 	if (axisSum[2] > 0){
@@ -342,7 +342,7 @@ void Interpreter::checkAccel(InfoPacket pack)
 		if (Z_STATE[0]){
 			Z_STATE.pop_back();
 		}
-		Z_STATE.push_back(' ');
+		Z_STATE.push_back('n');
 	}
 }
 void Interpreter::showAccel()

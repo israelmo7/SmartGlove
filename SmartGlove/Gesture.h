@@ -13,6 +13,6 @@ public:
 	//private:
 	string* _fingers = new string[NUM_FINGERS];
 	int _commandNumber;
-	string _acceleration;
+	string* _acceleration = new string;
 
 };

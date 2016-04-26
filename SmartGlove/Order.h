@@ -29,7 +29,8 @@ public:
 	bool sendInput(WORD vk);
 	void printLines();
 	int fileLineToStringArray (string line, string* save);
-	bool sameChecks(string a[NUM_FINGERS], string b[NUM_FINGERS]);
+	string fileLineToAccel(string line);
+	bool sameChecks(string a, string b);
 	~Order();
 
 private:
