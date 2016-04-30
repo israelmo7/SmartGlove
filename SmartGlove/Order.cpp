@@ -3,9 +3,9 @@
 #include <string>
 #include <fstream>
 
-#define MINSPEEDMOVE 0
-#define FINSPEEDMOVE 70
-#define MAXSPEEDMOVE 100
+//#define MINSPEEDMOVE 0
+//#define FINSPEEDMOVE 70
+//#define MAXSPEEDMOVE 100
 #define PATHFILE "Profile.txt"
 
 /*
@@ -28,12 +28,10 @@ Order::Order()
 
 		while (getline(file, line))
 		{
-			string tempStr[6] = {""};
-			string accel = { "" };
+			string tempStr[8] = {""};
 			int commandNumber;
 			commandNumber = this->fileLineToStringArray(line, tempStr);
-			accel = this->fileLineToAccel(line);
-			this->_lines.push_back(new Gesture(tempStr, commandNumber, accel));
+			this->_lines.push_back(new Gesture(tempStr, commandNumber));
 		}
 
 		file.close();
@@ -59,27 +57,17 @@ Order::~Order()
 }
 
 
-void Order::TheComparetion(string* infoPackets)
+void Order::TheComparation(string* infoPackets)
 {
 
 	for (unsigned int i = 0; i < this->_lines.size(); i++)
 	{
-		cout << infoPackets[5] << " - " << this->_lines[i]->_acceleration << endl;
-		//string* a[2] = { this->_lines[i]->_fingers, this->_lines[i]->_acceleration };
-		//string* b[2];
-		//for (int i = 0; i < infoPackets->length(); i++){
-		//	if ((*infoPackets)[i] > 'a' && (*infoPackets)[i] < 'z'){
-
-		//	}
-		//}
-		string a;
-		for (int j = 0; i < this->_lines[j]->_fingers->length(); j++){
-			a.push_back(this->_lines[i]->_fingers->at(j));
-		}
-		for (int j = 0; i < this->_lines[j]->_acceleration->length(); j++){
-			a.push_back(this->_lines[i]->_acceleration->at(j));
-		}
-		if (sameChecks(a, *infoPackets) && infoPackets[5] == *this->_lines[i]->_acceleration)
+		//cout << infoPackets[5] << " - " << this->_lines[i]->_acceleration << endl;
+		vector<string> line;
+		line.reserve(NUM_FINGERS + NUM_AXIS);
+		line.insert(line.end(), this->_lines[i]->_fingers.begin(), this->_lines[i]->_fingers.end());
+		line.insert(line.end(), this->_lines[i]->_acceleration.begin(), this->_lines[i]->_acceleration.end());
+		if (sameChecks(line, infoPackets) /*&& infoPackets[5] == this->_lines[i]->_acceleration*/)
 		{
 			this->runCommand(this->_lines[i]->_commandNumber);
 		}
@@ -99,9 +87,6 @@ int Order::fileLineToStringArray(string line, string* save)
 
 	for (unsigned int i = 3; i < line.length(); i++)
 	{
-		if (line[i]  > 'a' && line[i] < 'z'){	//FOR THE ACCEL
-			break;
-		}
 		if (line[i] == '*')
 		{
 			cnt++;
@@ -120,35 +105,22 @@ int Order::fileLineToStringArray(string line, string* save)
 	}
 	return atoi(line.substr(0, 3).c_str());
 }
-
-string Order::fileLineToAccel(string line)
-{
-	string ret = { "" };
-	for (int i = 3; i < line.length(); i++){
-		if (line[i] > 'a' && line[i] < 'z'){
-			ret.push_back(line[i]);
-		}
-	}
-	return ret;
-}
 /*
 	The function checks if both sames.
 	Input:
-		string a[NUM_FINGERS+NUM_ACCEL] - the first
-		string b[NUM_FINGERS+NUM_ACCEL] - the seconed
+		vector<string> a	  - the first
+		string b[NUM_FINGERS] - the seconed
 	Output:
 		true if same and false if not.
 */
-bool Order::sameChecks(string a, string b)
+bool Order::sameChecks(vector<string> a, string b[NUM_FINGERS])
 {
-	if (a.length() == b.length()){
-		for (int i = 0; i < a.length(); i++)
+	for (int i = 0; i < NUM_FINGERS; i++)
+	{
+//		cout << a[i] << " == " << b[i] << "\n";
+		if (a[i] != b[i])
 		{
-			//		cout << a[i] << " == " << b[i] << "\n";
-			if (a[i] != b[i])
-			{
-				return false;
-			}
+			return false;
 		}
 	}
 	return true;

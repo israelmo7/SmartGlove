@@ -1,6 +1,6 @@
 #include "InfoPacket.h"
 #define SIZE_OF_VALUE 2
-#define SIZE_OF_GYRO_VALUE 9
+
 /*
 Ctor.
 Input:
@@ -29,7 +29,7 @@ InfoPacket::InfoPacket(string str)
 	this->_pressFingers[4] = atoi(str.substr(8, SIZE_OF_VALUE).c_str());    // P5
 
 	//G(1-5)
-	this->_gyroFingers.setValues(str.substr(10, SIZE_OF_GYRO_VALUE).c_str());     // G1
+	this->_gyroFingers.setValues(str.substr(10 , 9).c_str());     // G1
 
 }
 

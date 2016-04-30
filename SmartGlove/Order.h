@@ -24,13 +24,12 @@ class Order
 {
 public:
 	Order();
-	void TheComparetion(string *infoPackets);
+	void TheComparation(string *infoPackets);
 	void runCommand(int c);
 	bool sendInput(WORD vk);
 	void printLines();
 	int fileLineToStringArray (string line, string* save);
-	string fileLineToAccel(string line);
-	bool sameChecks(string a, string b);
+	bool sameChecks(vector<string> a, string b[NUM_FINGERS + NUM_AXIS]);
 	~Order();
 
 private:

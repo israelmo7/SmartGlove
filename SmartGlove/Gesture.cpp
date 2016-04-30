@@ -9,36 +9,73 @@ Gesture::Gesture()
 {
 	for (int i = 0; i < NUM_FINGERS; i++)
 	{
-		this->_fingers[i] = "";
+		this->_fingers.push_back("");
 	}
-	*this->_acceleration = "n";
+	for (int i = 0; i < NUM_AXIS; i++)
+	{
+		this->_acceleration.push_back("");
+	}
 	this->_commandNumber = -1;
 }
-Gesture::Gesture(string fingers[NUM_FINGERS], int commandNumber, string acceleration)
+Gesture::Gesture(string fingers[NUM_FINGERS], int commandNumber, string acceleration[NUM_AXIS])
 {
-	this->_fingers = new string[NUM_FINGERS];
-	*this->_acceleration = acceleration;
+	//this->_fingers = new string[NUM_FINGERS];
+	//this->_acceleration = new string[NUM_AXIS];
 	this->_commandNumber = commandNumber;
 
 	for (int i = 0; i < NUM_FINGERS; i++)
 	{
 		this->_fingers[i] = fingers[i];
 	}
-	for (int i = 0; i < 5; i++){
-		cout << this->_fingers[i] << " ";
+	for (int i = 0; i < NUM_AXIS; i++)
+	{
+		this->_acceleration[i] = _acceleration[i];
 	}
 }
+Gesture::Gesture(string data[NUM_FINGERS + NUM_AXIS], int commandNumber)
+{
+	//this->_fingers = new string[NUM_FINGERS];
+	//this->_acceleration = new string[NUM_AXIS];
+	this->_commandNumber = commandNumber;
+
+	if (this->_fingers.size() == 0){
+		for (int i = 0; i < NUM_FINGERS; i++)
+		{
+			this->_fingers.push_back("");
+		}
+	}
+	for (int i = 0; i < NUM_FINGERS; i++)
+	{
+		this->_fingers[i] = data[i];
+	}
+
+	if (this->_acceleration.size() == 0){
+		for (int i = 0; i < NUM_AXIS; i++)
+		{
+			this->_acceleration.push_back("");
+		}
+	}
+	for (int i = 0; i < NUM_AXIS; i++)
+	{
+		this->_acceleration[i] = data[i + NUM_FINGERS];
+	}
+}
+
 Gesture::~Gesture()
 {
-	delete this->_fingers;
+	//delete this->_fingers;
 }
 void Gesture::printGesture()
 {
-	cout << "Acceleration: " << this->_acceleration << endl;
+	//cout << "Acceleration: " << this->_acceleration << endl;
 	cout << "CommandNumber: " << this->_commandNumber << endl;
 
 	for (int i = 0; i < NUM_FINGERS; i++)
 	{
 		cout << "finger(" << i+1 << ") - " << this->_fingers[i].c_str() << endl;
+	}
+	for (int i = 0; i < NUM_AXIS; i++)
+	{
+		cout << "axis(" << i + 1 << ") - " << this->_acceleration[i].c_str() << endl;
 	}
 }

@@ -10,6 +10,7 @@ public:
 	void setValues(string str);
 	string getValues();
 	void getVal(int vals[3]);
+	int* getVal();
 private:
 	int _x,
 		_y,

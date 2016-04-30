@@ -6,7 +6,7 @@
 
 
 #define DEFAULT_BUFLEN 19 // Size of The packet
-#define FULL_SIZE 8 // 5 fingers + 3 Accel'
+#define FULL_SIZE 8 // 5 fingers + 1 Accel'
 
 using namespace std;
 
@@ -19,7 +19,7 @@ int main()
 	char recvbuf[DEFAULT_BUFLEN+1]; // More one for the NULL byte.
 	int iResult;
 	SOCKET ClientSocket = Traffic().getSocket();
-	
+		
 
 	// Receive until the peer shuts down the connection
 	do {
@@ -43,8 +43,7 @@ int main()
 
 			//interPreter.showSeq();
 			//system("cls");
-			interPreter.showAccel();
-			interPreter.showPress();
+			interPreter.showSymbols();
 		}
 		else if (iResult == 0)
 		{		
@@ -109,5 +108,5 @@ void closeSocket(SOCKET s)
 void sendToOrder(string temp[FULL_SIZE])
 {
 	Order doTheCommands;
-	doTheCommands.TheComparetion(temp);
+	doTheCommands.TheComparation(temp);
 }
