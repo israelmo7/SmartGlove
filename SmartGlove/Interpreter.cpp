@@ -175,10 +175,10 @@ bool Interpreter::InfoPacketsArrayToCharsArray(InfoPacket newPacket)
 			this->_equalsSeq[i] += 1;
 			if (this->_symbol[i].length())
 			{
-				if (this->_symbol[i][this->_symbol[i].length() - 1] != '=')
-				{
+				//if (this->_symbol[i][this->_symbol[i].length() - 1] != '=')
+				//{
 					this->_symbol[i].push_back('=');
-				}
+				//}
 			}
 		}
 	}
@@ -188,9 +188,9 @@ bool Interpreter::InfoPacketsArrayToCharsArray(InfoPacket newPacket)
 	int newAxis[3] = { 0 };
 	newPacket.getGyro().getVal(newAxis);
 	int sumAxis[NUM_AXIS];
-	sumAxis[0] = newAxis[0] - axis[0];
-	sumAxis[1] = newAxis[1] - axis[1];
-	sumAxis[2] = newAxis[2] - axis[2];
+	sumAxis[0] = axis[0] - newAxis[0];
+	sumAxis[1] = axis[1] - newAxis[1];
+	sumAxis[2] = axis[2] - newAxis[2];
 	for (unsigned int i = 0; i < NUM_AXIS; i++)
 	{
 		//if (this->_equalsSeq[i] > '3')
@@ -226,10 +226,10 @@ bool Interpreter::InfoPacketsArrayToCharsArray(InfoPacket newPacket)
 			this->_equalsSeq[i + 5] += 1;
 			if (this->_symbol[i + 5].length())
 			{
-				if (this->_symbol[i + 5][this->_symbol[i + 5].length() - 1] != '=')
-				{
+				//if (this->_symbol[i + 5][this->_symbol[i + 5].length() - 1] != '=')
+				//{
 					this->_symbol[i + 5].push_back('=');
-				}
+				//}
 			}
 		}
 	}
@@ -240,8 +240,11 @@ bool Interpreter::InfoPacketsArrayToCharsArray(InfoPacket newPacket)
 	{
 		for (int i = 0; i < NUM_FINGERS + NUM_AXIS; i++)
 		{
-			if (this->_symbol[i].length() > 1)
-				this->_symbol[i].pop_back();
+			if (this->_symbol[i].length()){
+				for (int j = 0; j < 3; j++){
+					this->_symbol[i].pop_back();
+				}
+			}
 		}
 		return true;
 	}

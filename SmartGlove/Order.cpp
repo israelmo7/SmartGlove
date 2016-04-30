@@ -113,9 +113,9 @@ int Order::fileLineToStringArray(string line, string* save)
 	Output:
 		true if same and false if not.
 */
-bool Order::sameChecks(vector<string> a, string b[NUM_FINGERS])
+bool Order::sameChecks(vector<string> a, string b[NUM_FINGERS + NUM_AXIS])
 {
-	for (int i = 0; i < NUM_FINGERS; i++)
+	for (int i = 0; i < NUM_FINGERS + NUM_AXIS; i++)
 	{
 //		cout << a[i] << " == " << b[i] << "\n";
 		if (a[i] != b[i])

@@ -42,7 +42,7 @@ int main()
 			//interPreter.InfoPacketsDetails();
 
 			//interPreter.showSeq();
-			//system("cls");
+			system("cls");
 			interPreter.showSymbols();
 		}
 		else if (iResult == 0)
@@ -53,6 +53,7 @@ int main()
 			interPreter.saveTheSymbol(temp);
 			interPreter.InfoPacketsDetails();
 			sendToOrder(temp);*/
+			system("cls");
 			printf("Connection closing...\n");
 		}
 		else  
