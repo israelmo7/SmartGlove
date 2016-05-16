@@ -17,6 +17,8 @@
 #define VOLUMEM		 10
 #define VOLUMEU		 11
 #define VOLUMED		 12
+#define MOUSEMODE    13
+#define DRAGMODE     14
 
 using namespace std;
 
@@ -24,8 +26,8 @@ class Order
 {
 public:
 	Order();
-	void TheComparation(string *infoPackets);
-	void runCommand(int c);
+	void TheComparation(string *infoPackets, SOCKET s);
+	void runCommand(int c, SOCKET s);
 	bool sendInput(WORD vk);
 	void printLines();
 	int fileLineToStringArray (string line, string* save);

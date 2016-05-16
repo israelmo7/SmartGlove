@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <vector>
 #define NUM_FINGERS 5
@@ -11,9 +12,9 @@ public:
 	Gesture(string fingers[NUM_FINGERS], int commandNumber, string acceleration[NUM_AXIS]);
 	Gesture(string data[NUM_FINGERS + NUM_AXIS], int commandNumber);
 	~Gesture();
-	void printGesture();
-
-	//private:
+	void printGesture() const;
+	
+//private:
 	//string* _fingers = new string[NUM_FINGERS];
 	vector<string> _fingers;
 	int _commandNumber;

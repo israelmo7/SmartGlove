@@ -32,7 +32,7 @@ Pressure::~Pressure()
 	Output
 		int - the value
 */
-int Pressure::getValue()
+int Pressure::getValue() const
 {
 	return this->_value;
 }

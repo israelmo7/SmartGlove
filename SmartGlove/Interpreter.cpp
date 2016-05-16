@@ -10,6 +10,8 @@
 //#define Y val[1]
 //#define Z val[2]
 
+#define MAX_OFFSET 5
+
 #define ABS(a) ((a < 0)? a*-1: a)
 
 #define A_BIGGER_THAN_B(a,b) ((ABS(a) > ABS(b))? true: false)
@@ -74,7 +76,9 @@ Interpreter::~Interpreter()
 */
 bool Interpreter::addInfoPacket(InfoPacket p)
 {
-	bool retValue = this->InfoPacketsArrayToCharsArray(p);
+	bool retValue;
+
+	retValue = this->InfoPacketsArrayToCharsArray(p);
 	this->_lastPacket = p;
 
 	return retValue;
@@ -146,7 +150,7 @@ bool Interpreter::InfoPacketsArrayToCharsArray(InfoPacket newPacket)
 		//}
 		int sum = this->_lastPacket.getPress(i).getValue() - newPacket.getPress(i).getValue();
 
-		if (sum > 0)
+		if (sum > MAX_OFFSET)
 		{
 			this->_equalsSeq[i] = '0';
 
@@ -158,7 +162,7 @@ bool Interpreter::InfoPacketsArrayToCharsArray(InfoPacket newPacket)
 			else
 				this->_symbol[i].push_back('-');
 		}
-		else if (sum < 0)
+		else if (sum < MAX_OFFSET)
 		{
 			this->_equalsSeq[i] = '0';
 
@@ -175,10 +179,10 @@ bool Interpreter::InfoPacketsArrayToCharsArray(InfoPacket newPacket)
 			this->_equalsSeq[i] += 1;
 			if (this->_symbol[i].length())
 			{
-				//if (this->_symbol[i][this->_symbol[i].length() - 1] != '=')
-				//{
+				if (this->_symbol[i][this->_symbol[i].length() - 1] != '=')
+				{
 					this->_symbol[i].push_back('=');
-				//}
+				}
 			}
 		}
 	}
@@ -188,16 +192,16 @@ bool Interpreter::InfoPacketsArrayToCharsArray(InfoPacket newPacket)
 	int newAxis[3] = { 0 };
 	newPacket.getGyro().getVal(newAxis);
 	int sumAxis[NUM_AXIS];
-	sumAxis[0] = axis[0] - newAxis[0];
-	sumAxis[1] = axis[1] - newAxis[1];
-	sumAxis[2] = axis[2] - newAxis[2];
+	sumAxis[0] = newAxis[0] - axis[0];
+	sumAxis[1] = newAxis[1] - axis[1];
+	sumAxis[2] = newAxis[2] - axis[2];
 	for (unsigned int i = 0; i < NUM_AXIS; i++)
 	{
 		//if (this->_equalsSeq[i] > '3')
 		//{
 		//	this->_equalsSeq[i] = '3';
 		//}
-		if (sumAxis[i] > 0)
+		if (sumAxis[i] > MAX_OFFSET)
 		{
 			this->_equalsSeq[i + 5] = '0';
 
@@ -209,7 +213,7 @@ bool Interpreter::InfoPacketsArrayToCharsArray(InfoPacket newPacket)
 			else
 				this->_symbol[i + 5].push_back('-');
 		}
-		else if (sumAxis[i] < 0)
+		else if (sumAxis[i] < MAX_OFFSET)
 		{
 			this->_equalsSeq[i + 5] = '0';
 
@@ -226,10 +230,10 @@ bool Interpreter::InfoPacketsArrayToCharsArray(InfoPacket newPacket)
 			this->_equalsSeq[i + 5] += 1;
 			if (this->_symbol[i + 5].length())
 			{
-				//if (this->_symbol[i + 5][this->_symbol[i + 5].length() - 1] != '=')
-				//{
+				if (this->_symbol[i + 5][this->_symbol[i + 5].length() - 1] != '=')
+				{
 					this->_symbol[i + 5].push_back('=');
-				//}
+				}
 			}
 		}
 	}
@@ -240,11 +244,8 @@ bool Interpreter::InfoPacketsArrayToCharsArray(InfoPacket newPacket)
 	{
 		for (int i = 0; i < NUM_FINGERS + NUM_AXIS; i++)
 		{
-			if (this->_symbol[i].length()){
-				for (int j = 0; j < 3; j++){
-					this->_symbol[i].pop_back();
-				}
-			}
+			if (this->_symbol[i].length() > 1)
+				this->_symbol[i].pop_back();
 		}
 		return true;
 	}

@@ -25,28 +25,35 @@ def main():
 	arr = ["".join(values1), "".join(values2), "".join(values3), "".join(values3), "".join(values3), "".join(values3)]
 	#, "".join(values4), "".join(values5), "".join(values6),"".join(values6),"".join(values6),"".join(values6)]
 
+	ax = 0
+	ay = 0
+	my_soc.send("0000000000+00+00+00")
+	my_soc.send("0000000000+00+00+00")
+      
 
+	while(True):
 
-	for i in arr:
-		my_soc.send(i)
+                
+		x = raw_input("Enter Axis: ")
+		if x == "e" or x == "E":
+			break
+		sigh = raw_input("Enter sigh: ")
+
+		if 'x' in x or 'X' in x: # == "X" or x == "x":
+			if sigh == "+":
+				ax += 1
+			elif sigh == "-":
+				ax -= 1
+				
+		if  'y' in x or 'Y' in x: #x == "Y" or x == "y":
+			if sigh == "+":
+				ay += 1
+			elif sigh == "-":
+				ay -= 1
+			
 		
-	#values1 = ("-100", "+020", "+080", "+070", "+070", "-123+456-789")
-	#values2 = ("-050", "+020", "+080", "+080", "+070", "-123+456-789")
-
-	#values3 = ("-040", "+020", "+080", "+080", "+070", "-123+456-789")
-
-	#values4 = ("-040", "+020", "+080", "+080", "+070", "-123+456-789")
-
-	#values5 = ("-040", "+020", "+080", "+080", "+070", "-123+456-789")
-
-	#values6 = ("+100", "+020", "+080", "+090", "+070", "-123+456-789")
-	
-
-	#arr = ["".join(values1),"".join(values1),"".join(values1),"".join(values1),"".join(values1),"".join(values1),"".join(values1),"".join(values1),"".join(values1),"".join(values1),"".join(values1),"".join(values1),"".join(values1),"".join(values1), "".join(values2), "".join(values3)\
-	#, "".join(values4), "".join(values5), "".join(values6),"".join(values6),"".join(values6),"".join(values6)]
-	
-	#for i in arr:
-	#	my_soc.send(i)
+		temp = "0000000000" + ("+" if ax >= 0 else "-")+ str(abs(ax)).zfill(2) + ("+" if ay >= 0 else "-")+ str(abs(ay)).zfill(2) + "+00"
+		my_soc.send(temp)      
 
 	my_soc.close()
 

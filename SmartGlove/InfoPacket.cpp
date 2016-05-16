@@ -1,6 +1,7 @@
 #include "InfoPacket.h"
 #define SIZE_OF_VALUE 2
-
+#define BIG_OR_NOT(a, b) ((a > b)? "+" : "-")
+#define SAME_OR_NOT(a,b) ((a == b)? "=": BIG_OR_NOT(a,b))
 /*
 Ctor.
 Input:
@@ -52,7 +53,7 @@ none
 Output:
 none
 */
-void InfoPacket::showDetails()
+void InfoPacket::showDetails() const
 {
 	cout << "Accelerometer: \n" << _gyroFingers.getValues().c_str();
 	cout << "Finger 1: \nPressure = " << _pressFingers[0].getValue() << "%\n";
@@ -62,12 +63,12 @@ void InfoPacket::showDetails()
 	cout << "Finger 5: \nPressure = " << _pressFingers[4].getValue() << "%\n";
 }
 
-Gyro InfoPacket::getGyro()
+Gyro InfoPacket::getGyro() const
 {
 	return this->_gyroFingers;
 }
 
-Pressure InfoPacket::getPress(int fingerNum)
+Pressure InfoPacket::getPress(int fingerNum) const
 {
 	Pressure pValue;
 
@@ -81,6 +82,28 @@ Pressure InfoPacket::getPress(int fingerNum)
 	}
 
 	return pValue;
+}
+Gesture InfoPacket::operator-(InfoPacket other) const
+{
+	int arrOne[3],
+		arrTwo[3];
+	Gesture g = Gesture();
+
+	this->_gyroFingers.getVal(arrOne);
+	other._gyroFingers.getVal(arrTwo);
+	g._acceleration[0] = (SAME_OR_NOT(arrOne[0], arrTwo[0]));
+	g._acceleration[1] = (SAME_OR_NOT(arrOne[1], arrTwo[1]));
+	g._acceleration[2] = (SAME_OR_NOT(arrOne[2], arrTwo[2]));
+
+
+	g._fingers[0] = (SAME_OR_NOT(this->getPress(0).getValue(), other.getPress(0).getValue()));
+	g._fingers[1] = (SAME_OR_NOT(this->getPress(1).getValue(), other.getPress(1).getValue()));
+	g._fingers[2] = (SAME_OR_NOT(this->getPress(2).getValue(), other.getPress(2).getValue()));
+	g._fingers[3] = (SAME_OR_NOT(this->getPress(3).getValue(), other.getPress(3).getValue()));
+	g._fingers[4] = (SAME_OR_NOT(this->getPress(4).getValue(), other.getPress(4).getValue()));
+
+
+	return g;
 }
 /*
 The functios returns the pressure of some finger.

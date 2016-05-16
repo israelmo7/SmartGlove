@@ -2,7 +2,6 @@
 #include <iostream>
 #include "Traffic.h"
 #include "Order.h"
-#include <ctime>
 
 
 #define DEFAULT_BUFLEN 19 // Size of The packet
@@ -11,10 +10,11 @@
 using namespace std;
 
 void closeSocket(SOCKET s);
-void sendToOrder(string temp[FULL_SIZE]);
+void sendToOrder(string temp[FULL_SIZE], SOCKET s);
 
 int main()
 {
+	bool lastOne;
 	Interpreter interPreter = Interpreter();
 	char recvbuf[DEFAULT_BUFLEN+1]; // More one for the NULL byte.
 	int iResult;
@@ -26,9 +26,10 @@ int main()
 
 		iResult = recv(ClientSocket, recvbuf, DEFAULT_BUFLEN, 0); // Recv Data from Client.
 		recvbuf[DEFAULT_BUFLEN] = NULL;
-		cout << recvbuf << endl;
+		//cout << recvbuf << endl;
 		if (iResult > 0) 
 		{
+			lastOne = true;
 			InfoPacket temPacket = InfoPacket(recvbuf); // Make InfoPacket from the Data.
 
 			if (interPreter.addInfoPacket(temPacket)) // Check if the Gesture is done.
@@ -36,25 +37,23 @@ int main()
 				cout << "In !\n";
 				string toSend[FULL_SIZE];
 				interPreter.saveTheSymbol(toSend); // Save the "Symbol" in 'toSend'.
-				sendToOrder(toSend);
+				sendToOrder(toSend, ClientSocket);
 				interPreter.clearAll();				// Clear the InterPreter.
 			}
-			//interPreter.InfoPacketsDetails();
-
-			//interPreter.showSeq();
-			system("cls");
-			interPreter.showSymbols();
 		}
 		else if (iResult == 0)
 		{		
 		//	interPreter.showSeq();
 
-			/*string temp[NUM_FINGERS];
-			interPreter.saveTheSymbol(temp);
-			interPreter.InfoPacketsDetails();
-			sendToOrder(temp);*/
-			system("cls");
-			printf("Connection closing...\n");
+			if (lastOne)
+			{
+				lastOne = false;
+
+				string toSend[FULL_SIZE];
+				interPreter.saveTheSymbol(toSend); // Save the "Symbol" in 'toSend'.
+				sendToOrder(toSend, ClientSocket);
+				interPreter.clearAll();
+			}
 		}
 		else  
 		{
@@ -64,7 +63,7 @@ int main()
 			return 1;
 		}
 
-	} while (iResult > 0);
+	} while (true);
 
 
 	closeSocket(ClientSocket); // Close The socket.
@@ -106,8 +105,8 @@ void closeSocket(SOCKET s)
 			none
 
 */
-void sendToOrder(string temp[FULL_SIZE])
+void sendToOrder(string temp[FULL_SIZE], SOCKET s)
 {
 	Order doTheCommands;
-	doTheCommands.TheComparation(temp);
+	doTheCommands.TheComparation(temp, s);
 }

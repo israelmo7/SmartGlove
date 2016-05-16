@@ -1,8 +1,9 @@
 #include <vector>
 #include "Order.h"
+#include "cMoveWindow.h"
 #include <string>
 #include <fstream>
-
+#include "Mouse.h"
 //#define MINSPEEDMOVE 0
 //#define FINSPEEDMOVE 70
 //#define MAXSPEEDMOVE 100
@@ -57,7 +58,7 @@ Order::~Order()
 }
 
 
-void Order::TheComparation(string* infoPackets)
+void Order::TheComparation(string* infoPackets, SOCKET s)
 {
 
 	for (unsigned int i = 0; i < this->_lines.size(); i++)
@@ -69,7 +70,7 @@ void Order::TheComparation(string* infoPackets)
 		line.insert(line.end(), this->_lines[i]->_acceleration.begin(), this->_lines[i]->_acceleration.end());
 		if (sameChecks(line, infoPackets) /*&& infoPackets[5] == this->_lines[i]->_acceleration*/)
 		{
-			this->runCommand(this->_lines[i]->_commandNumber);
+			this->runCommand(this->_lines[i]->_commandNumber,s);
 		}
 	}
 }
@@ -113,9 +114,9 @@ int Order::fileLineToStringArray(string line, string* save)
 	Output:
 		true if same and false if not.
 */
-bool Order::sameChecks(vector<string> a, string b[NUM_FINGERS + NUM_AXIS])
+bool Order::sameChecks(vector<string> a, string b[NUM_FINGERS])
 {
-	for (int i = 0; i < NUM_FINGERS + NUM_AXIS; i++)
+	for (int i = 0; i < NUM_FINGERS; i++)
 	{
 //		cout << a[i] << " == " << b[i] << "\n";
 		if (a[i] != b[i])
@@ -132,7 +133,7 @@ bool Order::sameChecks(vector<string> a, string b[NUM_FINGERS + NUM_AXIS])
 	Output:
 		none
 */
-void Order::runCommand(int c)
+void Order::runCommand(int c, SOCKET s)
 {
 	switch (c)
 	{
@@ -164,7 +165,7 @@ void Order::runCommand(int c)
 	case NSONG:
 		printf("%s\n", (sendInput(VK_MEDIA_NEXT_TRACK)) ? "NextSong success" : "NextSong failed");
 		break;
-		
+
 	case BPAGE:
 		printf("%s\n", (sendInput(VK_BROWSER_BACK)) ? "PreviousPage success" : "PreviousPage failed");
 		break;
@@ -184,6 +185,18 @@ void Order::runCommand(int c)
 	case VOLUMED:
 		printf("%s\n", (sendInput(VK_VOLUME_DOWN)) ? "DownVolume success" : "DownVolume failed");
 		break;
+	case MOUSEMODE:
+	{
+		printf("Change to 'Mouse Mode' \n");
+		Mouse m = Mouse(s);
+		break;
+	}
+	case DRAGMODE:
+	{
+		printf("Change to 'Drag Mode' \n");
+		cMoveWindow c = cMoveWindow(s);
+		break;
+	}
 	default:
 		printf("The command not found\n");
 		break;

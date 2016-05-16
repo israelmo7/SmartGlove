@@ -49,7 +49,7 @@ none
 Output:
 string - Contains the three values "x - [x] \n .. "
 */
-string Gyro::getValues()
+string Gyro::getValues() const
 {
 	ostringstream str;
 
@@ -65,7 +65,7 @@ int vals[3] - the values to set.
 Output:
 sets the values in the array.
 */
-void Gyro::getVal(int vals[3])
+void Gyro::getVal(int vals[3]) const
 {
 	vals[0] = this->_x;
 	vals[1] = this->_y;
@@ -79,7 +79,7 @@ none
 Output:
 int*- x,y and z
 */
-int* Gyro::getVal()
+int* Gyro::getVal() const
 {
 	int ret[3];
 	ret[0] = this->_x;
@@ -87,4 +87,3 @@ int* Gyro::getVal()
 	ret[2] = this->_z;
 	return ret;
 }
-

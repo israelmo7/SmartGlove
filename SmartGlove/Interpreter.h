@@ -38,5 +38,4 @@ private:
 	string  _symbol[NUM_FINGERS + NUM_AXIS];   // the states.
 	char _equalsSeq[NUM_FINGERS+NUM_AXIS];    // check for the end of the gesture.
 	bool _first;							 // check if its the first packet
-
 };
