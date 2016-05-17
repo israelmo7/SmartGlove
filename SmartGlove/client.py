@@ -27,8 +27,11 @@ def main():
 
 	ax = 0
 	ay = 0
-	my_soc.send("0000000000+00+00+00")
-	my_soc.send("0000000000+00+00+00")
+	f_zero = 50
+	f_one = 50
+	f_two = 50
+	my_soc.send("5050500000+00+00+00")
+	my_soc.send("5050500000+00+00+00")
       
 
 	while(True):
@@ -38,7 +41,20 @@ def main():
 		if x == "e" or x == "E":
 			break
 		sigh = raw_input("Enter sigh: ")
-
+		
+		if 'r' in x or 'R' in x:
+			if sigh == "+":
+				f_zero -= 1
+				f_one  -= 1
+			elif sigh == "-":
+				f_zero += 1
+				f_one  += 1				
+		if 'c' in x or 'C' in x:
+			if sigh == "+":
+				f_one += 1 #left click
+			elif sigh == "-":
+				f_two += 1 #right click
+		
 		if 'x' in x or 'X' in x: # == "X" or x == "x":
 			if sigh == "+":
 				ax += 1
@@ -52,7 +68,7 @@ def main():
 				ay -= 1
 			
 		
-		temp = "0000000000" + ("+" if ax >= 0 else "-")+ str(abs(ax)).zfill(2) + ("+" if ay >= 0 else "-")+ str(abs(ay)).zfill(2) + "+00"
+		temp = str(f_zero).zfill(2) + str(f_one).zfill(2) + str(f_two).zfill(2) + "0000" + ("+" if ax >= 0 else "-")+ str(abs(ax)).zfill(2) + ("+" if ay >= 0 else "-")+ str(abs(ay)).zfill(2) + "+00"
 		my_soc.send(temp)      
 
 	my_soc.close()

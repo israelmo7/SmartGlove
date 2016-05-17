@@ -1,4 +1,5 @@
 #include "cMoveWindow.h"
+#include "cResizeWindow.h"
 
 #define WIDTH_SCREEN  1366
 #define HEIGHT_SCREEN 768
@@ -56,6 +57,9 @@ cMoveWindow::~cMoveWindow()
 
 bool cMoveWindow::changePosition(Gesture g)
 {
+
+	cResizeWindow res = cResizeWindow(GetForegroundWindow());
+
 	if (g._fingers[0] == "+" &&
 		g._fingers[1] == "+" &&
 		g._fingers[2] == "+")
@@ -74,6 +78,8 @@ bool cMoveWindow::changePosition(Gesture g)
 
 	values[2] = bottomR.x - topL.x; // Width
 	values[3] = bottomR.y - topL.y; // Height
+
+	res.changeWindowSize(g);
 
 	//g.printGesture();
 	if (g._acceleration[0] != "")

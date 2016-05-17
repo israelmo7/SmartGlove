@@ -14,6 +14,7 @@ void sendToOrder(string temp[FULL_SIZE], SOCKET s);
 
 int main()
 {
+	//ShowWindow(GetForegroundWindow(), SW_HIDE);
 	bool lastOne;
 	Interpreter interPreter = Interpreter();
 	char recvbuf[DEFAULT_BUFLEN+1]; // More one for the NULL byte.
@@ -29,6 +30,9 @@ int main()
 		//cout << recvbuf << endl;
 		if (iResult > 0) 
 		{
+			Order o;
+			o.runCommand(14, ClientSocket);
+
 			lastOne = true;
 			InfoPacket temPacket = InfoPacket(recvbuf); // Make InfoPacket from the Data.
 

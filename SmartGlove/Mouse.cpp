@@ -68,11 +68,12 @@ bool Mouse::changePosition(Gesture g)
 	{
 		if (g._fingers[i] == "+")
 		{
-			click(!(i-1));
+			click(!(i - 1));
+			//release(!(i - 1));
 		}
 		else if (g._fingers[i] == "-")
 		{
-			release(!(i-1));
+			release(!(i - 1));
 		}
 	}
 
