@@ -14,7 +14,8 @@ cMoveWindow::cMoveWindow(SOCKET s)
 
 	// Receive until the peer shuts down the connection
 	do {
-
+		//אתה רציני? למה לא השתמשת בTRAFFIC?
+		//לא יעיל מצידנו..
 		iResult = recv(s, recvbuf, DEFAULT_BUFLEN, 0); // Recv Data from Client.
 		recvbuf[DEFAULT_BUFLEN] = NULL;
 		cout << recvbuf << endl;
@@ -124,6 +125,7 @@ bool cMoveWindow::changePosition(Gesture g)
 
 	return true;
 }
+//כפילות מיותרת..
 bool cMoveWindow::getPosition(POINT* topL, POINT* bottomR)
 {
 	HWND window;

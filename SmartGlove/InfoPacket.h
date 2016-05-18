@@ -1,12 +1,13 @@
 #pragma once
 #include <iostream>
+#include "SmartGloveDll.h"
 #include "Gyro.h"
 #include "Pressure.h"
 #include "Gesture.h"
 #define NUM_FINGERS 5
 using namespace std;
 
-class InfoPacket
+_declspec(dllexport) class /*SMARTGLOVE_API*/ InfoPacket
 {
 public:
 	InfoPacket(){};

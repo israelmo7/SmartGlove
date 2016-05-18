@@ -1,9 +1,10 @@
 #include <Windows.h>
 #include <iostream>
+#include "SmartGloveDll.h"
 #include "Gesture.h"
 using namespace std;
 
-class cResizeWindow
+class SMARTGLOVE_API cResizeWindow
 {
 public:
 	cResizeWindow(HWND window);

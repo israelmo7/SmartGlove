@@ -1,6 +1,7 @@
 #include <iostream>
+#include "SmartGloveDll.h"
 
-class Point
+_declspec(dllexport) class /*SMARTGLOVE_API*/ Point
 {
 public:
 	Point(long x, long y) :_x(x), _y(y){};

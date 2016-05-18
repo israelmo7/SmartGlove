@@ -1,9 +1,10 @@
 #pragma once
 #include <iostream>
 #include "Interpreter.h"
+#include "SmartGloveDll.h"
 using namespace std;
 
-class Traffic
+_declspec(dllexport) class /*SMARTGLOVE_API*/ Traffic
 {
 public:
 	Traffic();

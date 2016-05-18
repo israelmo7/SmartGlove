@@ -1,5 +1,6 @@
 #include <Windows.h>
 #include <iostream>
+#include "SmartGloveDll.h"
 #include "InfoPacket.h"
 
 #define STEP 15
@@ -7,7 +8,7 @@
 
 using namespace std;
 
-class cMoveWindow
+class SMARTGLOVE_API cMoveWindow
 {
 public:
 

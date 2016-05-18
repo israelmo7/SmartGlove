@@ -4,6 +4,7 @@
 #include <vector>
 #include "InfoPacket.h"
 #include "Gesture.h"
+#include "SmartGloveDll.h"
 
 #define PAGE_UP      1
 #define PAGE_DOWN    2
@@ -22,7 +23,7 @@
 
 using namespace std;
 
-class Order
+_declspec(dllexport) class /*SMARTGLOVE_API*/ Order
 {
 public:
 	Order();

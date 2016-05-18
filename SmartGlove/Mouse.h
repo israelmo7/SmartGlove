@@ -2,8 +2,9 @@
 #include <iostream>
 #include "Gesture.h"
 #include "InfoPacket.h"
+#include "SmartGloveDll.h"
 
-class Mouse
+_declspec(dllexport) class /*SMARTGLOVE_API*/ Mouse
 {
 public:
 	//Mouse(){}

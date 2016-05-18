@@ -27,7 +27,7 @@ bool cResizeWindow::changeWindowSize(Gesture g)
 		return false;
 	}
 
-	if (g._fingers[0] == "-" && g._fingers[1] == "-" && g._fingers[2] == "=")
+	if (g._fingers[0] == "-" && g._fingers[1] == "-" && g._fingers[2] == "=") //מה זה ההארדקוד המגעיל הזה :O
 	{
 		if (!SetWindowPos(this->_window, 0, topL.x - STEP/2, topL.y - STEP/2, bottomR.x - topL.x + STEP, bottomR.y - topL.y + STEP, SWP_DRAWFRAME))
 		{

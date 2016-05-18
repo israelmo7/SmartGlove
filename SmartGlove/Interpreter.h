@@ -3,6 +3,7 @@
 #include <vector>
 #include <Windows.h>
 #include "InfoPacket.h"
+#include "SmartGloveDll.h"
 
 #define NUM_AXIS 3
 //#define PALM_TO_SKY      "+s"
@@ -15,7 +16,7 @@
 
 using namespace std;
 
-class Interpreter
+_declspec(dllexport) class /*SMARTGLOVE_API*/ Interpreter
 {
 public:
 	Interpreter();

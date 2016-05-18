@@ -1,8 +1,9 @@
 #pragma once
 #include <iostream>
+#include "SmartGloveDll.h"
 using namespace std;
 
-class Pressure
+_declspec(dllexport) class /*SMARTGLOVE_API*/ Pressure
 {
 public:
 	Pressure(int press = 0);
