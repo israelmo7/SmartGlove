@@ -1,17 +1,10 @@
 #pragma once
-#include <iostream>
-#include <vector>
-#include <Windows.h>
+//#include <Windows.h>
 #include "InfoPacket.h"
 
 #define NUM_AXIS 3
-//#define PALM_TO_SKY      "+s"
-//#define NE_PALM_TO_SKY   "-s"
-//#define PALM_TO_LEFT     "+l"
-//#define NE_PALM_TO_LEFT  "-l"
-//#define PALM_TO_ME       "+m"
-//#define NE_PALM_TO_ME    "-m"
-//#define NONE             "null"
+//#define MAX_OFFSET 5 /*Properties*/
+
 
 using namespace std;
 
@@ -29,12 +22,8 @@ public:
 	void showSeq();
 	void showSymbols();
 	void clearAll();
-	//void checkAccel(InfoPacket pack);
-	//void showAccel();
 private:
 	InfoPacket _lastPacket;						 // The last packet
-	//string _symbolF[NUM_FINGERS];				// f = flex
-	//string _symbolA[NUM_AXIS];		       // the Accel' state.
 	string  _symbol[NUM_FINGERS + NUM_AXIS];   // the states.
 	char _equalsSeq[NUM_FINGERS+NUM_AXIS];    // check for the end of the gesture.
 	bool _first;							 // check if its the first packet

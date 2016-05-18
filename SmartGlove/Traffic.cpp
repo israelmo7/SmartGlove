@@ -1,3 +1,4 @@
+#include "Properties.h"
 #undef UNICODE
 
 #define WIN32_LEAN_AND_MEAN
@@ -13,8 +14,6 @@
 #pragma comment (lib, "Ws2_32.lib")
 // #pragma comment (lib, "Mswsock.lib")
 
-#define DEFAULT_BUFLEN 24
-#define DEFAULT_PORT "80"
 
 Traffic::Traffic()
 {	

@@ -1,8 +1,15 @@
 #include "cResizeWindow.h"
-#define STEP 10
+#include "Properties.h"
+
+#define STR(x) #x
+
+int STEPRESIZEWINDOW = 0;
 
 cResizeWindow::cResizeWindow(HWND window)
 {
+	Properties p = Properties();
+	STEPRESIZEWINDOW = p.getValueByName(STR(STEPRESIZEWINDOW));
+
 	if (window)
 	{
 		this->_window = window;
@@ -29,7 +36,7 @@ bool cResizeWindow::changeWindowSize(Gesture g)
 
 	if (g._fingers[0] == "-" && g._fingers[1] == "-" && g._fingers[2] == "=")
 	{
-		if (!SetWindowPos(this->_window, 0, topL.x - STEP/2, topL.y - STEP/2, bottomR.x - topL.x + STEP, bottomR.y - topL.y + STEP, SWP_DRAWFRAME))
+		if (!SetWindowPos(this->_window, 0, topL.x - STEPRESIZEWINDOW / 2, topL.y - STEPRESIZEWINDOW / 2, bottomR.x - topL.x + STEPRESIZEWINDOW, bottomR.y - topL.y + STEPRESIZEWINDOW, SWP_DRAWFRAME))
 		{
 			cout << "SetWindowPos Error: " << GetLastError() << endl;
 			return false;
@@ -37,7 +44,7 @@ bool cResizeWindow::changeWindowSize(Gesture g)
 	}
 	else if (g._fingers[0] == "+" && g._fingers[1] == "+" && g._fingers[2] == "=")
 	{
-		if (!SetWindowPos(this->_window, 0, topL.x + STEP/2, topL.y + STEP/2, bottomR.x - topL.x - STEP, bottomR.y - topL.y - STEP, SWP_DRAWFRAME))
+		if (!SetWindowPos(this->_window, 0, topL.x + STEPRESIZEWINDOW / 2, topL.y + STEPRESIZEWINDOW / 2, bottomR.x - topL.x - STEPRESIZEWINDOW, bottomR.y - topL.y - STEPRESIZEWINDOW, SWP_DRAWFRAME))
 		{
 			cout << "SetWindowPos Error: " << GetLastError() << endl;
 			return false;

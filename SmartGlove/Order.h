@@ -1,9 +1,8 @@
-#pragma once
 #include <Windows.h>
-#include <iostream>
-#include <vector>
+//#include <iostream>
+//#include <vector>
 #include "InfoPacket.h"
-#include "Gesture.h"
+//#include "Gesture.h"
 
 #define PAGE_UP      1
 #define PAGE_DOWN    2

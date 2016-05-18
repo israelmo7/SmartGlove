@@ -1,5 +1,5 @@
 #include "Gesture.h"
-#include <string>
+//#include <string>
 
 /*
 	Ctor.

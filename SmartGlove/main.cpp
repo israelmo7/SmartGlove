@@ -1,19 +1,27 @@
+//#import D:\Users\user-pc\Documents\Visual Studio 2013\\rojects\SmartGlove\SmartGlove\DllSmartGlove.dll
+//#import "D:\\Users\\user-pc\\Documents\\Visual Studio 2013\\Projects\\SmartGlove\\SmartGlove\\DllSmartGlove.dll"
 #include <winsock2.h>
 #include <iostream>
 #include "Traffic.h"
+#include "Interpreter.h"
 #include "Order.h"
+#include "Mouse.h"
 
-
+#define DLLNAME "D:\\Users\\user-pc\\Documents\\Visual Studio 2013\\Projects\\SmartGlove\\SmartGlove\\DllSmartGlove.dll"
 #define DEFAULT_BUFLEN 19 // Size of The packet
 #define FULL_SIZE 8 // 5 fingers + 1 Accel'
 
 using namespace std;
 
+typedef int(__stdcall *f_funci)();
+
 void closeSocket(SOCKET s);
 void sendToOrder(string temp[FULL_SIZE], SOCKET s);
+void loadDll();
 
 int main()
 {
+	loadDll();
 	//ShowWindow(GetForegroundWindow(), SW_HIDE);
 	bool lastOne;
 	Interpreter interPreter = Interpreter();
@@ -113,4 +121,24 @@ void sendToOrder(string temp[FULL_SIZE], SOCKET s)
 {
 	Order doTheCommands;
 	doTheCommands.TheComparation(temp, s);
+}
+void loadDll()
+{
+	HINSTANCE dll = LoadLibrary(DLLNAME);
+
+	if (dll)
+	{
+		cout << "Found!\n";
+		f_funci funci = (f_funci)GetProcAddress(dll, "Add");
+		if (funci)
+		{
+			cout << funci() << "\n";
+		}
+		else
+			cout << "Function not found - Error " << GetLastError() << "\n";
+	}
+	else
+	{
+		cout << "Dll not found - Error " << GetLastError() << "\n";
+	}
 }

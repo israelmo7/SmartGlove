@@ -1,7 +1,7 @@
 #include <Windows.h>
-#include <iostream>
 #include "Gesture.h"
-using namespace std;
+
+//#define STEPRESIZEWINDOW 10  /*Properties*/
 
 class cResizeWindow
 {

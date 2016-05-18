@@ -1,7 +1,6 @@
 #pragma once
-#include <iostream>
-#include "Interpreter.h"
-using namespace std;
+
+#define DEFAULT_PORT "80"
 
 class Traffic
 {

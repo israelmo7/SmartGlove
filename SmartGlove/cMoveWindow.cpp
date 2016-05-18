@@ -1,11 +1,19 @@
 #include "cMoveWindow.h"
 #include "cResizeWindow.h"
+#include "Properties.h"
 
-#define WIDTH_SCREEN  1366
-#define HEIGHT_SCREEN 768
+#define STR(x) #x
+int WIDTH_SCREENw= 0;
+int HEIGHT_SCREENw = 0;
+int STEPMOVEWINDOW = 0;
 
 cMoveWindow::cMoveWindow(SOCKET s)
 {
+	Properties p = Properties();
+	STEPMOVEWINDOW = p.getValueByName(STR(STEPMOVEWINDOW));
+
+	this->GetDesktopResolution();
+	//cout << "Width: " << WIDTH_SCREENw << endl << "Height: " << HEIGHT_SCREENw << endl;
 	bool flag = true;
 	this->_first = true;
 	//
@@ -88,12 +96,12 @@ bool cMoveWindow::changePosition(Gesture g)
 		{
 			cout << "X+ \n";
 			//temp.x += STEP;
-			topL.x = (bottomR.x + STEP > WIDTH_SCREEN) ? topL.x : topL.x + STEP;
+			topL.x = (bottomR.x + STEPMOVEWINDOW > WIDTH_SCREENw) ? topL.x : topL.x + STEPMOVEWINDOW;
 		}
 		else if (g._acceleration[0] == "-")
 		{
 			cout << "X- \n";
-			topL.x = (topL.x - STEP < 0) ? 0 : topL.x - STEP;
+			topL.x = (topL.x - STEPMOVEWINDOW < 0) ? 0 : topL.x - STEPMOVEWINDOW;
 		}
 
 	}
@@ -102,12 +110,12 @@ bool cMoveWindow::changePosition(Gesture g)
 		if (g._acceleration[1] == "+")
 		{
 			cout << "Y+ \n";
-			topL.y = (topL.y - STEP < 0) ? 0 : topL.y - STEP;
+			topL.y = (topL.y - STEPMOVEWINDOW < 0) ? 0 : topL.y - STEPMOVEWINDOW;
 		}
 		else if (g._acceleration[1] == "-")
 		{
 			cout << "Y- \n";
-			topL.y = (bottomR.y + STEP > HEIGHT_SCREEN) ? topL.y : topL.y + STEP;
+			topL.y = (bottomR.y + STEPMOVEWINDOW > HEIGHT_SCREENw) ? topL.y : topL.y + STEPMOVEWINDOW;
 		}
 
 	}
@@ -141,33 +149,7 @@ bool cMoveWindow::getPosition(POINT* topL, POINT* bottomR)
 		return true;
 	}
 	return false;
-	//HWND window;
-	//WINDOWPLACEMENT posStructe;
-
-	//posStructe.length = sizeof(WINDOWPLACEMENT);
-
-	//window = GetForegroundWindow();
-
-	//if (GetWindowPlacement(window, &posStructe))
-	//{
-	//	//posStructe.rcNormalPosition.
-	//	cout << "(" << posStructe.rcNormalPosition.left << ", " << posStructe.rcNormalPosition.top << ") - TOP_LEFT\n";
-	//	cout << "(" << posStructe.rcNormalPosition.right << ", " << posStructe.rcNormalPosition.bottom << ") - BOTTOM_RIGHT\n";
-	//	cout << "Width - " << posStructe.rcNormalPosition.right - posStructe.rcNormalPosition.left << "\n";
-	//	cout << "Hieght - " << posStructe.rcNormalPosition.bottom - posStructe.rcNormalPosition.top << "\n";
-
-	//	topL->x = posStructe.rcNormalPosition.left;
-	//	topL->y = 0; posStructe.rcNormalPosition.top;
-
-	//	bottomR->x = posStructe.rcNormalPosition.right;
-	//	bottomR->y = posStructe.rcNormalPosition.bottom;
-	//	return true;
-	//}
-	//else
-	//{
-	//	printf("Error: %d", GetLastError());
-	//}
-	//return false;
+	
 }
 bool cMoveWindow::setWindowPos(int values[4])
 {
@@ -185,4 +167,18 @@ bool cMoveWindow::setWindowPos(int values[4])
 		return true;
 	}
 	return false;
+}
+void cMoveWindow::GetDesktopResolution()
+{
+	RECT desktop;
+	// Get a handle to the desktop window
+	const HWND hDesktop = GetDesktopWindow();
+	// Get the size of screen to the variable desktop
+	GetWindowRect(hDesktop, &desktop);
+	// The top left corner will have coordinates (0,0)
+	// and the bottom right corner will have coordinates
+	// (horizontal, vertical)
+
+	WIDTH_SCREENw = desktop.right;
+	HEIGHT_SCREENw = desktop.bottom;
 }
