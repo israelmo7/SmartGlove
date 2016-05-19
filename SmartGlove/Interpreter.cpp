@@ -1,7 +1,10 @@
 #include "Interpreter.h"
-#include "Order.h"
-#include <fstream>
-#include <string>
+#include "Properties.h"
+
+#define STR(x) #x
+//#include "Order.h"
+//#include <fstream>
+//#include <string>
 
 //#define MIN_GRAVITY			7
 //#define  MAX_NON_GRAVITY    2
@@ -10,19 +13,21 @@
 //#define Y val[1]
 //#define Z val[2]
 
-#define MAX_OFFSET 5
-
-#define ABS(a) ((a < 0)? a*-1: a)
-
-#define A_BIGGER_THAN_B(a,b) ((ABS(a) > ABS(b))? true: false)
-#define A_BIGGER_THAN_B_AND_C(a,b,c) ((A_BIGGER_THAN_B(a,b) && A_BIGGER_THAN_B(a,c))?true:false)
 
 
-#define CHECK_NON_GRAVITY(a) ((a > MAX_NON_GRAVITY)? false: true)
-#define CHECK_ZERO(a, b) ((CHECK_NON_GRAVITY(ABS(a)) && CHECK_NON_GRAVITY(ABS(b)))? true: false)
-#define CHECK_GRAVITY(c) ((ABS(c) > MIN_GRAVITY)? true: false)
-#define IS_POSITIVE(a) ((a > 0)? true: false)
+//#define ABS(a) ((a < 0)? a*-1: a)
+//
+//#define A_BIGGER_THAN_B(a,b) ((ABS(a) > ABS(b))? true: false)
+//#define A_BIGGER_THAN_B_AND_C(a,b,c) ((A_BIGGER_THAN_B(a,b) && A_BIGGER_THAN_B(a,c))?true:false)
+//
+//
+//#define CHECK_NON_GRAVITY(a) ((a > MAX_NON_GRAVITY)? false: true)
+//#define CHECK_ZERO(a, b) ((CHECK_NON_GRAVITY(ABS(a)) && CHECK_NON_GRAVITY(ABS(b)))? true: false)
+//#define CHECK_GRAVITY(c) ((ABS(c) > MIN_GRAVITY)? true: false)
+//#define IS_POSITIVE(a) ((a > 0)? true: false)
 
+
+int MAX_OFFSET = 0;
 /*
 	Ctor.
 	Input:
@@ -32,6 +37,9 @@
 */
 Interpreter::Interpreter()
 {
+	Properties p = Properties();
+	MAX_OFFSET = p.getValueByName(STR(MAX_OFFSET));
+
 	//this->_stateA = NONE;
 	this->_first = true;
 	for (short int i = 0; i < NUM_FINGERS + NUM_AXIS; i++)
@@ -95,7 +103,7 @@ void Interpreter::InfoPacketsDetails()
 {
 	for (unsigned int i = 0; i < NUM_FINGERS + NUM_AXIS; i++)
 	{
-		cout << i+1 << ") " << this->_symbol[i] << endl;
+		cout << i+1 << ") " << this->_symbol[i].c_str() << endl;
 	}
 }
 

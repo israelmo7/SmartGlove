@@ -1,7 +1,10 @@
 #pragma once
+<<<<<<< HEAD
 #include <iostream>
 #include "SmartGloveDll.h"
 using namespace std;
+=======
+>>>>>>> origin/israel
 
 _declspec(dllexport) class /*SMARTGLOVE_API*/ Pressure
 {

@@ -1,5 +1,4 @@
 #include "Pressure.h"
-#include <sstream>
 
 /*
 	Ctor.

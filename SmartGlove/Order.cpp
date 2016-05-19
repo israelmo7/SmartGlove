@@ -1,12 +1,9 @@
-#include <vector>
 #include "Order.h"
 #include "cMoveWindow.h"
 #include <string>
 #include <fstream>
 #include "Mouse.h"
-//#define MINSPEEDMOVE 0
-//#define FINSPEEDMOVE 70
-//#define MAXSPEEDMOVE 100
+
 #define PATHFILE "Profile.txt"
 
 /*
