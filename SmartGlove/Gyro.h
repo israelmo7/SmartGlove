@@ -1,9 +1,8 @@
 #pragma once
 #include <iostream>
-#include "SmartGloveDll.h"
 using namespace std;
 
-_declspec(dllexport) class /*SMARTGLOVE_API*/ Gyro
+class Gyro
 {
 public:
 	Gyro(int x = 0, int y = 0, int z = 0);

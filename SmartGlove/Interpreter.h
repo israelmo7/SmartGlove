@@ -1,7 +1,6 @@
 #pragma once
 //#include <Windows.h>
 #include "InfoPacket.h"
-#include "SmartGloveDll.h"
 
 #define NUM_AXIS 3
 //#define MAX_OFFSET 5 /*Properties*/
@@ -9,7 +8,7 @@
 
 using namespace std;
 
-_declspec(dllexport) class /*SMARTGLOVE_API*/ Interpreter
+class Interpreter
 {
 public:
 	Interpreter();

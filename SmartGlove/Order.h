@@ -1,13 +1,9 @@
 #include <Windows.h>
+#include <fstream>
 //#include <iostream>
 //#include <vector>
 #include "InfoPacket.h"
-<<<<<<< HEAD
-#include "Gesture.h"
-#include "SmartGloveDll.h"
-=======
 //#include "Gesture.h"
->>>>>>> origin/israel
 
 #define PAGE_UP      1
 #define PAGE_DOWN    2
@@ -26,7 +22,7 @@
 
 using namespace std;
 
-_declspec(dllexport) class /*SMARTGLOVE_API*/ Order
+class Order
 {
 public:
 	Order();

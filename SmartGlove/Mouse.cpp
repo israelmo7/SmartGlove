@@ -1,12 +1,5 @@
 #include "Mouse.h"
-<<<<<<< HEAD
-#define STEP 10
-#define DEFAULT_BUFLEN 19 // Size of The packet
-#define WIDTH_SCREEN  1366
-#define HEIGHT_SCREEN 768
-=======
 #include "Properties.h"
->>>>>>> origin/israel
 
 #define STR(x) #x
 

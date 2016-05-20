@@ -1,12 +1,11 @@
 #pragma once
 #include <iostream>
 #include <vector>
-#include "SmartGloveDll.h"
 #define NUM_FINGERS 5
 #define NUM_AXIS 3
 using namespace std;
 
-_declspec(dllexport) class /*SMARTGLOVE_API*/ Gesture
+class Gesture
 {
 public:
 	Gesture();

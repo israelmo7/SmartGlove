@@ -1,13 +1,3 @@
-<<<<<<< HEAD
-#include "cMoveWindow.h"
-#include "cResizeWindow.h"
-
-#define WIDTH_SCREEN  1366
-#define HEIGHT_SCREEN 768
-
-cMoveWindow::cMoveWindow(SOCKET s)
-{
-=======
 #include "cMoveWindow.h"
 #include "cResizeWindow.h"
 #include "Properties.h"
@@ -24,7 +14,6 @@ cMoveWindow::cMoveWindow(SOCKET s)
 
 	this->GetDesktopResolution();
 	//cout << "Width: " << WIDTH_SCREENw << endl << "Height: " << HEIGHT_SCREENw << endl;
->>>>>>> origin/israel
 	bool flag = true;
 	this->_first = true;
 	//
@@ -33,8 +22,7 @@ cMoveWindow::cMoveWindow(SOCKET s)
 
 	// Receive until the peer shuts down the connection
 	do {
-		//אתה רציני? למה לא השתמשת בTRAFFIC?
-		//לא יעיל מצידנו..
+
 		iResult = recv(s, recvbuf, DEFAULT_BUFLEN, 0); // Recv Data from Client.
 		recvbuf[DEFAULT_BUFLEN] = NULL;
 		cout << recvbuf << endl;
@@ -144,7 +132,6 @@ bool cMoveWindow::changePosition(Gesture g)
 
 	return true;
 }
-//כפילות מיותרת..
 bool cMoveWindow::getPosition(POINT* topL, POINT* bottomR)
 {
 	HWND window;

@@ -64,8 +64,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="cMoveWindow.cpp" />
-    <ClCompile Include="cResizeWindow.cpp" />
     <ClCompile Include="Gesture.cpp" />
     <ClCompile Include="Gyro.cpp" />
     <ClCompile Include="Interpreter.cpp" />
@@ -77,8 +75,6 @@
     <ClCompile Include="Traffic.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cMoveWindow.h" />
-    <ClInclude Include="cResizeWindow.h" />
     <ClInclude Include="Gesture.h" />
     <ClInclude Include="Gyro.h" />
     <ClInclude Include="Interpreter.h" />

@@ -2,14 +2,17 @@
 //#import "D:\\Users\\user-pc\\Documents\\Visual Studio 2013\\Projects\\SmartGlove\\SmartGlove\\DllSmartGlove.dll"
 #include <winsock2.h>
 #include <iostream>
+#include <fstream>
+#include <sstream>
 #include "Traffic.h"
 #include "Interpreter.h"
 #include "Order.h"
 #include "Mouse.h"
 
-#define DLLNAME "D:\\Users\\user-pc\\Documents\\Visual Studio 2013\\Projects\\SmartGlove\\SmartGlove\\DllSmartGlove.dll"
+#define DLLNAME "DllSmartGlove.dll"
 #define DEFAULT_BUFLEN 19 // Size of The packet
 #define FULL_SIZE 8 // 5 fingers + 1 Accel'
+#define FILE "Profile.txt"
 
 using namespace std;
 
@@ -19,7 +22,7 @@ void closeSocket(SOCKET s);
 void sendToOrder(string temp[FULL_SIZE], SOCKET s);
 void loadDll();
 
-int main()
+int main(int argc, char* argv)
 {
 	loadDll();
 	//ShowWindow(GetForegroundWindow(), SW_HIDE);
@@ -28,8 +31,11 @@ int main()
 	char recvbuf[DEFAULT_BUFLEN+1]; // More one for the NULL byte.
 	int iResult;
 	SOCKET ClientSocket = Traffic().getSocket();
-		
-
+	char mode, cmnd;
+	if (argc > 0){
+		mode = argv[1];
+		cmnd = argv[2];
+	}
 	// Receive until the peer shuts down the connection
 	do {
 
@@ -38,8 +44,8 @@ int main()
 		//cout << recvbuf << endl;
 		if (iResult > 0) 
 		{
-			Order o;
-			o.runCommand(14, ClientSocket);
+			//Order o;
+			//o.runCommand(14, ClientSocket);
 
 			lastOne = true;
 			InfoPacket temPacket = InfoPacket(recvbuf); // Make InfoPacket from the Data.
@@ -49,7 +55,12 @@ int main()
 				cout << "In !\n";
 				string toSend[FULL_SIZE];
 				interPreter.saveTheSymbol(toSend); // Save the "Symbol" in 'toSend'.
-				sendToOrder(toSend, ClientSocket);
+				if (mode == 'n'){
+					sendToOrder(toSend, ClientSocket);
+				}
+				else if (mode == 'a'){
+					saveToProfile(toSend, cmnd);
+				}
 				interPreter.clearAll();				// Clear the InterPreter.
 			}
 		}
@@ -122,6 +133,18 @@ void sendToOrder(string temp[FULL_SIZE], SOCKET s)
 	Order doTheCommands;
 	doTheCommands.TheComparation(temp, s);
 }
+
+void saveToProfile(string temp[FULL_SIZE], int commandNumber){
+	ofstream file(FILE, ios::app);
+	string command;
+	stringstream out;
+	out << commandNumber;
+	command = out.str();
+	file << command;
+	file << temp;
+	file.close;
+}
+
 void loadDll()
 {
 	HINSTANCE dll = LoadLibrary(DLLNAME);

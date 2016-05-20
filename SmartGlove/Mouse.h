@@ -1,17 +1,12 @@
 #include <Windows.h>
 #include "InfoPacket.h"
-#include "SmartGloveDll.h"
 
-<<<<<<< HEAD
-_declspec(dllexport) class /*SMARTGLOVE_API*/ Mouse
-=======
 //#define STEPMOVEMOUSE 10
 #define DEFAULT_BUFLEN 19 // Size of The packet
 //#define WIDTH_SCREEN  1366 /*Properties*/
 //#define HEIGHT_SCREEN 768 /*Properties*/
 
 class Mouse
->>>>>>> origin/israel
 {
 public:
 	//Mouse(){}

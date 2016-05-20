@@ -1,7 +1,7 @@
 #include "Order.h"
 #include "cMoveWindow.h"
 #include <string>
-#include <fstream>
+#include <iostream>
 #include "Mouse.h"
 
 #define PATHFILE "Profile.txt"
@@ -15,18 +15,16 @@
 */
 Order::Order()
 {
-	ifstream file;
-	
+	fstream file;
 	file.open(PATHFILE);
 
 	if (file.is_open())
 	{
 		int cnt = 0;
 		string line;
-
 		while (getline(file, line))
 		{
-			string tempStr[8] = {""};
+			string tempStr[8] = { "" };
 			int commandNumber;
 			commandNumber = this->fileLineToStringArray(line, tempStr);
 			this->_lines.push_back(new Gesture(tempStr, commandNumber));
@@ -36,7 +34,6 @@ Order::Order()
 	}
 	else
 		cout << "Can not open this File - " << PATHFILE << "\n";
-	
 }
 
 /*
@@ -67,7 +64,7 @@ void Order::TheComparation(string* infoPackets, SOCKET s)
 		line.insert(line.end(), this->_lines[i]->_acceleration.begin(), this->_lines[i]->_acceleration.end());
 		if (sameChecks(line, infoPackets) /*&& infoPackets[5] == this->_lines[i]->_acceleration*/)
 		{
-			this->runCommand(this->_lines[i]->_commandNumber,s);
+			this->runCommand(this->_lines[i]->_commandNumber, s);
 		}
 	}
 }
