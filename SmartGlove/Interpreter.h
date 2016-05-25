@@ -20,11 +20,12 @@ public:
 	void saveTheSymbol(string *arr);
 	bool checkToEnd();
 	void showSeq();
-	void showSymbols();
 	void clearAll();
+	void calculateSymbol(InfoPacket newPacket);
+	void calculateSymbol(int sumAxis[NUM_AXIS]);
 private:
-	InfoPacket _lastPacket;						 // The last packet
+	InfoPacket _lastPacket; // The last packet			
+	//Gesture _symbols;
 	string  _symbol[NUM_FINGERS + NUM_AXIS];   // the states.
-	char _equalsSeq[NUM_FINGERS+NUM_AXIS];    // check for the end of the gesture.
-	bool _first;							 // check if its the first packet
+	char _equalsSeq[NUM_FINGERS];    // check for the end of the gesture.
 };

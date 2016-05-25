@@ -7,15 +7,15 @@ int WIDTH_SCREENw= 0;
 int HEIGHT_SCREENw = 0;
 int STEPMOVEWINDOW = 0;
 
-cMoveWindow::cMoveWindow(SOCKET s)
+
+cMoveWindow::cMoveWindow(SOCKET s, string lastRecv)
 {
 	Properties p = Properties();
 	STEPMOVEWINDOW = p.getValueByName(STR(STEPMOVEWINDOW));
 
 	this->GetDesktopResolution();
-	//cout << "Width: " << WIDTH_SCREENw << endl << "Height: " << HEIGHT_SCREENw << endl;
+	this->_lastPacket = InfoPacket(lastRecv);
 	bool flag = true;
-	this->_first = true;
 	//
 	int iResult;
 	char recvbuf[DEFAULT_BUFLEN + 1]; // More one for the NULL byte.
@@ -25,19 +25,20 @@ cMoveWindow::cMoveWindow(SOCKET s)
 
 		iResult = recv(s, recvbuf, DEFAULT_BUFLEN, 0); // Recv Data from Client.
 		recvbuf[DEFAULT_BUFLEN] = NULL;
-		cout << recvbuf << endl;
+		//cout << recvbuf << endl;
 		if (iResult > 0)
 		{
 			InfoPacket p = InfoPacket(recvbuf);
-			if (!this->_first)
-			{
-				Gesture g = p - this->_lastPacket;
-				flag = changePosition(g);
-			}
-			else
-			{
-				this->_first = false;
-			}
+
+			int temp[NUM_FINGERS];
+			temp[0] = p.getPress(0).getValue();
+			temp[1] = p.getPress(1).getValue();
+			temp[2] = p.getPress(2).getValue();
+			temp[3] = p.getPress(3).getValue();
+			temp[4] = p.getPress(4).getValue();
+			Gesture g = (p - this->_lastPacket);
+			flag = changePosition(g, temp);
+
 
 			this->_lastPacket = p;
 
@@ -55,15 +56,14 @@ cMoveWindow::cMoveWindow(SOCKET s)
 		}
 
 	} while (flag);
-
-	closesocket(s);
+	cout << "Exit from 'Drag Mode' \n";
 }
 cMoveWindow::~cMoveWindow()
 {
 	//
 }
 
-bool cMoveWindow::changePosition(Gesture g)
+bool cMoveWindow::changePosition(Gesture g, int fingerState[NUM_FINGERS])
 {
 
 	cResizeWindow res = cResizeWindow(GetForegroundWindow());
@@ -73,9 +73,15 @@ bool cMoveWindow::changePosition(Gesture g)
 		g._fingers[2] == "+")
 		return false;
 
+	if (g._fingers[2] == "+")
+		this->replaceWindows();
+
 	POINT topL,
 		bottomR;
-	int values[4];
+	int values[4]; // [0] - Top-Left Point (X)
+				   // [1] - Top-Left Point (Y)
+				   // [2] - Width
+				   // [3] - Height 
 
 
 	if (!getPosition(&topL, &bottomR))
@@ -87,9 +93,6 @@ bool cMoveWindow::changePosition(Gesture g)
 	values[2] = bottomR.x - topL.x; // Width
 	values[3] = bottomR.y - topL.y; // Height
 
-	res.changeWindowSize(g);
-
-	//g.printGesture();
 	if (g._acceleration[0] != "")
 	{
 		if (g._acceleration[0] == "+")
@@ -117,13 +120,12 @@ bool cMoveWindow::changePosition(Gesture g)
 			cout << "Y- \n";
 			topL.y = (bottomR.y + STEPMOVEWINDOW > HEIGHT_SCREENw) ? topL.y : topL.y + STEPMOVEWINDOW;
 		}
-
 	}
 
 
 	values[0] = topL.x;
 	values[1] = topL.y;
-
+	res.reSizeForMoveWindowClass(g, values,fingerState);
 
 	if (!setWindowPos(values))//(temp.x, temp.y))
 	{
@@ -182,3 +184,32 @@ void cMoveWindow::GetDesktopResolution()
 	WIDTH_SCREENw = desktop.right;
 	HEIGHT_SCREENw = desktop.bottom;
 }
+bool cMoveWindow::replaceWindows()
+{
+	INPUT ip;
+	INPUT ip2;
+	ip.type = INPUT_KEYBOARD;
+	ip.ki.wScan = 0;
+	ip.ki.time = 0;
+	ip.ki.dwExtraInfo = 0;
+	ip.ki.wVk = VK_LMENU;
+	ip.ki.dwFlags = 0;
+	if (!SendInput(1, &ip, sizeof(INPUT)))
+		return false;
+
+	Sleep(100);
+
+	ip2.type = INPUT_KEYBOARD;
+	ip2.ki.wScan = 0;
+	ip2.ki.time = 0;
+	ip2.ki.dwExtraInfo = 0;
+	ip2.ki.wVk = VK_TAB;
+	ip2.ki.dwFlags = 0;
+	SendInput(1, &ip2, sizeof(INPUT));
+
+	ip.ki.dwFlags = KEYEVENTF_KEYUP;
+	SendInput(1, &ip, sizeof(INPUT));
+	ip2.ki.dwFlags = KEYEVENTF_KEYUP;
+	return (SendInput(1, &ip2, sizeof(INPUT)) != 0);
+}
+

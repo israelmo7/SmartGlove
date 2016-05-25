@@ -13,7 +13,7 @@ public:
 	Gesture(string data[NUM_FINGERS + NUM_AXIS], int commandNumber);
 	~Gesture();
 	void printGesture() const;
-	
+	void clearAll();
 //private:
 	//string* _fingers = new string[NUM_FINGERS];
 	vector<string> _fingers;

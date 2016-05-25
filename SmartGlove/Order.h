@@ -1,5 +1,4 @@
 #include <Windows.h>
-#include <fstream>
 //#include <iostream>
 //#include <vector>
 #include "InfoPacket.h"
@@ -26,12 +25,12 @@ class Order
 {
 public:
 	Order();
-	void TheComparation(string *infoPackets, SOCKET s);
-	void runCommand(int c, SOCKET s);
+	void TheComparation(string *infoPackets, SOCKET s, string lastRecv);
+	void runCommand(int c, SOCKET s, string lastRecv);
 	bool sendInput(WORD vk);
 	void printLines();
 	int fileLineToStringArray (string line, string* save);
-	bool sameChecks(vector<string> a, string b[NUM_FINGERS + NUM_AXIS]);
+	bool sameChecks(vector<string> a, string* b);
 	~Order();
 
 private:

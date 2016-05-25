@@ -8,6 +8,7 @@ public:
 	Traffic();
 	~Traffic(){};
 	SOCKET getSocket() const;
+	void closeSocket();
 private:
 	SOCKET _sock;
 };

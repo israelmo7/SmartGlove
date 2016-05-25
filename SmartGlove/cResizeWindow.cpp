@@ -1,69 +1,68 @@
 #include "cResizeWindow.h"
-#include "Properties.h"
 
-#define STR(x) #x
-
-int STEPRESIZEWINDOW = 0;
 
 cResizeWindow::cResizeWindow(HWND window)
 {
-	Properties p = Properties();
-	STEPRESIZEWINDOW = p.getValueByName(STR(STEPRESIZEWINDOW));
 
-	if (window)
-	{
-		this->_window = window;
-	}
-	else
-	{
-		cout << "Error : " << GetLastError() << endl;
-	}
 }
 cResizeWindow::~cResizeWindow()
 {
 
 }
-bool cResizeWindow::changeWindowSize(Gesture g)
+int cResizeWindow::getResizeStep(int p, bool bigger, bool width)
 {
-	POINT topL,
-		bottomR;
+	int temp;
+	const RECT X = this->GetDesktopResolution();
+	const RECT x = this->GetDesktopResolution(false);
 
-	if (!this->getPosition(&topL, &bottomR))
-	{
-		cout << "getPosition Error: " << GetLastError() << endl;
-		return false;
-	}
 
-	if (g._fingers[0] == "-" && g._fingers[1] == "-" && g._fingers[2] == "=")
-	{
-		if (!SetWindowPos(this->_window, 0, topL.x - STEPRESIZEWINDOW / 2, topL.y - STEPRESIZEWINDOW / 2, bottomR.x - topL.x + STEPRESIZEWINDOW, bottomR.y - topL.y + STEPRESIZEWINDOW, SWP_DRAWFRAME))
-		{
-			cout << "SetWindowPos Error: " << GetLastError() << endl;
-			return false;
-		}
-	}
-	else if (g._fingers[0] == "+" && g._fingers[1] == "+" && g._fingers[2] == "=")
-	{
-		if (!SetWindowPos(this->_window, 0, topL.x + STEPRESIZEWINDOW / 2, topL.y + STEPRESIZEWINDOW / 2, bottomR.x - topL.x - STEPRESIZEWINDOW, bottomR.y - topL.y - STEPRESIZEWINDOW, SWP_DRAWFRAME))
-		{
-			cout << "SetWindowPos Error: " << GetLastError() << endl;
-			return false;
-		}
-	}
-	return true;
+	temp = (width) ? ((bigger) ? X.right - x.right : X.right + x.right) : ((bigger) ? X.top - x.top : X.top + x.top);
+
+	return (bigger) ? temp*p / 100 : -temp*p / 100;
 }
-bool cResizeWindow::getPosition(POINT* topL, POINT* bottomR)
+RECT cResizeWindow::GetDesktopResolution(bool isDesktop)
 {
-	RECT r;
+	RECT desktop;
 
-	if (GetWindowRect(this->_window, &r))
+	const HWND hDesktop = (isDesktop) ? GetDesktopWindow() : GetForegroundWindow();
+
+	GetWindowRect(hDesktop, &desktop);
+
+	return desktop;
+}
+void cResizeWindow::reSizeForMoveWindowClass(Gesture g, int values[4], int fingerState[NUM_FINGERS])
+{
+	//[0] - TL.x
+	//[1] - TL.y
+	//[2] - Width
+	//[3] - Height
+	
+	if (g._fingers[0] != "")
 	{
-		topL->x = r.left;
-		topL->y = r.top;
-
-		bottomR->x = r.right;
-		bottomR->y = r.bottom;
-		return true;
+		int tempX;
+		if (g._fingers[0] == "+")
+		{
+			tempX = -this->getResizeStep(fingerState[0],true,true) / 2;
+		}
+		else
+		{
+			tempX = this->getResizeStep(fingerState[0], false, true) / 2;
+		}
+		values[0] = values[0] + tempX;
+		values[2] = values[2] - tempX;
 	}
-	return false;
+	if (g._fingers[1] != "")
+	{
+		int tempY;
+		if (g._fingers[1] == "+")
+		{
+			tempY = -this->getResizeStep(fingerState[0], true, false) / 2;
+		}
+		else
+		{
+			tempY = this->getResizeStep(fingerState[0], false, false) / 2;
+		}
+		values[1] = values[1] + tempY;
+		values[3] = values[3] - tempY;
+	}
 }

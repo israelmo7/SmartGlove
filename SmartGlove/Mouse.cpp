@@ -2,20 +2,30 @@
 #include "Properties.h"
 
 #define STR(x) #x
+#define ABS(x) ((x < 0)?x*-1:x)
+#define BIGGER(a,b) ((a > b)? a:b)
+#define SMALLER(a,b) ((a < b)? a:b)
+#define ISINSIDE()
+#define LEVEL0 5
+#define LEVEL1 10
+#define LEVEL2 15
+#define LEVEL3 20
+#define KEYBOARD_TITLE "On-Screen KeyBoard"
 
 int WIDTH_SCREENm = 0;
 int HEIGHT_SCREENm = 0;
-int STEPMOVEMOUSE = 0;
-Mouse::Mouse(SOCKET s)
+int STEPMOVEMOUSE = 10;
+
+Mouse::Mouse(SOCKET s, string lastRecv)
 {
 	this->GetDesktopResolution();
 	Properties p = Properties();
 
 	STEPMOVEMOUSE = p.getValueByName(STR(STEPMOVEMOUSE));
-//	cout << "Width: " << WIDTH_SCREENm << "\nHeight: " << HEIGHT_SCREENm << "\nStep: " << STEPMOVEMOUSE << endl;
+
 	bool flag = true;
-	this->_first = true;
-	//
+	this->_lastPacket = InfoPacket(lastRecv);
+
 	int iResult;
 	char recvbuf[DEFAULT_BUFLEN + 1]; // More one for the NULL byte.
 
@@ -28,16 +38,11 @@ Mouse::Mouse(SOCKET s)
 		if (iResult > 0)
 		{
 			InfoPacket p = InfoPacket(recvbuf);
-			if (!this->_first)
-			{
-				Gesture g = p - this->_lastPacket;
 
-				flag = changePosition(g);
-			}
-			else
-			{
-				this->_first = false;
-			}
+			Gesture g = p - this->_lastPacket;
+
+			flag = changePosition(g,p);
+
 			
 			this->_lastPacket = p;
 
@@ -56,54 +61,49 @@ Mouse::Mouse(SOCKET s)
 
 	} while (flag);
 
-	closesocket(s);
+	cout << "Exit from 'Mouse Mode' \n";
 }
-bool Mouse::changePosition(Gesture g) 
+bool Mouse::changePosition(Gesture g, InfoPacket packet) 
 {
 	if (g._fingers[0] == "+")
 		return false;
-	else if (g._fingers[0] == "2")
+	/*else if (g._fingers[0] == "-")
 	{
 		if (!(this->openKeyboard() && this->FocusOnKeyboard(GetForegroundWindow())))
-		{
 			cout << "Error: " << GetLastError() << endl;
-			return false;
-		}
+
 		return true;
-	}
+	}*/
 	POINT p;
 	if (!GetCursorPos(&p))
 	{
 		cout << "Error: cant find mouse position \n";
 		return true;
 	}
-	g.printGesture();
 	
-	for (int i = 1; i < 3; i++)
-	{
-		if (g._fingers[i] == "+")
-		{
-			click(!(i - 1));
-			//release(!(i - 1));
-		}
-		else if (g._fingers[i] == "-")
-		{
-			release(!(i - 1));
-		}
-	}
+	if (g._fingers[1] == "+")
+		click(); // send true as default.
+	else if (g._fingers[1] == "-")
+		release(); // send true as default.
 
+	if (g._fingers[2] == "+")
+		click(false);
+	else if (g._fingers[2] == "-")
+		release(false);
+
+	int step = /*(this->onKeyboardCheck()) ? 20 :*/ STEPMOVEMOUSE;
 
 	if (g._acceleration[0] != "")
 	{
 		if (g._acceleration[0] == "+")
 		{
 			cout << "X+ \n";
-			p.x = (p.x + STEPMOVEMOUSE > WIDTH_SCREENm) ? WIDTH_SCREENm : p.x + STEPMOVEMOUSE;
+			p.x = (p.x + step > WIDTH_SCREENm) ? WIDTH_SCREENm : p.x + step;
 		}
 		else if (g._acceleration[0] == "-")
 		{
 			cout << "X- \n";
-			p.x = (p.x - STEPMOVEMOUSE < 0) ? 0 : p.x - STEPMOVEMOUSE;
+			p.x = (p.x - step < 0) ? 0 : p.x - step;
 		}
 	}
 	if (g._acceleration[1] != "")
@@ -111,13 +111,13 @@ bool Mouse::changePosition(Gesture g)
 		if (g._acceleration[1] == "+")
 		{
 			cout << "Y+ \n";
-			p.y = (p.y - STEPMOVEMOUSE < 0) ? 0 : p.y - STEPMOVEMOUSE;
+			p.y = (p.y - step < 0) ? 0 : p.y - step;
 
 		}
 		else if (g._acceleration[1] == "-")
 		{
 			cout << "Y- \n";
-			p.y = (p.y + STEPMOVEMOUSE > HEIGHT_SCREENm) ? HEIGHT_SCREENm : p.y + STEPMOVEMOUSE;
+			p.y = (p.y + step > HEIGHT_SCREENm) ? HEIGHT_SCREENm : p.y + step;
 		}
 	}
 	if (!SetCursorPos(p.x, p.y))
@@ -183,6 +183,7 @@ bool Mouse::FocusOnKeyboard(HWND window)
 {
 	if (window)
 	{
+		SetFocus(window);
 		RECT r;
 		if (GetWindowRect(window, &r))
 		{
@@ -213,4 +214,57 @@ void Mouse::GetDesktopResolution()
 	// (horizontal, vertical)
 	WIDTH_SCREENm = desktop.right;
 	HEIGHT_SCREENm = desktop.bottom;
+}
+int  Mouse::calculateDistance(int aOld,int aNew)
+{
+	int sum = aNew - aOld;
+	sum = ABS(sum);
+	if (sum > 5)
+	{
+		return LEVEL1;
+	}
+	else if (sum > 10)
+	{
+		return LEVEL2;
+	}
+	else if (sum > 15)
+	{
+		return LEVEL3;
+	}
+	else
+	{
+		return LEVEL0;
+	}
+}
+inline bool Mouse::onKeyboardCheck()
+{
+	HWND window = GetForegroundWindow();
+
+	if (window)
+	{
+		if (this->getWindowTitle() == KEYBOARD_TITLE)
+		{
+			RECT r;
+			if (GetWindowRect(window, &r))
+			{
+
+				if ((this->_position.x >= r.left && this->_position.x <= r.right) && (this->_position.y >= r.bottom && this->_position.y <= r.top))
+				{
+					return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+string Mouse::getWindowTitle()
+{
+	char wnd_title[256];
+	HWND hwnd = GetForegroundWindow(); // get handle of currently active window
+	GetWindowText(hwnd, wnd_title, sizeof(wnd_title));
+	return wnd_title;
+}
+bool Mouse::setCursorIcon(string path)
+{
+	//HCURSOR curs = (HCURSOR)LoadImage(NULL, IDC_WAIT, IMAGE_CURSOR, 0, 0, LR_SHARED);
 }

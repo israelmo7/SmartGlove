@@ -103,3 +103,8 @@ void Gesture::printGesture() const
 		cout << "axis(" << i + 1 << ") - " << this->_acceleration[i].c_str() << endl;
 	}
 }
+void Gesture::clearAll()
+{
+	this->_acceleration.clear();
+	this->_fingers.clear();
+}

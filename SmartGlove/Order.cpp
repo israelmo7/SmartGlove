@@ -1,7 +1,7 @@
 #include "Order.h"
 #include "cMoveWindow.h"
 #include <string>
-#include <iostream>
+#include <fstream>
 #include "Mouse.h"
 
 #define PATHFILE "Profile.txt"
@@ -15,13 +15,14 @@
 */
 Order::Order()
 {
-	fstream file;
+	ifstream file;
+	
 	file.open(PATHFILE);
 
 	if (file.is_open())
 	{
-		int cnt = 0;
 		string line;
+
 		while (getline(file, line))
 		{
 			string tempStr[8] = { "" };
@@ -33,7 +34,8 @@ Order::Order()
 		file.close();
 	}
 	else
-		cout << "Can not open this File - " << PATHFILE << "\n";
+		cout << "'"<< PATHFILE << "' File not found\n";// << PATHFILE << "\n";
+	
 }
 
 /*
@@ -45,26 +47,23 @@ Order::Order()
 */
 Order::~Order()
 {
-	/*for (unsigned int i = 0; i < this->_lines.size();i++)
-	{
-		delete this->_lines[i];
-	}*/
+	//
 }
 
 
-void Order::TheComparation(string* infoPackets, SOCKET s)
+void Order::TheComparation(string* infoPackets, SOCKET s, string lastRecv)
 {
 
 	for (unsigned int i = 0; i < this->_lines.size(); i++)
 	{
-		//cout << infoPackets[5] << " - " << this->_lines[i]->_acceleration << endl;
 		vector<string> line;
 		line.reserve(NUM_FINGERS + NUM_AXIS);
 		line.insert(line.end(), this->_lines[i]->_fingers.begin(), this->_lines[i]->_fingers.end());
 		line.insert(line.end(), this->_lines[i]->_acceleration.begin(), this->_lines[i]->_acceleration.end());
-		if (sameChecks(line, infoPackets) /*&& infoPackets[5] == this->_lines[i]->_acceleration*/)
+
+		if (sameChecks(line, infoPackets))
 		{
-			this->runCommand(this->_lines[i]->_commandNumber, s);
+			this->runCommand(this->_lines[i]->_commandNumber, s, lastRecv);
 		}
 	}
 }
@@ -110,13 +109,10 @@ int Order::fileLineToStringArray(string line, string* save)
 */
 bool Order::sameChecks(vector<string> a, string b[NUM_FINGERS])
 {
-	for (int i = 0; i < NUM_FINGERS; i++)
+	for (int i = 0; i < NUM_FINGERS+NUM_AXIS; i++)
 	{
-//		cout << a[i] << " == " << b[i] << "\n";
 		if (a[i] != b[i])
-		{
 			return false;
-		}
 	}
 	return true;
 }
@@ -127,7 +123,7 @@ bool Order::sameChecks(vector<string> a, string b[NUM_FINGERS])
 	Output:
 		none
 */
-void Order::runCommand(int c, SOCKET s)
+void Order::runCommand(int c, SOCKET s, string lastRecv)
 {
 	switch (c)
 	{
@@ -182,13 +178,13 @@ void Order::runCommand(int c, SOCKET s)
 	case MOUSEMODE:
 	{
 		printf("Change to 'Mouse Mode' \n");
-		Mouse m = Mouse(s);
+		Mouse m = Mouse(s, lastRecv);
 		break;
 	}
 	case DRAGMODE:
 	{
 		printf("Change to 'Drag Mode' \n");
-		cMoveWindow c = cMoveWindow(s);
+		cMoveWindow c = cMoveWindow(s, lastRecv);
 		break;
 	}
 	default:

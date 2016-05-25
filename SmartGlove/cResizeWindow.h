@@ -8,10 +8,9 @@ class cResizeWindow
 public:
 	cResizeWindow(HWND window);
 	~cResizeWindow();
-	bool changeWindowSize(Gesture g);
-	bool getPosition(POINT* topL, POINT* bottomR);
-
+	int getResizeStep(int p, bool bigger = true, bool width = true);
+	void reSizeForMoveWindowClass(Gesture g, int values[4], int fingerState[NUM_FINGERS]);
 private:
-	HWND _window;
+	RECT GetDesktopResolution(bool isDesktop = true);
 
 };

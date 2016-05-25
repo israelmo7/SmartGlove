@@ -9,7 +9,7 @@ using namespace std;
 class InfoPacket
 {
 public:
-	InfoPacket(){};
+	InfoPacket();
 	InfoPacket(string str);
 	~InfoPacket();
 	void showDetails() const;

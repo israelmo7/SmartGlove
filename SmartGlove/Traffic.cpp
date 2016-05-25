@@ -95,3 +95,15 @@ SOCKET Traffic::getSocket() const
 {
 	return this->_sock;
 }
+void Traffic::closeSocket()
+{
+	int iResult;
+
+	iResult = shutdown(this->_sock, SD_SEND);
+	if (iResult == SOCKET_ERROR)
+		std::cout << ("shutdown failed with error: %d\n", WSAGetLastError());
+
+	// cleanup
+	closesocket(this->_sock);
+	WSACleanup();
+}

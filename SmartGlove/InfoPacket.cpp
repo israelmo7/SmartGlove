@@ -1,7 +1,16 @@
 #include "InfoPacket.h"
 #define SIZE_OF_VALUE 2
 #define BIG_OR_NOT(a, b) ((a > b)? "+" : "-")
-#define SAME_OR_NOT(a,b) ((a == b)? "=": BIG_OR_NOT(a,b))
+#define SAME_OR_NOT(a,b) ((a == b)? "": BIG_OR_NOT(a,b))
+
+InfoPacket::InfoPacket()
+{
+	for (unsigned int i = 0; i < NUM_FINGERS; i++)
+	{
+		this->_pressFingers[i] = 0;
+	}
+	this->_gyroFingers.setValues("+00+00+00");
+}
 /*
 Ctor.
 Input:
@@ -105,14 +114,3 @@ Gesture InfoPacket::operator-(InfoPacket other) const
 
 	return g;
 }
-/*
-The functios returns the pressure of some finger.
-Input:
-finger - the finger number.
-Output:
-int - if finger exist return the finger pressure, otherwise return -1
-*/
-//int InfoPacket::getPressure(int finger)
-//{
-//	return ((finger >= 0 && finger < NUM_FINGERS) ? this->_pressFingers[finger] : -1);
-//}

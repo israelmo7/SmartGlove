@@ -10,20 +10,24 @@ class Mouse
 {
 public:
 	//Mouse(){}
-	Mouse(SOCKET s);
+	Mouse(SOCKET s, string lastRecv);
 	Mouse(POINT position) :_position(position){};
 	~Mouse(){}
 	
-	bool changePosition(Gesture g);
+	bool changePosition(Gesture g, InfoPacket packet);
+	int calculateDistance(int aOld, int aNew);
 	void click(bool leftClick = true);
 	void release(bool leftClick = true);
 	bool openKeyboard(string s = "C:/windows/System32/osk.exe");
 	bool FocusOnKeyboard(HWND window);
+	inline bool onKeyboardCheck();
+	bool setCursorIcon(string path);
 private:
 
 	void GetDesktopResolution();
+	string getWindowTitle();
+
 	POINT _position;
 	InfoPacket _lastPacket;
-	bool _first;
 	//Gesture _gesture;
 };
