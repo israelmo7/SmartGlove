@@ -101,6 +101,10 @@ int Order::fileLineToStringArray(string line, string* save)
 }
 /*
 	The function checks if both sames.
+	///EDIT:///
+	the function checks only when the value is changes,
+	for example if a = "112332" and b = "12232" it'll 
+	still work.
 	Input:
 		vector<string> a	  - the first
 		string b[NUM_FINGERS] - the seconed
@@ -109,9 +113,31 @@ int Order::fileLineToStringArray(string line, string* save)
 */
 bool Order::sameChecks(vector<string> a, string b[NUM_FINGERS])
 {
-	for (int i = 0; i < NUM_FINGERS+NUM_AXIS; i++)
+	vector<string> arr1;
+	vector<string> arr2;
+	for (int i = 0; i < NUM_FINGERS + NUM_AXIS; i++){
+		if (i != 0){
+			if (!(a[i] == a[i - 1])){
+				arr1.push_back(a[i]);
+			}
+		}
+		else{
+			arr1.push_back(a[i]);
+		}
+	}
+	for (int i = 0; i < NUM_FINGERS + NUM_AXIS; i++){
+		if (i != 0){
+			if (!(b[i] == b[i - 1])){
+				arr2.push_back(b[i]);
+			}
+		}
+		else{
+			arr2.push_back(b[i]);
+		}
+	}
+	for (int i = 0; i < NUM_FINGERS + NUM_AXIS; i++)
 	{
-		if (a[i] != b[i])
+		if (arr1[i] != arr2[i])
 			return false;
 	}
 	return true;
@@ -193,7 +219,7 @@ void Order::runCommand(int c, SOCKET s, string lastRecv)
 	}
 }
 /*
-	The Functionsend input to the computer (simulate)
+	The Function sends input to the computer (simulate)
 	Input:
 		WORD vk - the Virtual Key you want to send
 	Output:
@@ -214,6 +240,14 @@ bool Order::sendInput(WORD vk)
 
 	return (SendInput(1, &i, sizeof(INPUT)) != 0);
 }
+
+/*
+	This function is used to print the lines.
+	Input:
+		none.
+	Output:
+		prints the lines.
+*/
 void Order::printLines()
 {
 	for (unsigned int i = 0; i < this->_lines.size(); i++)

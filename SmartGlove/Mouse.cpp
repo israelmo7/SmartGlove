@@ -65,15 +65,10 @@ Mouse::Mouse(SOCKET s, string lastRecv)
 }
 bool Mouse::changePosition(Gesture g, InfoPacket packet) 
 {
+	//Exit Mouse Mode condition:
 	if (g._fingers[0] == "+")
 		return false;
-	/*else if (g._fingers[0] == "-")
-	{
-		if (!(this->openKeyboard() && this->FocusOnKeyboard(GetForegroundWindow())))
-			cout << "Error: " << GetLastError() << endl;
 
-		return true;
-	}*/
 	POINT p;
 	if (!GetCursorPos(&p))
 	{
@@ -87,11 +82,11 @@ bool Mouse::changePosition(Gesture g, InfoPacket packet)
 		release(); // send true as default.
 
 	if (g._fingers[2] == "+")
-		click(false);
+		click(false); //right click
 	else if (g._fingers[2] == "-")
 		release(false);
 
-	int step = /*(this->onKeyboardCheck()) ? 20 :*/ STEPMOVEMOUSE;
+	int step = STEPMOVEMOUSE;
 
 	if (g._acceleration[0] != "")
 	{
@@ -264,7 +259,11 @@ string Mouse::getWindowTitle()
 	GetWindowText(hwnd, wnd_title, sizeof(wnd_title));
 	return wnd_title;
 }
+
+
+//DELETE:
 bool Mouse::setCursorIcon(string path)
 {
 	//HCURSOR curs = (HCURSOR)LoadImage(NULL, IDC_WAIT, IMAGE_CURSOR, 0, 0, LR_SHARED);
+	return false;
 }

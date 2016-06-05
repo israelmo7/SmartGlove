@@ -12,6 +12,7 @@ public:
 
 	void getVal(int vals[3]) const;
 	int* getVal() const;
+	int getVal(int axis) const;
 private:
 	int _x,
 		_y,

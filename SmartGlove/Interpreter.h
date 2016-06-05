@@ -22,7 +22,7 @@ public:
 	void showSeq();
 	void clearAll();
 	void calculateSymbol(InfoPacket newPacket);
-	void calculateSymbol(int sumAxis[NUM_AXIS]);
+	//void calculateSymbol(int sumAxis[NUM_AXIS]);
 private:
 	InfoPacket _lastPacket; // The last packet			
 	//Gesture _symbols;

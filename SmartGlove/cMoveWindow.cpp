@@ -56,7 +56,7 @@ cMoveWindow::cMoveWindow(SOCKET s, string lastRecv)
 		}
 
 	} while (flag);
-	cout << "Exit from 'Drag Mode' \n";
+	cout << "Exit from 'Window Control Mode' \n";
 }
 cMoveWindow::~cMoveWindow()
 {
@@ -65,14 +65,16 @@ cMoveWindow::~cMoveWindow()
 
 bool cMoveWindow::changePosition(Gesture g, int fingerState[NUM_FINGERS])
 {
-
+	//Interact with Foreground Window.
 	cResizeWindow res = cResizeWindow(GetForegroundWindow());
-
+	
+	//Exit from Window Control Mode condition:
 	if (g._fingers[0] == "+" &&
 		g._fingers[1] == "+" &&
 		g._fingers[2] == "+")
 		return false;
 
+	//Replace Windows (like alt+tab).
 	if (g._fingers[2] == "+")
 		this->replaceWindows();
 
@@ -98,7 +100,6 @@ bool cMoveWindow::changePosition(Gesture g, int fingerState[NUM_FINGERS])
 		if (g._acceleration[0] == "+")
 		{
 			cout << "X+ \n";
-			//temp.x += STEP;
 			topL.x = (bottomR.x + STEPMOVEWINDOW > WIDTH_SCREENw) ? topL.x : topL.x + STEPMOVEWINDOW;
 		}
 		else if (g._acceleration[0] == "-")
@@ -138,6 +139,7 @@ bool cMoveWindow::getPosition(POINT* topL, POINT* bottomR)
 {
 	HWND window;
 	
+	//Interact with Foreground Window.
 	window = GetForegroundWindow();
 	RECT r;
 
@@ -155,14 +157,6 @@ bool cMoveWindow::getPosition(POINT* topL, POINT* bottomR)
 }
 bool cMoveWindow::setWindowPos(int values[4])
 {
-	//values[0] - top left.x
-	//values[1] - top left.y
-	//values[2] - width
-	//values[3] - height
-
-	//cout << "(" << values[0] << ", " << values[1] << ")\n";
-	//cout << "Width - " << values[2] << "\nHeight - " << values[3] << "\n";
-
 	HWND window = GetForegroundWindow();
 	if(MoveWindow(window, values[0], values[1], values[2], values[3], false))
 	{

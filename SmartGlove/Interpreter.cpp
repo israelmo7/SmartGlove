@@ -147,21 +147,21 @@ void Interpreter::clearAll()
 bool Interpreter::InfoPacketsArrayToCharsArray(InfoPacket newPacket)
 {
 
-	int newAxis[NUM_AXIS] = { 0 };
-	int sumAxis[NUM_AXIS] = { 0 };
+	//int newAxis[NUM_AXIS] = { 0 };
+	//int sumAxis[NUM_AXIS] = { 0 };
 
-	this->_lastPacket.getGyro().getVal(sumAxis);
-	newPacket.getGyro().getVal(newAxis);
+	//this->_lastPacket.getGyro().getVal(sumAxis);
+	//newPacket.getGyro().getVal(newAxis);
 	//cout << "N:(0) " << newAxis[0] << ". (1) " << newAxis[1] << ". (2) " << newAxis[2] << "\n";
 	//cout << "S:(0) " << sumAxis[0] << ". (1) " << sumAxis[1] << ". (2) " << sumAxis[2] << "\n";
 
-	sumAxis[0] = newAxis[0] - sumAxis[0];
-	sumAxis[1] = newAxis[1] - sumAxis[1];
-	sumAxis[2] = newAxis[2] - sumAxis[2];
+	//sumAxis[0] = newAxis[0] - sumAxis[0];
+	//sumAxis[1] = newAxis[1] - sumAxis[1];
+	//sumAxis[2] = newAxis[2] - sumAxis[2];
 
 	
 	this->calculateSymbol(newPacket);
-	this->calculateSymbol(sumAxis);
+	//this->calculateSymbol(sumAxis, newAxis);
 
 	return this->checkToEnd();
 }
@@ -193,25 +193,57 @@ void Interpreter::showSeq()
 }
 void Interpreter::calculateSymbol(InfoPacket newPacket)
 {
-	for (unsigned int i = 0; i < NUM_FINGERS; i++)
+	for (unsigned int i = 0; i < NUM_FINGERS + NUM_AXIS; i++)
 	{
-		int sum = this->_lastPacket.getPress(i).getValue() - newPacket.getPress(i).getValue();
-		//printf("Sum: (%d-%d) = %d\n", this->_lastPacket.getPress(i).getValue(), newPacket.getPress(i).getValue(), sum);
-
-		if (sum >= MAX_OFFSET) // New > Old
+		int sum = 0;
+		if (i < NUM_FINGERS){
+			sum = this->_lastPacket.getPress(i).getValue() - newPacket.getPress(i).getValue();
+		}
+		else{
+			sum = this->_lastPacket.getGyro().getVal(i-NUM_FINGERS) - newPacket.getGyro.getVal(i-NUM_FINGERS);
+		}
+		
+		if (sum >= MAX_OFFSET || sum <= -MAX_OFFSET) // New different from Old
 		{
 			this->_equalsSeq[i] = '0';
 
 			//
-			if (this->_symbol[i].length())
+			/*if (this->_symbol[i].length())
 			{
 				if (this->_symbol[i][this->_symbol[i].length() - 1] != '-')
 					this->_symbol[i].push_back('-');
 			}
 			else
 				this->_symbol[i].push_back('-');
+			*/
+			char offset[5];
+			if (i < NUM_FINGERS){
+				for (int j = 0; j < MAX_OFFSET; j++){
+					if (newPacket.getPress(j).getValue() >= j*MAX_OFFSET && newPacket.getPress(j).getValue() <= j*MAX_OFFSET + 9){
+						itoa(j, offset, 10);
+						this->_symbol[j].append(offset);
+						break;
+					}
+				}
+			}
+			else{
+				for (int j = 0; j < MAX_OFFSET; j++){
+					if (newPacket.getPress(j).getValue() < j*MAX_OFFSET || newPacket.getPress(j).getValue() > j*MAX_OFFSET + 9){
+						itoa(j, offset, 10);
+						this->_symbol[j].append(offset);
+						break;
+					}
+				}
+				for (int j = -10; j < MAX_OFFSET; j++){
+					if (newPacket.getPress(j).getValue() < j*MAX_OFFSET || newPacket.getPress(j).getValue() > j*MAX_OFFSET + 9){
+						itoa(j, offset, 10);
+						this->_symbol[j].append(offset);
+						break;
+					}
+				}
+			}
 		}
-		else if (sum <= -MAX_OFFSET) // Old > New
+		/*else if (sum <= -MAX_OFFSET) // Old > New
 		{
 			this->_equalsSeq[i] = '0';
 
@@ -222,7 +254,7 @@ void Interpreter::calculateSymbol(InfoPacket newPacket)
 			}
 			else
 				this->_symbol[i].push_back('+');
-		}
+		}*/
 		else
 		{
 			this->_equalsSeq[i] += 1;
@@ -235,7 +267,7 @@ void Interpreter::calculateSymbol(InfoPacket newPacket)
 			//}
 		}
 	}
-}
+}/*
 void Interpreter::calculateSymbol(int sumAxis[NUM_AXIS])
 {
 	const int LEN = NUM_FINGERS + NUM_AXIS;
@@ -276,98 +308,5 @@ void Interpreter::calculateSymbol(int sumAxis[NUM_AXIS])
 		//		}
 		//	}
 		//}
-	}
-}
-/*
-void Interpreter::checkAccel(InfoPacket pack)
-{
-	//val[0] = x
-	//val[1] = y
-	//val[2] = z
-
-	int val[3];
-	pack.getGyro().getVal(val);
-
-	if (A_BIGGER_THAN_B_AND_C(X,Y,Z))								//(CHECK_ZERO(Y, Z) && CHECK_GRAVITY(X))
-	{
-		if (IS_POSITIVE(X))
-		{
-			this->_stateA = PALM_TO_ME;
-		}
-		else
-		{
-			this->_stateA = NE_PALM_TO_ME;
-		}
-	}
-	else if (A_BIGGER_THAN_B_AND_C(Y, X, Z))						//(CHECK_ZERO(X, Z) && CHECK_GRAVITY(Y))
-	{
-		if (IS_POSITIVE(Y))
-		{
-			this->_stateA = NE_PALM_TO_LEFT;
-		}
-		else
-		{
-			this->_stateA = PALM_TO_LEFT;
-		}
-	}
-	else if (A_BIGGER_THAN_B_AND_C(Z, Y, X))						//((CHECK_ZERO(X, Y) && CHECK_GRAVITY(Z)))
-	{
-		if (IS_POSITIVE(Z))
-		{
-			this->_stateA = NE_PALM_TO_SKY;
-		}
-		else
-		{
-			this->_stateA = PALM_TO_SKY;
-		}
-	}
-}
-
-void Interpreter::showAccel()
-{
-	switch (this->_stateA[1])
-	{
-	case 's':
-	{
-		if (_stateA[0] == '+')
-		{
-			cout << "Palm to Sky. \n";
-		}
-		else
-		{
-			cout << "Palm to Ground. \n";
-		}
-		break;
-	}
-
-	case 'l':
-	{
-		if (_stateA[0] == '+')
-		{
-			cout << "Palm to Left. \n";
-		}
-		else
-		{
-			cout << "Palm to Right. \n";
-		}
-		break;
-	}
-
-	case 'm':
-	{
-		if (_stateA[0] == '+')
-		{
-			cout << "Palm to Me. \n";
-		}
-		else
-		{
-			cout << "Palm not to Me. \n";
-		}
-		break;
-	}
-
-	default:
-		cout << "None\n";
-		break;
 	}
 }*/

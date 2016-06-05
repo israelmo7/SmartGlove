@@ -32,11 +32,6 @@ RECT cResizeWindow::GetDesktopResolution(bool isDesktop)
 }
 void cResizeWindow::reSizeForMoveWindowClass(Gesture g, int values[4], int fingerState[NUM_FINGERS])
 {
-	//[0] - TL.x
-	//[1] - TL.y
-	//[2] - Width
-	//[3] - Height
-	
 	if (g._fingers[0] != "")
 	{
 		int tempX;

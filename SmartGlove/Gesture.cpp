@@ -17,34 +17,12 @@ Gesture::Gesture()
 	}
 	this->_commandNumber = -1;
 }
+
 /*
-Gesture::Gesture(InfoPacket i)
-{
-	int temp[3];
-	char buff[4];
-
-	i.getGyro().getVal(temp);
-
-	itoa(temp[0], buff, 10);
-	this->_acceleration.push_back(buff);
-
-	itoa(temp[1], buff, 10);
-	this->_acceleration.push_back(buff);
-
-	itoa(temp[2], buff, 10);
-	this->_acceleration.push_back(buff);
-
-	for (int j = 0; j < 5; j++)
-	{
-		itoa(i.getPress(j).getValue(), buff, 10);
-		this->_fingers.push_back(buff);
-	}
-}
+	Ctor (create from parameters [1]).
 */
 Gesture::Gesture(string fingers[NUM_FINGERS], int commandNumber, string acceleration[NUM_AXIS])
 {
-	//this->_fingers = new string[NUM_FINGERS];
-	//this->_acceleration = new string[NUM_AXIS];
 	this->_commandNumber = commandNumber;
 
 	for (int i = 0; i < NUM_FINGERS; i++)
@@ -56,10 +34,12 @@ Gesture::Gesture(string fingers[NUM_FINGERS], int commandNumber, string accelera
 		this->_acceleration[i] = _acceleration[i];
 	}
 }
+
+/*
+	Ctor (create from parameters [2]).
+*/
 Gesture::Gesture(string data[NUM_FINGERS + NUM_AXIS], int commandNumber)
 {
-	//this->_fingers = new string[NUM_FINGERS];
-	//this->_acceleration = new string[NUM_AXIS];
 	this->_commandNumber = commandNumber;
 
 	if (this->_fingers.size() == 0){
@@ -85,13 +65,20 @@ Gesture::Gesture(string data[NUM_FINGERS + NUM_AXIS], int commandNumber)
 	}
 }
 
-Gesture::~Gesture()
-{
-	//delete this->_fingers;
-}
+/*
+	Dtor.
+*/
+Gesture::~Gesture(){}
+
+/*
+	This function is used to print the Gesture info.
+	Input:
+		none.
+	Output:
+		prints the information.
+*/
 void Gesture::printGesture() const
 {
-	//cout << "Acceleration: " << this->_acceleration << endl;
 	cout << "CommandNumber: " << this->_commandNumber << endl;
 
 	for (int i = 0; i < NUM_FINGERS; i++)
@@ -103,6 +90,14 @@ void Gesture::printGesture() const
 		cout << "axis(" << i + 1 << ") - " << this->_acceleration[i].c_str() << endl;
 	}
 }
+
+/*
+	This function is used to clear the Gesture.
+	Input:
+		none.
+	Output
+		none.
+*/
 void Gesture::clearAll()
 {
 	this->_acceleration.clear();

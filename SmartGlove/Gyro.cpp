@@ -87,3 +87,24 @@ int* Gyro::getVal() const
 	ret[2] = this->_z;
 	return ret;
 }
+
+/*
+Get single value of specific axis.
+Input:
+int axis - the axis.
+Output:
+int - the value of the axis.
+*/
+int Gyro::getVal(int axis) const
+{
+	switch (axis){
+	case 0:
+		return this->_x;
+	case 1:
+		return this->_y;
+	case 2:
+		return this->_z;
+	default:
+		return -1;
+}
+}

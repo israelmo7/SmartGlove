@@ -4,9 +4,8 @@
 #include "Interpreter.h"
 #include "Order.h"
 #include "Mouse.h"
-//#include "cMoveWindow.h"
 
-#define DLLNAME "D:\\Users\\user-pc\\Documents\\Visual Studio 2013\\Projects\\SmartGlove\\SmartGlove\\DllSmartGlove.dll"
+#define DLLNAME "DllSmartGlove.dll"
 #define DEFAULT_BUFLEN 19 // Size of The packet
 #define FULL_SIZE 8 // 5 fingers + 3 Axis
 
@@ -18,9 +17,6 @@ void loadDll();
 
 int main()
 {
-	//cMoveWindow m = cMoveWindow(0);
-	//loadDll();
-	//ShowWindow(GetForegroundWindow(), SW_HIDE);
 	Traffic connection = Traffic();
 	Interpreter interPreter = Interpreter();
 	Order commanderOrder = Order();

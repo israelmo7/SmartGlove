@@ -64,6 +64,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="cMoveWindow.cpp" />
+    <ClCompile Include="cResizeWindow.cpp" />
     <ClCompile Include="Gesture.cpp" />
     <ClCompile Include="Gyro.cpp" />
     <ClCompile Include="Interpreter.cpp" />
@@ -72,9 +74,12 @@
     <ClCompile Include="InfoPacket.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pressure.cpp" />
+    <ClCompile Include="Properties.cpp" />
     <ClCompile Include="Traffic.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="cMoveWindow.h" />
+    <ClInclude Include="cResizeWindow.h" />
     <ClInclude Include="Gesture.h" />
     <ClInclude Include="Gyro.h" />
     <ClInclude Include="Interpreter.h" />
@@ -83,10 +88,12 @@
     <ClInclude Include="InfoPacket.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="Pressure.h" />
+    <ClInclude Include="Properties.h" />
     <ClInclude Include="Traffic.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Profile.txt" />
+    <Text Include="Properties.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
