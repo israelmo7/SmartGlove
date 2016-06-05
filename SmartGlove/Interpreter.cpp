@@ -1,30 +1,7 @@
 #include "Interpreter.h"
 #include "Properties.h"
-
 #define STR(x) #x
-//#include "Order.h"
-//#include <fstream>
-//#include <string>
-
-//#define MIN_GRAVITY			7
-//#define  MAX_NON_GRAVITY    2
-
-//#define X val[0]
-//#define Y val[1]
-//#define Z val[2]
-
-
-
-//#define ABS(a) ((a < 0)? a*-1: a)
-//
-//#define A_BIGGER_THAN_B(a,b) ((ABS(a) > ABS(b))? true: false)
-//#define A_BIGGER_THAN_B_AND_C(a,b,c) ((A_BIGGER_THAN_B(a,b) && A_BIGGER_THAN_B(a,c))?true:false)
-//
-//
-//#define CHECK_NON_GRAVITY(a) ((a > MAX_NON_GRAVITY)? false: true)
-//#define CHECK_ZERO(a, b) ((CHECK_NON_GRAVITY(ABS(a)) && CHECK_NON_GRAVITY(ABS(b)))? true: false)
-//#define CHECK_GRAVITY(c) ((ABS(c) > MIN_GRAVITY)? true: false)
-//#define IS_POSITIVE(a) ((a > 0)? true: false)
+#define CHECK_FIRST_PRESS _lastPacket.getPress(0).getValue()==0 && _lastPacket.getPress(1).getValue()== 0 && _lastPacket.getPress(2).getValue()==0 && _lastPacket.getPress(3).getValue()==0 && _lastPacket.getPress(4).getValue()==0
 
 
 int MAX_OFFSET = 0;
@@ -138,6 +115,9 @@ void Interpreter::clearAll()
 	*	if the values in some finger is 60, 75, 75, 50
 		then i see several positive jump, zero jump and negative jump and i write in the char array, + = -
 
+		//EDIT:
+		same shit but with values and not symbols.
+
 	Input:
 		string a[NUM_FINGERS] - Save here the chars array.
 	Output:
@@ -146,22 +126,7 @@ void Interpreter::clearAll()
 
 bool Interpreter::InfoPacketsArrayToCharsArray(InfoPacket newPacket)
 {
-
-	//int newAxis[NUM_AXIS] = { 0 };
-	//int sumAxis[NUM_AXIS] = { 0 };
-
-	//this->_lastPacket.getGyro().getVal(sumAxis);
-	//newPacket.getGyro().getVal(newAxis);
-	//cout << "N:(0) " << newAxis[0] << ". (1) " << newAxis[1] << ". (2) " << newAxis[2] << "\n";
-	//cout << "S:(0) " << sumAxis[0] << ". (1) " << sumAxis[1] << ". (2) " << sumAxis[2] << "\n";
-
-	//sumAxis[0] = newAxis[0] - sumAxis[0];
-	//sumAxis[1] = newAxis[1] - sumAxis[1];
-	//sumAxis[2] = newAxis[2] - sumAxis[2];
-
-	
 	this->calculateSymbol(newPacket);
-	//this->calculateSymbol(sumAxis, newAxis);
 
 	return this->checkToEnd();
 }
@@ -193,120 +158,68 @@ void Interpreter::showSeq()
 }
 void Interpreter::calculateSymbol(InfoPacket newPacket)
 {
-	for (unsigned int i = 0; i < NUM_FINGERS + NUM_AXIS; i++)
-	{
-		int sum = 0;
-		if (i < NUM_FINGERS){
-			sum = this->_lastPacket.getPress(i).getValue() - newPacket.getPress(i).getValue();
-		}
-		else{
-			sum = this->_lastPacket.getGyro().getVal(i-NUM_FINGERS) - newPacket.getGyro.getVal(i-NUM_FINGERS);
-		}
-		
-		if (sum >= MAX_OFFSET || sum <= -MAX_OFFSET) // New different from Old
+	int checkFirst[3];
+	_lastPacket.getGyro().getVal(checkFirst);
+	if (!(checkFirst[0] == 0 && checkFirst[1] == 0 && checkFirst[2] == 0 && CHECK_FIRST_PRESS)){
+		for (unsigned int i = 0; i < NUM_FINGERS + NUM_AXIS; i++)
 		{
-			this->_equalsSeq[i] = '0';
-
-			//
-			/*if (this->_symbol[i].length())
-			{
-				if (this->_symbol[i][this->_symbol[i].length() - 1] != '-')
-					this->_symbol[i].push_back('-');
-			}
-			else
-				this->_symbol[i].push_back('-');
-			*/
-			char offset[5];
+			int sum = 0;
 			if (i < NUM_FINGERS){
-				for (int j = 0; j < MAX_OFFSET; j++){
-					if (newPacket.getPress(j).getValue() >= j*MAX_OFFSET && newPacket.getPress(j).getValue() <= j*MAX_OFFSET + 9){
-						itoa(j, offset, 10);
-						this->_symbol[j].append(offset);
-						break;
-					}
-				}
+				sum = this->_lastPacket.getPress(i).getValue() - newPacket.getPress(i).getValue();
 			}
 			else{
-				for (int j = 0; j < MAX_OFFSET; j++){
-					if (newPacket.getPress(j).getValue() < j*MAX_OFFSET || newPacket.getPress(j).getValue() > j*MAX_OFFSET + 9){
-						itoa(j, offset, 10);
-						this->_symbol[j].append(offset);
-						break;
-					}
-				}
-				for (int j = -10; j < MAX_OFFSET; j++){
-					if (newPacket.getPress(j).getValue() < j*MAX_OFFSET || newPacket.getPress(j).getValue() > j*MAX_OFFSET + 9){
-						itoa(j, offset, 10);
-						this->_symbol[j].append(offset);
-						break;
-					}
-				}
+				int a =
+					sum = this->_lastPacket.getGyro().getVal(i - NUM_FINGERS) - newPacket.getGyro().getVal(i - NUM_FINGERS);
 			}
-		}
-		/*else if (sum <= -MAX_OFFSET) // Old > New
-		{
-			this->_equalsSeq[i] = '0';
 
-			if (this->_symbol[i].length())
+			if (sum >= MAX_OFFSET || sum <= -MAX_OFFSET) // New different from Old
 			{
-				if (this->_symbol[i][this->_symbol[i].length() - 1] != '+')
-					this->_symbol[i].push_back('+');
+				this->_equalsSeq[i] = '0';
+
+				char offset[3];
+				if (i < NUM_FINGERS){
+					int symbol = newPacket.getPress(i).getValue() / 10 + 1;
+					_itoa(symbol, offset, 10);
+					this->_symbol[i].append(offset);
+				}
+				else{
+					int symbol = newPacket.getGyro().getVal(i - NUM_FINGERS) / 10;
+					if (symbol > 0){
+						symbol++;
+					}
+					else if (symbol < 0){
+						symbol--;
+					}
+					_itoa(symbol, offset, 10);
+					this->_symbol[i].append(offset);
+				}
 			}
 			else
-				this->_symbol[i].push_back('+');
-		}*/
-		else
-		{
-			this->_equalsSeq[i] += 1;
-			//if (this->_symbol[i].length())
-			//{
-			//	if (this->_symbol[i][this->_symbol[i].length() - 1] != '=')
-			//	{
-			//		this->_symbol[i].push_back('=');
-			//	}
-			//}
+			{
+				this->_equalsSeq[i] += 1;
+			}
 		}
 	}
-}/*
-void Interpreter::calculateSymbol(int sumAxis[NUM_AXIS])
-{
-	const int LEN = NUM_FINGERS + NUM_AXIS;
-	int cnt = 0;
-	for (unsigned int i = NUM_FINGERS; i < LEN; i++ ,cnt++)
-	{
-		//cout << "Sum" << sumAxis[cnt] << "\n";
+	else{
+		for (unsigned int i = 0; i < NUM_FINGERS + NUM_AXIS; i++){
+			char offset[3];
 
-		if (sumAxis[cnt] >= MAX_OFFSET) // New > Old
-		{
-
-			if (this->_symbol[i].length())
-			{
-				if (this->_symbol[i][this->_symbol[i].length() - 1] != '+')
-					this->_symbol[i].push_back('+');
+			if (i < NUM_FINGERS){
+				int symbol = newPacket.getPress(i).getValue() / 10 + 1;
+				_itoa(symbol, offset, 10);
+				this->_symbol[i].append(offset);
 			}
-			else
-				this->_symbol[i].push_back('+');
-		}
-		else if (sumAxis[cnt] <= -MAX_OFFSET) // Old > New
-		{
-
-			if (this->_symbol[i].length())
-			{
-				if (this->_symbol[i][this->_symbol[i].length() - 1] != '-')
-					this->_symbol[i].push_back('-');
+			else{
+				int symbol = newPacket.getGyro().getVal(i - NUM_FINGERS);
+				if (symbol > 0){
+					symbol = symbol / 10 + 1;
+				}
+				else if (symbol < 0){
+					symbol = symbol / 10 - 1;
+				}
+				_itoa(symbol, offset, 10);
+				this->_symbol[i].append(offset);
 			}
-			else
-				this->_symbol[i].push_back('-');
 		}
-		//else
-		//{
-		//	if (this->_symbol[i].length())
-		//	{
-		//		if (this->_symbol[i][this->_symbol[i].length() - 1] != '=')
-		//		{
-		//			this->_symbol[i].push_back('=');
-		//		}
-		//	}
-		//}
 	}
-}*/
+}

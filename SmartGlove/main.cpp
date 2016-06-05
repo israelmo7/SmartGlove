@@ -31,11 +31,10 @@ int main()
 
 		iResult = recv(ClientSocket, recvbuf, DEFAULT_BUFLEN, 0); // Recv Data from Client.
 		recvbuf[DEFAULT_BUFLEN] = NULL;
-		cout << recvbuf << endl;
 		if (iResult > 0) 
 		{
+			cout << recvbuf << endl;
 
-			
 			lastOne = true;
 			InfoPacket temPacket = InfoPacket(recvbuf); // Make InfoPacket from the Data.
 
@@ -63,6 +62,9 @@ int main()
 				commanderOrder.TheComparation(toSend, ClientSocket,recvbuf);
 				interPreter.clearAll();
 			}
+			else{
+				break;
+			}
 		}
 		else  
 		{
@@ -70,11 +72,11 @@ int main()
 			connection.closeSocket();
 			return 1;
 		}
-
 	} while (true);
 
 
 	connection.closeSocket();
+	system("pause");
 	return 0;
 }
 /*

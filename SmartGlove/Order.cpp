@@ -101,10 +101,6 @@ int Order::fileLineToStringArray(string line, string* save)
 }
 /*
 	The function checks if both sames.
-	///EDIT:///
-	the function checks only when the value is changes,
-	for example if a = "112332" and b = "12232" it'll 
-	still work.
 	Input:
 		vector<string> a	  - the first
 		string b[NUM_FINGERS] - the seconed
@@ -113,31 +109,9 @@ int Order::fileLineToStringArray(string line, string* save)
 */
 bool Order::sameChecks(vector<string> a, string b[NUM_FINGERS])
 {
-	vector<string> arr1;
-	vector<string> arr2;
-	for (int i = 0; i < NUM_FINGERS + NUM_AXIS; i++){
-		if (i != 0){
-			if (!(a[i] == a[i - 1])){
-				arr1.push_back(a[i]);
-			}
-		}
-		else{
-			arr1.push_back(a[i]);
-		}
-	}
-	for (int i = 0; i < NUM_FINGERS + NUM_AXIS; i++){
-		if (i != 0){
-			if (!(b[i] == b[i - 1])){
-				arr2.push_back(b[i]);
-			}
-		}
-		else{
-			arr2.push_back(b[i]);
-		}
-	}
 	for (int i = 0; i < NUM_FINGERS + NUM_AXIS; i++)
 	{
-		if (arr1[i] != arr2[i])
+		if (a[i] != b[i])
 			return false;
 	}
 	return true;
