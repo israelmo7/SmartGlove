@@ -37,14 +37,14 @@ Mouse::Mouse(SOCKET s, string lastRecv)
 		//cout << recvbuf << endl;
 		if (iResult > 0)
 		{
-			InfoPacket p = InfoPacket(recvbuf);
+			InfoPacket packet = InfoPacket(recvbuf);
 
-			Gesture g = p - this->_lastPacket;
+			Gesture g = packet - this->_lastPacket;
 
-			flag = changePosition(g,p);
+			flag = changePosition(g,packet);
 
 			
-			this->_lastPacket = p;
+			this->_lastPacket = packet;
 
 		}
 		else if (iResult == 0)
@@ -65,8 +65,17 @@ Mouse::Mouse(SOCKET s, string lastRecv)
 }
 bool Mouse::changePosition(Gesture g, InfoPacket packet) 
 {
+	int fingersInt[3] = { atoi(g._fingers[0].c_str()), atoi(g._fingers[1].c_str()),
+		atoi(g._fingers[2].c_str()) };
+	bool fingersRange[3] = { (valueRange(packet.getPress(0).getValue()) != valueRange(this->_lastPacket.getPress(0).getValue())),
+		(valueRange(packet.getPress(1).getValue()) != valueRange(this->_lastPacket.getPress(1).getValue())),
+		(valueRange(packet.getPress(2).getValue()) != valueRange(this->_lastPacket.getPress(2).getValue())) };
+	int accelInt[2] = { atoi(g._acceleration[0].c_str()), atoi(g._acceleration[1].c_str()) };
+	bool accelRange[2] = { (valueRange(packet.getGyro().getVal(0)) != valueRange(this->_lastPacket.getGyro().getVal(0))),
+		(valueRange(packet.getGyro().getVal(1)) != valueRange(this->_lastPacket.getGyro().getVal(1))) };
+	
 	//Exit Mouse Mode condition:
-	if (g._fingers[0] == "+")
+	if (fingersInt[0] > 0 && fingersRange[0])
 		return false;
 
 	POINT p;
@@ -75,44 +84,50 @@ bool Mouse::changePosition(Gesture g, InfoPacket packet)
 		cout << "Error: cant find mouse position \n";
 		return true;
 	}
-	
-	if (g._fingers[1] == "+")
-		click(); // send true as default.
-	else if (g._fingers[1] == "-")
-		release(); // send true as default.
+	if (fingersRange[1]){
+		if (fingersInt[1] < 0)
+			click(); // left click - sends true as default.
+		else if (fingersInt[1] > 0)
+			release(); // left release - sends true as default.
+	}
 
-	if (g._fingers[2] == "+")
-		click(false); //right click
-	else if (g._fingers[2] == "-")
-		release(false);
-
+	if (fingersRange[2]){
+		if (fingersInt[2] < 0)
+			click(false); //right click.
+		else if (fingersInt[2] > 0)
+			release(false); //right release.
+	}
 	int step = STEPMOVEMOUSE;
 
-	if (g._acceleration[0] != "")
+	if (g._acceleration[0] != "0")
 	{
-		if (g._acceleration[0] == "+")
-		{
-			cout << "X+ \n";
-			p.x = (p.x + step > WIDTH_SCREENm) ? WIDTH_SCREENm : p.x + step;
-		}
-		else if (g._acceleration[0] == "-")
-		{
-			cout << "X- \n";
-			p.x = (p.x - step < 0) ? 0 : p.x - step;
+		if (accelRange[0]){
+			if (accelInt[0] < 0)
+			{
+				cout << "X+ \n";
+				p.x = (p.x + step > WIDTH_SCREENm) ? WIDTH_SCREENm : p.x + step;
+			}
+			else if (accelInt[0] > 0)
+			{
+				cout << "X- \n";
+				p.x = (p.x - step < 0) ? 0 : p.x - step;
+			}
 		}
 	}
-	if (g._acceleration[1] != "")
+	if (g._acceleration[1] != "0")
 	{
-		if (g._acceleration[1] == "+")
-		{
-			cout << "Y+ \n";
-			p.y = (p.y - step < 0) ? 0 : p.y - step;
+		if (accelRange[1]){
+			if (accelInt[1] < 0)
+			{
+				cout << "Y+ \n";
+				p.y = (p.y - step < 0) ? 0 : p.y - step;
 
-		}
-		else if (g._acceleration[1] == "-")
-		{
-			cout << "Y- \n";
-			p.y = (p.y + step > HEIGHT_SCREENm) ? HEIGHT_SCREENm : p.y + step;
+			}
+			else if (accelInt[1] > 0)
+			{
+				cout << "Y- \n";
+				p.y = (p.y + step > HEIGHT_SCREENm) ? HEIGHT_SCREENm : p.y + step;
+			}
 		}
 	}
 	if (!SetCursorPos(p.x, p.y))
@@ -266,4 +281,25 @@ bool Mouse::setCursorIcon(string path)
 {
 	//HCURSOR curs = (HCURSOR)LoadImage(NULL, IDC_WAIT, IMAGE_CURSOR, 0, 0, LR_SHARED);
 	return false;
+}
+
+int Mouse::valueRange(int value)
+{
+	Properties p = Properties();
+	int offset = p.getValueByName(STR(MAX_OFFSET));
+	if (value > 0){
+		for (int i = 0; i < offset; i++){
+			if (value >= i*offset && value <= i*offset + 9){
+				return i + 1;
+			}
+		}
+	}
+	else if(value < 0){
+		for (int i = 0; i > -offset; i--){
+			if (value >= i*offset && value <= i*offset + 9){
+				return i - 1;
+			}
+		}
+	}
+	return 0;
 }

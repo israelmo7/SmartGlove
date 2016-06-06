@@ -22,6 +22,7 @@ public:
 	bool FocusOnKeyboard(HWND window);
 	inline bool onKeyboardCheck();
 	bool setCursorIcon(string path);
+	int valueRange(int value);
 private:
 
 	void GetDesktopResolution();

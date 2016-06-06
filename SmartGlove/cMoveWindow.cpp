@@ -28,19 +28,19 @@ cMoveWindow::cMoveWindow(SOCKET s, string lastRecv)
 		//cout << recvbuf << endl;
 		if (iResult > 0)
 		{
-			InfoPacket p = InfoPacket(recvbuf);
+			InfoPacket packet = InfoPacket(recvbuf);
 
 			int temp[NUM_FINGERS];
-			temp[0] = p.getPress(0).getValue();
-			temp[1] = p.getPress(1).getValue();
-			temp[2] = p.getPress(2).getValue();
-			temp[3] = p.getPress(3).getValue();
-			temp[4] = p.getPress(4).getValue();
-			Gesture g = (p - this->_lastPacket);
-			flag = changePosition(g, temp);
+			temp[0] = packet.getPress(0).getValue();
+			temp[1] = packet.getPress(1).getValue();
+			temp[2] = packet.getPress(2).getValue();
+			temp[3] = packet.getPress(3).getValue();
+			temp[4] = packet.getPress(4).getValue();
+			Gesture g = (packet - this->_lastPacket);
+			flag = changePosition(g, temp, packet);
 
 
-			this->_lastPacket = p;
+			this->_lastPacket = packet;
 
 		}
 		else if (iResult == 0)
@@ -63,19 +63,29 @@ cMoveWindow::~cMoveWindow()
 	//
 }
 
-bool cMoveWindow::changePosition(Gesture g, int fingerState[NUM_FINGERS])
+bool cMoveWindow::changePosition(Gesture g, int fingerState[NUM_FINGERS], InfoPacket packet)
 {
 	//Interact with Foreground Window.
 	cResizeWindow res = cResizeWindow(GetForegroundWindow());
 	
+	//Initialize arrays for use-
+	int fingersInt[3] = { atoi(g._fingers[0].c_str()), atoi(g._fingers[1].c_str()),
+		atoi(g._fingers[2].c_str()) };
+	bool fingersRange[3] = { (valueRange(packet.getPress(0).getValue()) != valueRange(this->_lastPacket.getPress(0).getValue())),
+		(valueRange(packet.getPress(1).getValue()) != valueRange(this->_lastPacket.getPress(1).getValue())),
+		(valueRange(packet.getPress(2).getValue()) != valueRange(this->_lastPacket.getPress(2).getValue())) };
+	int accelInt[2] = { atoi(g._acceleration[0].c_str()), atoi(g._acceleration[1].c_str()) };
+	bool accelRange[2] = { (valueRange(packet.getGyro().getVal(0)) != valueRange(this->_lastPacket.getGyro().getVal(0))),
+		(valueRange(packet.getGyro().getVal(1)) != valueRange(this->_lastPacket.getGyro().getVal(1))) };
+
 	//Exit from Window Control Mode condition:
-	if (g._fingers[0] == "+" &&
-		g._fingers[1] == "+" &&
-		g._fingers[2] == "+")
+	if ((fingersInt[0] > 0 && fingersRange[0]) &&
+		(fingersInt[1] > 0 && fingersRange[1]) &&
+		(fingersInt[2] > 0 && fingersRange[2]))
 		return false;
 
 	//Replace Windows (like alt+tab).
-	if (g._fingers[2] == "+")
+	if (fingersInt[2] > 0 && fingersRange[2])
 		this->replaceWindows();
 
 	POINT topL,
@@ -97,29 +107,33 @@ bool cMoveWindow::changePosition(Gesture g, int fingerState[NUM_FINGERS])
 
 	if (g._acceleration[0] != "")
 	{
-		if (g._acceleration[0] == "+")
-		{
-			cout << "X+ \n";
-			topL.x = (bottomR.x + STEPMOVEWINDOW > WIDTH_SCREENw) ? topL.x : topL.x + STEPMOVEWINDOW;
-		}
-		else if (g._acceleration[0] == "-")
-		{
-			cout << "X- \n";
-			topL.x = (topL.x - STEPMOVEWINDOW < 0) ? 0 : topL.x - STEPMOVEWINDOW;
+		if (accelRange[0]){
+			if (accelInt[0] > 0)
+			{
+				cout << "X+ \n";
+				topL.x = (bottomR.x + STEPMOVEWINDOW > WIDTH_SCREENw) ? topL.x : topL.x + STEPMOVEWINDOW;
+			}
+			else if (accelInt[0] < 0)
+			{
+				cout << "X- \n";
+				topL.x = (topL.x - STEPMOVEWINDOW < 0) ? 0 : topL.x - STEPMOVEWINDOW;
+			}
 		}
 
 	}
 	if (g._acceleration[1] != "")
 	{
-		if (g._acceleration[1] == "+")
-		{
-			cout << "Y+ \n";
-			topL.y = (topL.y - STEPMOVEWINDOW < 0) ? 0 : topL.y - STEPMOVEWINDOW;
-		}
-		else if (g._acceleration[1] == "-")
-		{
-			cout << "Y- \n";
-			topL.y = (bottomR.y + STEPMOVEWINDOW > HEIGHT_SCREENw) ? topL.y : topL.y + STEPMOVEWINDOW;
+		if (accelRange[1]){
+			if (accelInt[1] > 0)
+			{
+				cout << "Y+ \n";
+				topL.y = (topL.y - STEPMOVEWINDOW < 0) ? 0 : topL.y - STEPMOVEWINDOW;
+			}
+			else if (accelInt[1] < 0)
+			{
+				cout << "Y- \n";
+				topL.y = (bottomR.y + STEPMOVEWINDOW > HEIGHT_SCREENw) ? topL.y : topL.y + STEPMOVEWINDOW;
+			}
 		}
 	}
 
@@ -207,3 +221,23 @@ bool cMoveWindow::replaceWindows()
 	return (SendInput(1, &ip2, sizeof(INPUT)) != 0);
 }
 
+int cMoveWindow::valueRange(int value)
+{
+	Properties p = Properties();
+	int offset = p.getValueByName(STR(MAX_OFFSET));
+	if (value > 0){
+		for (int i = 0; i < offset; i++){
+			if (value >= i*offset && value <= i*offset + 9){
+				return i + 1;
+			}
+		}
+	}
+	else if (value < 0){
+		for (int i = 0; i > -offset; i--){
+			if (value >= i*offset && value <= i*offset + 9){
+				return i - 1;
+			}
+		}
+	}
+	return 0;
+}

@@ -94,13 +94,22 @@ Pressure InfoPacket::getPress(int fingerNum) const
 }
 Gesture InfoPacket::operator-(InfoPacket other) const
 {
-	int arrOne[3],
-		arrTwo[3];
-	Gesture g = Gesture();
-
-	this->_gyroFingers.getVal(arrOne);
-	other._gyroFingers.getVal(arrTwo);
-	g._acceleration[0] = (SAME_OR_NOT(arrOne[0], arrTwo[0]));
+	Gesture* g = new Gesture();
+	char buff[5];
+	for (int i = 0; i < NUM_AXIS; i++){
+		 _itoa(this->_gyroFingers.getVal(i) - other._gyroFingers.getVal(i), buff, 10);
+		 for (int j = 0; j < strlen(buff); j++){
+			 g->_acceleration[i].push_back(buff[j]);
+		 }
+	}
+	for (int i = 0; i < NUM_FINGERS; i++){
+		_itoa(this->_pressFingers[i].getValue() - other._pressFingers[i].getValue(), buff, 10);
+		for (int j = 0; j < strlen(buff); j++){
+			g->_fingers[i].push_back(buff[j]);
+		}
+	}
+	//delete buff;
+	/*g._acceleration[0] = (SAME_OR_NOT(arrOne[0], arrTwo[0]));
 	g._acceleration[1] = (SAME_OR_NOT(arrOne[1], arrTwo[1]));
 	g._acceleration[2] = (SAME_OR_NOT(arrOne[2], arrTwo[2]));
 
@@ -109,8 +118,8 @@ Gesture InfoPacket::operator-(InfoPacket other) const
 	g._fingers[1] = (SAME_OR_NOT(this->getPress(1).getValue(), other.getPress(1).getValue()));
 	g._fingers[2] = (SAME_OR_NOT(this->getPress(2).getValue(), other.getPress(2).getValue()));
 	g._fingers[3] = (SAME_OR_NOT(this->getPress(3).getValue(), other.getPress(3).getValue()));
-	g._fingers[4] = (SAME_OR_NOT(this->getPress(4).getValue(), other.getPress(4).getValue()));
+	g._fingers[4] = (SAME_OR_NOT(this->getPress(4).getValue(), other.getPress(4).getValue()));*/
 
 
-	return g;
+	return *g;
 }

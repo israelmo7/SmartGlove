@@ -128,10 +128,10 @@ void Order::runCommand(int c, SOCKET s, string lastRecv)
 	switch (c)
 	{
 
-	case PAGE_UP:
+	/*case PAGE_UP:
 		printf("%s\n", (sendInput(VK_PRIOR)) ? "Page up success" : "Page up failed");
 		break;
-
+		*/
 	case PAGE_DOWN:
 		printf("%s\n", (sendInput(VK_NEXT)) ? "Page down success" : "Page down failed");
 		break;
@@ -175,7 +175,7 @@ void Order::runCommand(int c, SOCKET s, string lastRecv)
 	case VOLUMED:
 		printf("%s\n", (sendInput(VK_VOLUME_DOWN)) ? "DownVolume success" : "DownVolume failed");
 		break;
-	case MOUSEMODE:
+	case PAGE_UP:
 	{
 		printf("Change to 'Mouse Mode' \n");
 		Mouse m = Mouse(s, lastRecv);

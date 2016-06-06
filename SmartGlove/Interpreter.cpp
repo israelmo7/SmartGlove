@@ -178,18 +178,12 @@ void Interpreter::calculateSymbol(InfoPacket newPacket)
 
 				char offset[3];
 				if (i < NUM_FINGERS){
-					int symbol = newPacket.getPress(i).getValue() / 10 + 1;
+					int symbol = valueRange(newPacket.getPress(i).getValue());
 					_itoa(symbol, offset, 10);
 					this->_symbol[i].append(offset);
 				}
 				else{
-					int symbol = newPacket.getGyro().getVal(i - NUM_FINGERS) / 10;
-					if (symbol > 0){
-						symbol++;
-					}
-					else if (symbol < 0){
-						symbol--;
-					}
+					int symbol = valueRange(newPacket.getGyro().getVal(i - NUM_FINGERS));
 					_itoa(symbol, offset, 10);
 					this->_symbol[i].append(offset);
 				}
@@ -222,4 +216,25 @@ void Interpreter::calculateSymbol(InfoPacket newPacket)
 			}
 		}
 	}
+}
+
+int Interpreter::valueRange(int value)
+{
+	Properties p = Properties();
+	int offset = p.getValueByName(STR(MAX_OFFSET));
+	if (value > 0){
+		for (int i = 0; i < offset; i++){
+			if (value >= i*offset && value <= i*offset + 9){
+				return i + 1;
+			}
+		}
+	}
+	else if (value < 0){
+		for (int i = 0; i > -offset; i--){
+			if (value >= i*offset && value <= i*offset + 9){
+				return i - 1;
+			}
+		}
+	}
+	return 0;
 }
