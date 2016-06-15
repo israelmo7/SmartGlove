@@ -51,7 +51,7 @@ Order::~Order()
 }
 
 
-void Order::TheComparation(string* infoPackets, SOCKET s, string lastRecv)
+void Order::TheComparation(string* infoPackets, string data, SOCKET s)
 {
 
 	for (unsigned int i = 0; i < this->_lines.size(); i++)
@@ -63,7 +63,7 @@ void Order::TheComparation(string* infoPackets, SOCKET s, string lastRecv)
 
 		if (sameChecks(line, infoPackets))
 		{
-			this->runCommand(this->_lines[i]->_commandNumber, s, lastRecv);
+			this->runCommand(this->_lines[i]->_commandNumber, data, s);
 		}
 	}
 }
@@ -102,16 +102,16 @@ int Order::fileLineToStringArray(string line, string* save)
 /*
 	The function checks if both sames.
 	Input:
-		vector<string> a	  - the first
-		string b[NUM_FINGERS] - the seconed
+	vector<string> a	  - the first
+	string b[NUM_FINGERS] - the seconed
 	Output:
-		true if same and false if not.
-*/
+	true if same and false if not.
+	*/
 bool Order::sameChecks(vector<string> a, string b[NUM_FINGERS])
 {
 	for (int i = 0; i < NUM_FINGERS + NUM_AXIS; i++)
 	{
-		if (a[i] != b[i])
+		if (a[i] != b[i] && a[i] !=	"")
 			return false;
 	}
 	return true;
@@ -119,19 +119,19 @@ bool Order::sameChecks(vector<string> a, string b[NUM_FINGERS])
 /*
 	The function runs the command by the int 'c'
 	Input:
-		int c - the serial command number
+	int c - the serial command number
 	Output:
-		none
-*/
-void Order::runCommand(int c, SOCKET s, string lastRecv)
+	none
+	*/
+void Order::runCommand(int c, string data, SOCKET s)
 {
 	switch (c)
 	{
 
-	/*case PAGE_UP:
-		printf("%s\n", (sendInput(VK_PRIOR)) ? "Page up success" : "Page up failed");
-		break;
-		*/
+	case PAGE_UP:
+			printf("%s\n", (sendInput(VK_PRIOR)) ? "Page up success" : "Page up failed");
+			break;
+			
 	case PAGE_DOWN:
 		printf("%s\n", (sendInput(VK_NEXT)) ? "Page down success" : "Page down failed");
 		break;
@@ -175,16 +175,24 @@ void Order::runCommand(int c, SOCKET s, string lastRecv)
 	case VOLUMED:
 		printf("%s\n", (sendInput(VK_VOLUME_DOWN)) ? "DownVolume success" : "DownVolume failed");
 		break;
-	case PAGE_UP:
+	case MOUSEMODE:
 	{
 		printf("Change to 'Mouse Mode' \n");
-		Mouse m = Mouse(s, lastRecv);
+		Mouse m = Mouse(s, data);
 		break;
 	}
 	case DRAGMODE:
 	{
 		printf("Change to 'Drag Mode' \n");
-		cMoveWindow c = cMoveWindow(s, lastRecv);
+		cMoveWindow c = cMoveWindow(s, data);
+		break;
+	}
+	case MSGBOX:
+	{
+		if (!MessageBoxA(NULL, data.c_str(), "SmartGlove", MB_OK))
+		{
+			cout << "Error with MessageBox. error " << GetLastError() << "\n";
+		}
 		break;
 	}
 	default:

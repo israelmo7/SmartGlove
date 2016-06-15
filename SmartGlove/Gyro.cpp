@@ -36,10 +36,16 @@ none
 */
 void Gyro::setValues(string str)
 {
-
-	this->_x = atoi(str.substr(0, 3).c_str());
-	this->_y = atoi(str.substr(3, 3).c_str());
-	this->_z = atoi(str.substr(6, 3).c_str());
+	try
+	{
+		this->_x = atoi(str.substr(0, 3).c_str());
+		this->_y = atoi(str.substr(3, 3).c_str());
+		this->_z = atoi(str.substr(6, 3).c_str());
+	}
+	catch (exception& e)
+	{
+		cout << "Convert Gyro values from String to Int failed with error : " << e.what() << endl;
+	}
 }
 
 /*
@@ -81,7 +87,7 @@ int*- x,y and z
 */
 int* Gyro::getVal() const
 {
-	int ret[3];
+	int* ret = new int[3];
 	ret[0] = this->_x;
 	ret[1] = this->_y;
 	ret[2] = this->_z;

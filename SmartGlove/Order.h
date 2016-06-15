@@ -18,6 +18,7 @@
 #define VOLUMED		 12
 #define MOUSEMODE    13
 #define DRAGMODE     14
+#define MSGBOX		 15
 
 using namespace std;
 
@@ -25,8 +26,8 @@ class Order
 {
 public:
 	Order();
-	void TheComparation(string *infoPackets, SOCKET s, string lastRecv);
-	void runCommand(int c, SOCKET s, string lastRecv);
+	void TheComparation(string* infoPackets, string data="", SOCKET s=0);
+	void runCommand(int c, string data="", SOCKET s = 0);
 	bool sendInput(WORD vk);
 	void printLines();
 	int fileLineToStringArray (string line, string* save);

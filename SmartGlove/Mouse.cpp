@@ -16,6 +16,7 @@ int WIDTH_SCREENm = 0;
 int HEIGHT_SCREENm = 0;
 int STEPMOVEMOUSE = 10;
 
+
 Mouse::Mouse(SOCKET s, string lastRecv)
 {
 	this->GetDesktopResolution();
@@ -152,14 +153,14 @@ void Mouse::click(bool leftClick)
 }
 void Mouse::release(bool leftClick)
 {
-	INPUT i;
-	i.type = INPUT_MOUSE;
-	i.mi.dx = this->_position.x;
-	i.mi.dy = this->_position.y;
-	i.mi.time = 1000;
+	//INPUT i;
+	//i.type = INPUT_MOUSE;
+	//i.mi.dx = this->_position.x;
+	//i.mi.dy = this->_position.y;
+	//i.mi.time = 1000;
 
-	i.mi.dwFlags = (leftClick) ? MOUSEEVENTF_LEFTUP : MOUSEEVENTF_RIGHTUP;
-	SendInput(1, &i, sizeof(INPUT));
+	//i.mi.dwFlags = (leftClick) ? MOUSEEVENTF_LEFTUP : MOUSEEVENTF_RIGHTUP;
+	//SendInput(1, &i, sizeof(INPUT));
 }
 bool Mouse::openKeyboard(string s)
 {

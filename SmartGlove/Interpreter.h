@@ -17,16 +17,17 @@ public:
 	bool addInfoPacket(InfoPacket p);
 	void InfoPacketsDetails();
 	bool InfoPacketsArrayToCharsArray(InfoPacket newPacket);
-	void saveTheSymbol(string *arr);
+	void saveTheRanges(string *arr);
 	bool checkToEnd();
 	void showSeq();
 	void clearAll();
-	void calculateSymbol(InfoPacket newPacket);
-	int valueRange(int value);
-	//void calculateSymbol(int sumAxis[NUM_AXIS]);
+	void calculateRanges(InfoPacket newPacket);
+	int valueRange(int value, bool accel = 0);
+	//void calculateranges(int sumAxis[NUM_AXIS]);
 private:
 	InfoPacket _lastPacket; // The last packet			
-	//Gesture _symbols;
-	string  _symbol[NUM_FINGERS + NUM_AXIS];   // the states.
-	char _equalsSeq[NUM_FINGERS];    // check for the end of the gesture.
+	//Gesture _rangess;
+	string  _ranges[NUM_FINGERS + NUM_AXIS];   // the ranges between packets.
+	string  _symbols[NUM_FINGERS + NUM_AXIS]; // The sign of the ranges
+	int _equalsSeq[NUM_FINGERS];    // check for the end of the gesture.
 };

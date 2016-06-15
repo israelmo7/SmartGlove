@@ -31,13 +31,19 @@ InfoPacket::InfoPacket(string str)
 	//cout << str.substr(16, 4).c_str() << "\n";
 	//cout << str.substr(20, 12).c_str() << "\n";
 
-	//P(1-5)
-	this->_pressFingers[0] = atoi(str.substr(0, SIZE_OF_VALUE).c_str());     // P1
-	this->_pressFingers[1] = atoi(str.substr(2, SIZE_OF_VALUE).c_str());     // P2
-	this->_pressFingers[2] = atoi(str.substr(4, SIZE_OF_VALUE).c_str());     // P3
-	this->_pressFingers[3] = atoi(str.substr(6, SIZE_OF_VALUE).c_str());     // P4
-	this->_pressFingers[4] = atoi(str.substr(8, SIZE_OF_VALUE).c_str());    // P5
-
+	try
+	{
+		//P(1-5)
+		this->_pressFingers[0] = atoi(str.substr(0, SIZE_OF_VALUE).c_str());     // P1
+		this->_pressFingers[1] = atoi(str.substr(2, SIZE_OF_VALUE).c_str());     // P2
+		this->_pressFingers[2] = atoi(str.substr(4, SIZE_OF_VALUE).c_str());     // P3
+		this->_pressFingers[3] = atoi(str.substr(6, SIZE_OF_VALUE).c_str());     // P4
+		this->_pressFingers[4] = atoi(str.substr(8, SIZE_OF_VALUE).c_str());    // P5
+	}
+	catch (exception& e)
+	{
+		cout << "Convert pressure values from String to Int failed with error : " << e.what() << endl;
+	}
 	//G(1-5)
 	this->_gyroFingers.setValues(str.substr(10 , 9).c_str());     // G1
 
@@ -97,14 +103,14 @@ Gesture InfoPacket::operator-(InfoPacket other) const
 	Gesture* g = new Gesture();
 	char buff[5];
 	for (int i = 0; i < NUM_AXIS; i++){
-		 _itoa(this->_gyroFingers.getVal(i) - other._gyroFingers.getVal(i), buff, 10);
-		 for (int j = 0; j < strlen(buff); j++){
+		 _itoa_s(this->_gyroFingers.getVal(i) - other._gyroFingers.getVal(i), buff, 10);
+		 for (unsigned int j = 0; j < strlen(buff); j++){
 			 g->_acceleration[i].push_back(buff[j]);
 		 }
 	}
 	for (int i = 0; i < NUM_FINGERS; i++){
-		_itoa(this->_pressFingers[i].getValue() - other._pressFingers[i].getValue(), buff, 10);
-		for (int j = 0; j < strlen(buff); j++){
+		_itoa_s(this->_pressFingers[i].getValue() - other._pressFingers[i].getValue(), buff, 10);
+		for (unsigned int j = 0; j < strlen(buff); j++){
 			g->_fingers[i].push_back(buff[j]);
 		}
 	}

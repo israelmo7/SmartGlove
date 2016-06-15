@@ -3,8 +3,9 @@
 #define STR(x) #x
 #define CHECK_FIRST_PRESS _lastPacket.getPress(0).getValue()==0 && _lastPacket.getPress(1).getValue()== 0 && _lastPacket.getPress(2).getValue()==0 && _lastPacket.getPress(3).getValue()==0 && _lastPacket.getPress(4).getValue()==0
 
-
+int EQUAL_NUM = 15;
 int MAX_OFFSET = 0;
+int MAX_ACCEL_OFFSET = 0;
 /*
 	Ctor.
 	Input:
@@ -16,11 +17,13 @@ Interpreter::Interpreter()
 {
 	Properties p = Properties();
 	MAX_OFFSET = p.getValueByName(STR(MAX_OFFSET));
+	MAX_ACCEL_OFFSET = p.getValueByName(STR(MAX_ACCEL_OFFSET));
+	EQUAL_NUM = p.getValueByName(STR(EQUAL_NUM));
 
 	//this->_stateA = NONE;
 	this->_lastPacket = InfoPacket();
 	for (short int i = 0; i < NUM_FINGERS; i++)
-		this->_equalsSeq[i] = '0';
+		this->_equalsSeq[i] = 0;
 }
 /*
 	Ctor.
@@ -35,7 +38,7 @@ Interpreter::Interpreter(InfoPacket p)
 	this->_lastPacket = p;
 
 	for (short int i = 0; i < NUM_FINGERS; i++)
-		this->_equalsSeq[i] = '0';
+		this->_equalsSeq[i] = 0;
 
 }
 
@@ -77,12 +80,13 @@ bool Interpreter::addInfoPacket(InfoPacket p)
 */
 void Interpreter::InfoPacketsDetails()
 {
+	cout << "Flex and Gyro Values: \n";
 	for (unsigned int i = 0; i < NUM_FINGERS + NUM_AXIS; i++)
 	{
-		cout << i+1 << ") " << this->_symbol[i].c_str() << endl;
+		cout << i+1 << ") " << this->_ranges[i].c_str() << endl;
 	}
 	//OR
-	//this->_symbols.printGesture();
+	//this->_rangess.printGesture();
 }
 
 /*
@@ -96,11 +100,11 @@ void Interpreter::clearAll()
 {
 	for (int i = 0; i < NUM_FINGERS + NUM_AXIS; i++)
 	{
-		this->_equalsSeq[i%NUM_FINGERS] = '0';
-		this->_symbol[i].clear();
+		this->_equalsSeq[i%NUM_FINGERS] = 0;
+		this->_ranges[i].clear();
 	}
 	//OR
-	//this->_symbols.clearAll();
+	//this->_rangess.clearAll();
 	this->_lastPacket = InfoPacket();
 }
 
@@ -116,7 +120,7 @@ void Interpreter::clearAll()
 		then i see several positive jump, zero jump and negative jump and i write in the char array, + = -
 
 		//EDIT:
-		same shit but with values and not symbols.
+		same shit but with values and not rangess.
 
 	Input:
 		string a[NUM_FINGERS] - Save here the chars array.
@@ -126,37 +130,38 @@ void Interpreter::clearAll()
 
 bool Interpreter::InfoPacketsArrayToCharsArray(InfoPacket newPacket)
 {
-	this->calculateSymbol(newPacket);
+	this->calculateRanges(newPacket);
 
 	return this->checkToEnd();
 }
-void Interpreter::saveTheSymbol(string *arr)
+void Interpreter::saveTheRanges(string *arr)
 {
 	for (unsigned int i = 0; i < NUM_FINGERS + NUM_AXIS; i++)
 	{
-		arr[i] = this->_symbol[i];
+		arr[i] = this->_ranges[i];
 	}
 	//OR
-	//gesture = this->_symbols;
+	//gesture = this->_rangess;
 }
 bool Interpreter::checkToEnd()
 {
 	for (unsigned int i = 0; i < NUM_FINGERS; i++)
 	{
-		if (this->_equalsSeq[i] < '3')
+		if (this->_equalsSeq[i] < EQUAL_NUM)
 			return false;
 	}
 	return true;
 }
 void Interpreter::showSeq()
 {
+	cout << "Flex Sequance: \n";
 	for (int i = 0; i < NUM_FINGERS; i++)
 	{
 		cout << i + 1 << ") " << this->_equalsSeq[i] << "\n";
 	}
 
 }
-void Interpreter::calculateSymbol(InfoPacket newPacket)
+void Interpreter::calculateRanges(InfoPacket newPacket)
 {
 	int checkFirst[3];
 	_lastPacket.getGyro().getVal(checkFirst);
@@ -166,31 +171,34 @@ void Interpreter::calculateSymbol(InfoPacket newPacket)
 			int sum = 0;
 			if (i < NUM_FINGERS){
 				sum = this->_lastPacket.getPress(i).getValue() - newPacket.getPress(i).getValue();
+				if (sum >= MAX_OFFSET || sum <= -MAX_OFFSET) // New different from Old
+				{
+					this->_equalsSeq[i] = 0;
+					char offset[3];
+					int ranges = valueRange(newPacket.getPress(i).getValue());
+					_itoa_s(ranges, offset, 10);
+					this->_ranges[i].append(offset);
+				}
+				else
+				{
+					this->_equalsSeq[i] += 1;
+					this->_equalsSeq[i] = (this->_equalsSeq[i] > EQUAL_NUM) ? EQUAL_NUM : this->_equalsSeq[i];
+				}
 			}
 			else{
-				int a =
-					sum = this->_lastPacket.getGyro().getVal(i - NUM_FINGERS) - newPacket.getGyro().getVal(i - NUM_FINGERS);
-			}
-
-			if (sum >= MAX_OFFSET || sum <= -MAX_OFFSET) // New different from Old
-			{
-				this->_equalsSeq[i] = '0';
-
-				char offset[3];
-				if (i < NUM_FINGERS){
-					int symbol = valueRange(newPacket.getPress(i).getValue());
-					_itoa(symbol, offset, 10);
-					this->_symbol[i].append(offset);
+				sum = this->_lastPacket.getGyro().getVal(i - NUM_FINGERS) - newPacket.getGyro().getVal(i - NUM_FINGERS);
+				if (sum >= MAX_ACCEL_OFFSET || sum <= -MAX_ACCEL_OFFSET){ // New different from Old
+					this->_equalsSeq[i] = 0;
+					char offset[3];
+					int ranges = valueRange(newPacket.getGyro().getVal(i - NUM_FINGERS), true);
+					_itoa_s(ranges, offset, 10);
+					this->_ranges[i].append(offset);
 				}
-				else{
-					int symbol = valueRange(newPacket.getGyro().getVal(i - NUM_FINGERS));
-					_itoa(symbol, offset, 10);
-					this->_symbol[i].append(offset);
+				else
+				{
+					this->_equalsSeq[i] += 1;
+					this->_equalsSeq[i] = (this->_equalsSeq[i] > EQUAL_NUM) ? EQUAL_NUM : this->_equalsSeq[i];
 				}
-			}
-			else
-			{
-				this->_equalsSeq[i] += 1;
 			}
 		}
 	}
@@ -199,39 +207,40 @@ void Interpreter::calculateSymbol(InfoPacket newPacket)
 			char offset[3];
 
 			if (i < NUM_FINGERS){
-				int symbol = newPacket.getPress(i).getValue() / 10 + 1;
-				_itoa(symbol, offset, 10);
-				this->_symbol[i].append(offset);
+				int ranges = valueRange(newPacket.getPress(i).getValue());
+				_itoa_s(ranges, offset, 10);
+				this->_ranges[i].append(offset);
 			}
 			else{
-				int symbol = newPacket.getGyro().getVal(i - NUM_FINGERS);
-				if (symbol > 0){
-					symbol = symbol / 10 + 1;
+				int ranges = valueRange(newPacket.getGyro().getVal(i - NUM_FINGERS), true);
+				/*if (ranges > 0){
+					ranges = ranges / MAX_GYRO_OFFSET + 1;
 				}
-				else if (symbol < 0){
-					symbol = symbol / 10 - 1;
-				}
-				_itoa(symbol, offset, 10);
-				this->_symbol[i].append(offset);
+				else if (ranges < 0){
+					ranges = ranges / MAX_GYRO_OFFSET - 1;
+				}*/
+				_itoa_s(ranges, offset, 10);
+				this->_ranges[i].append(offset);
 			}
 		}
 	}
 }
 
-int Interpreter::valueRange(int value)
+int Interpreter::valueRange(int value, bool accel)
 {
 	Properties p = Properties();
-	int offset = p.getValueByName(STR(MAX_OFFSET));
+	int offset = (accel) ? p.getValueByName(STR(MAX_ACCEL_OFFSET)) : p.getValueByName(STR(MAX_OFFSET));
+
 	if (value > 0){
 		for (int i = 0; i < offset; i++){
-			if (value >= i*offset && value <= i*offset + 9){
+			if (value >= i*offset && value <= i*offset + offset - 1){
 				return i + 1;
 			}
 		}
 	}
 	else if (value < 0){
 		for (int i = 0; i > -offset; i--){
-			if (value >= i*offset && value <= i*offset + 9){
+			if (value >= i*offset && value <= i*offset + offset - 1){
 				return i - 1;
 			}
 		}

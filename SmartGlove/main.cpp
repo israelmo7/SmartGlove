@@ -7,6 +7,7 @@
 
 #define DLLNAME "DllSmartGlove.dll"
 #define DEFAULT_BUFLEN 19 // Size of The packet
+#define RECV_SIZE DEFAULT_BUFLEN-1 // Without Null Byte
 #define FULL_SIZE 8 // 5 fingers + 3 Axis
 
 using namespace std;
@@ -18,11 +19,11 @@ void loadDll();
 int main()
 {
 	Traffic connection = Traffic();
-	Interpreter interPreter = Interpreter();
 	Order commanderOrder = Order();
+	Interpreter interPreter = Interpreter();
 	bool lastOne;
 	char recvbuf[DEFAULT_BUFLEN+1]; // More one for the NULL byte.
-	int iResult;
+	int iResult, cnt = 0;
 	SOCKET ClientSocket = connection.getSocket();
 		
 
@@ -40,11 +41,16 @@ int main()
 
 			if (interPreter.addInfoPacket(temPacket)) // Check if the Gesture is done.
 			{
-				cout << "In !\n";
-				string toSend[FULL_SIZE];
-				interPreter.saveTheSymbol(toSend); // Save the "Symbol" in 'toSend'.
-				commanderOrder.TheComparation(toSend, ClientSocket,recvbuf);
-				interPreter.clearAll();				// Clear the InterPreter.
+				if (cnt % 2 == 0){
+					cout << "In !\n";
+					string toSend[FULL_SIZE];
+					interPreter.saveTheRanges(toSend); // Save the "ranges" in 'toSend'.
+					commanderOrder.TheComparation(toSend, recvbuf, ClientSocket);
+					interPreter.clearAll();				// Clear the InterPreter.
+				}
+				else{
+					interPreter.clearAll();				// Clear the InterPreter.
+				}
 			}
 			interPreter.InfoPacketsDetails();
 			interPreter.showSeq();
@@ -58,8 +64,8 @@ int main()
 				lastOne = false;
 
 				string toSend[FULL_SIZE];
-				interPreter.saveTheSymbol(toSend); // Save the "Symbol" in 'toSend'.
-				commanderOrder.TheComparation(toSend, ClientSocket,recvbuf);
+				interPreter.saveTheRanges(toSend); // Save the "ranges" in 'toSend'.
+				commanderOrder.TheComparation(toSend, recvbuf, ClientSocket);
 				interPreter.clearAll();
 			}
 			else{
@@ -72,6 +78,7 @@ int main()
 			connection.closeSocket();
 			return 1;
 		}
+		cnt++;
 	} while (true);
 
 
