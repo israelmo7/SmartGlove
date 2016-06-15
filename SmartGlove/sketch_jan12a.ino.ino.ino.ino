@@ -3,7 +3,7 @@
 #include <WiFi.h>
 #include <Adafruit_LIS3DH.h>
 #include <Adafruit_Sensor.h>
-
+#define ABS(x) ((x < 0)?x*-1:x)
 // Used for software SPI
 #define LIS3DH_CLK 13
 #define LIS3DH_MISO 12
@@ -22,13 +22,14 @@ Adafruit_LIS3DH lis = Adafruit_LIS3DH();
 // for Zero, output on USB Serial console, remove line below if using programming port to program the Zero!
    #define Serial SerialUSB
 #endif
-void fillPlace(char* bb);
+void fillPlace(char* bb, int sizeFill);
+int floorUp(float num);
 
-char ssid[] = "yourNetwork";          //  your network SSID (name) 
-char pass[] = "yourPassword";   // your network password
+char ssid[] = "HOTBOX-LIVNAT1";          //  your network SSID (name) 
+char pass[] = "10203040";   // your network password
 
 int status = WL_IDLE_STATUS;
-IPAddress server(192,168,1,13);  // Google
+IPAddress server(192,168,1,18);  // Google
 
 // Initialize the client library
 WiFiClient client;
@@ -101,29 +102,42 @@ void loop()
   itoa(flexSensorReading[1], buffY, 10);
   itoa(flexSensorReading[2], buffZ, 10);
 
+
+
+  fillPlace(buffX,2);
+  fillPlace(buffY,2);
+  fillPlace(buffZ,2);
+ 
+  Serial.print("Flex0 - ");
+  Serial.println(buffX);
+  Serial.print("Flex1 - ");
+  Serial.println(buffY);
+  Serial.print("Flex2 - ");
+  Serial.println(buffZ);
+   
   strcpy(temp,buffX);
   strcat(temp,buffY);
   strcat(temp,buffZ);
   
   itoa(int(event.acceleration.x), buffX, 10);
-  Serial.print(buffX);
-  Serial.print("  (X)  ");
-  fillPlace(buffX);
-  Serial.print(buffX);
-  Serial.println();
+ // Serial.print(buffX);
+ // Serial.print("  (X)  ");
+  fillPlace(buffX,3);
+ // Serial.print(buffX);
+ // Serial.println();
   itoa(int(event.acceleration.y), buffY, 10);
-  Serial.print(buffY);
-  Serial.print("  (Y)  ");
-  fillPlace(buffY);
-  Serial.print(buffY);
-  Serial.println();
+ // Serial.print(buffY);
+ // Serial.print("  (Y)  ");
+  fillPlace(buffY,3);
+  //Serial.print(buffY);
+ // Serial.println();
   
   itoa(int(event.acceleration.z), buffZ, 10);
-  Serial.print(buffZ);
-  Serial.print("  (Z)  ");
-  fillPlace(buffZ);
-  Serial.print(buffZ);
-  Serial.println();
+  //Serial.print(buffZ);
+ // Serial.print("  (Z)  ");
+  fillPlace(buffZ,3);
+  //Serial.print(buffZ);
+  //Serial.println();
   
 
 
@@ -134,55 +148,67 @@ void loop()
   //strcat(temp, NULL);
   //Serial.println(temp);
 
+  //delay(1500);
   client.print(temp);
-
+  Serial.println(temp);
+  Serial.println(strlen(temp));
   delay(1000);
 }
-void fillPlace(char* bb)
+void fillPlace(char* bb, int sizeFill)
 {
-  if(strlen(bb) > 3)
+  int value;
+  if (!bb|| ABS(strlen(bb)) > sizeFill)
+    return;
+
+  value = atoi(bb);  // 0
+  char* retStr = new char[sizeFill+1];
+  retStr[sizeFill] = NULL; // [ ][ ][ ][N]
+  if(value > 0)
   {
-    bb[0] = NULL;
+      int temp = sizeFill - strlen(bb); // 1
+      unsigned int i=0;
+      
+      for(i; i < temp; i++)
+      {
+         retStr[i] = '0'; // [0][][][N]
+      }
+      temp = strlen(bb); // 2
+      for(int j =0; j < temp; i++,j++)
+      {
+          retStr[i] = bb[j]; // [0][3][4][N]
+      }
   }
-  else if(strlen(bb) < 3)
+  else
   {
-    if(atoi(bb) > 0)
-    {
-      if(strlen(bb) == 2)
+      int temp = sizeFill - strlen(bb)-1; // 1
+      unsigned int i=0;
+      
+      for(i; i < temp; i++)
       {
-        char temp[10];
-        strcpy(temp, "+");
-        strcat(temp,bb);
-        strcpy(bb,temp);
+          retStr[i] = '0'; // [0][][][N]
       }
-      else
+      temp = strlen(bb); // 1
+      retStr[i++] = '-'; // [0][-][][N]
+      for(int j =0; j < temp; i++,j++)
       {
-        char temp[10];
-        strcpy(temp, "+0");
-        strcat(temp,bb);
-        strcpy(bb,temp);
-      }
-    }
-    else
-    {
-      if(strlen(bb) == 2)
-      {
-        char num[2];
-        num[0] = bb[1];
-        num[1] = NULL;
-        char temp[10];
-        strcpy(temp, "-0");
-        strcat(temp,num);
-        strcpy(bb,temp);
-      }
-      else
-      {
-        char temp[10];
-        strcpy(temp, "00");
-        strcat(temp,bb);
-        strcpy(bb,temp);      
-      }
-    }
+         retStr[i] = bb[j]; // [0][-][0][N]
+      }   
   }
-  //Serial.println(bb);
+  strcpy(bb, retStr);    
+  delete retStr;
+}
+int floorUp(float num)
+{
+  int retValue;
+  float temp = ABS(num - (int)num);
+  
+  if(temp >= 0.5)
+  {
+      retValue = (int)num + 1;
+  }
+  else
+  {
+      retValue = (int)num;
+  }
+  return retValue;
 }
