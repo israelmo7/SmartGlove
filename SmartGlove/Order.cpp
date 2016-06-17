@@ -47,7 +47,7 @@ Order::Order()
 */
 Order::~Order()
 {
-	//
+	//delete &_lines;
 }
 
 

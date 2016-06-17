@@ -5,20 +5,19 @@
 #define ABS(x) ((x < 0)?x*-1:x)
 #define BIGGER(a,b) ((a > b)? a:b)
 #define SMALLER(a,b) ((a < b)? a:b)
-#define ISINSIDE()
-#define LEVEL0 5
-#define LEVEL1 10
-#define LEVEL2 15
-#define LEVEL3 20
-#define KEYBOARD_TITLE "On-Screen KeyBoard"
+#define X 1
+#define Y 0
+#define Z 2
+#define OFFSET 5
+
 
 int WIDTH_SCREENm = 0;
 int HEIGHT_SCREENm = 0;
 int STEPMOVEMOUSE = 10;
 
-
 Mouse::Mouse(SOCKET s, string lastRecv)
 {
+	lastRecv = (lastRecv == "") ? "0000000000000000000" : lastRecv;
 	this->GetDesktopResolution();
 	Properties p = Properties();
 
@@ -66,17 +65,20 @@ Mouse::Mouse(SOCKET s, string lastRecv)
 }
 bool Mouse::changePosition(Gesture g, InfoPacket packet) 
 {
-	int fingersInt[3] = { atoi(g._fingers[0].c_str()), atoi(g._fingers[1].c_str()),
-		atoi(g._fingers[2].c_str()) };
-	bool fingersRange[3] = { (valueRange(packet.getPress(0).getValue()) != valueRange(this->_lastPacket.getPress(0).getValue())),
-		(valueRange(packet.getPress(1).getValue()) != valueRange(this->_lastPacket.getPress(1).getValue())),
-		(valueRange(packet.getPress(2).getValue()) != valueRange(this->_lastPacket.getPress(2).getValue())) };
+	int fingersInt[3] = { atoi(g._fingers[0].c_str()), atoi(g._fingers[1].c_str()), atoi(g._fingers[2].c_str()) };
+	bool fingersRange[3] = { (valueRange(packet.getPress(0).getValue()) == valueRange(this->_lastPacket.getPress(0).getValue())),
+		(valueRange(packet.getPress(1).getValue()) == valueRange(this->_lastPacket.getPress(1).getValue())),
+		(valueRange(packet.getPress(2).getValue()) == valueRange(this->_lastPacket.getPress(2).getValue())) };
 	int accelInt[2] = { atoi(g._acceleration[0].c_str()), atoi(g._acceleration[1].c_str()) };
-	bool accelRange[2] = { (valueRange(packet.getGyro().getVal(0)) != valueRange(this->_lastPacket.getGyro().getVal(0))),
-		(valueRange(packet.getGyro().getVal(1)) != valueRange(this->_lastPacket.getGyro().getVal(1))) };
+	cout << packet.getGyro().getVal(0) << " " << this->_lastPacket.getGyro().getVal(0) << endl;
+	cout << packet.getGyro().getVal(1) << " " << this->_lastPacket.getGyro().getVal(1) << endl;
+	cout << (valueRange(packet.getGyro().getVal(0), true) == valueRange(this->_lastPacket.getGyro().getVal(0))) << endl;
+	cout << (valueRange(packet.getGyro().getVal(1), true) == valueRange(this->_lastPacket.getGyro().getVal(1))) << endl;
+	bool accelRange[2] = { (valueRange(packet.getGyro().getVal(0), true) == valueRange(this->_lastPacket.getGyro().getVal(0), true)),
+		(valueRange(packet.getGyro().getVal(1), true) == valueRange(this->_lastPacket.getGyro().getVal(1), true)) };
 	
 	//Exit Mouse Mode condition:
-	if (fingersInt[0] > 0 && fingersRange[0])
+	if (fingersInt[0] > 0 && !fingersRange[0])
 		return false;
 
 	POINT p;
@@ -85,14 +87,14 @@ bool Mouse::changePosition(Gesture g, InfoPacket packet)
 		cout << "Error: cant find mouse position \n";
 		return true;
 	}
-	if (fingersRange[1]){
+	if (!fingersRange[1]){
 		if (fingersInt[1] < 0)
 			click(); // left click - sends true as default.
 		else if (fingersInt[1] > 0)
 			release(); // left release - sends true as default.
 	}
 
-	if (fingersRange[2]){
+	if (!fingersRange[2]){
 		if (fingersInt[2] < 0)
 			click(false); //right click.
 		else if (fingersInt[2] > 0)
@@ -100,31 +102,32 @@ bool Mouse::changePosition(Gesture g, InfoPacket packet)
 	}
 	int step = STEPMOVEMOUSE;
 
-	if (g._acceleration[0] != "0")
+	if (atoi(g._acceleration[X].c_str()))
 	{
-		if (accelRange[0]){
-			if (accelInt[0] < 0)
+		cout << g._acceleration[X] << "\n";
+		if (accelRange[X] == accelRange[X]){
+			if (accelInt[X] < OFFSET)
 			{
 				cout << "X+ \n";
 				p.x = (p.x + step > WIDTH_SCREENm) ? WIDTH_SCREENm : p.x + step;
 			}
-			else if (accelInt[0] > 0)
+			else if (accelInt[X] > OFFSET)
 			{
 				cout << "X- \n";
 				p.x = (p.x - step < 0) ? 0 : p.x - step;
 			}
 		}
 	}
-	if (g._acceleration[1] != "0")
+	if (atoi(g._acceleration[Y].c_str()))
 	{
-		if (accelRange[1]){
-			if (accelInt[1] < 0)
+		if (accelRange[Y] == accelRange[Y]){
+			if (accelInt[Y] < OFFSET)
 			{
 				cout << "Y+ \n";
 				p.y = (p.y - step < 0) ? 0 : p.y - step;
 
 			}
-			else if (accelInt[1] > 0)
+			else if (accelInt[Y] > OFFSET)
 			{
 				cout << "Y- \n";
 				p.y = (p.y + step > HEIGHT_SCREENm) ? HEIGHT_SCREENm : p.y + step;
@@ -226,48 +229,28 @@ void Mouse::GetDesktopResolution()
 	WIDTH_SCREENm = desktop.right;
 	HEIGHT_SCREENm = desktop.bottom;
 }
-int  Mouse::calculateDistance(int aOld,int aNew)
-{
-	int sum = aNew - aOld;
-	sum = ABS(sum);
-	if (sum > 5)
-	{
-		return LEVEL1;
-	}
-	else if (sum > 10)
-	{
-		return LEVEL2;
-	}
-	else if (sum > 15)
-	{
-		return LEVEL3;
-	}
-	else
-	{
-		return LEVEL0;
-	}
-}
-inline bool Mouse::onKeyboardCheck()
-{
-	HWND window = GetForegroundWindow();
 
-	if (window)
-	{
-		if (this->getWindowTitle() == KEYBOARD_TITLE)
-		{
-			RECT r;
-			if (GetWindowRect(window, &r))
-			{
-
-				if ((this->_position.x >= r.left && this->_position.x <= r.right) && (this->_position.y >= r.bottom && this->_position.y <= r.top))
-				{
-					return true;
-				}
-			}
-		}
-	}
-	return false;
-}
+//inline bool Mouse::onKeyboardCheck()
+//{
+//	HWND window = GetForegroundWindow();
+//
+//	if (window)
+//	{
+//		if (this->getWindowTitle() == KEYBOARD_TITLE)
+//		{
+//			RECT r;
+//			if (GetWindowRect(window, &r))
+//			{
+//
+//				if ((this->_position.x >= r.left && this->_position.x <= r.right) && (this->_position.y >= r.bottom && this->_position.y <= r.top))
+//				{
+//					return true;
+//				}
+//			}
+//		}
+//	}
+//	return false;
+//}
 string Mouse::getWindowTitle()
 {
 	char wnd_title[256];
@@ -284,20 +267,20 @@ bool Mouse::setCursorIcon(string path)
 	return false;
 }
 
-int Mouse::valueRange(int value)
+int Mouse::valueRange(int value, bool accel)
 {
-	Properties p = Properties();
-	int offset = p.getValueByName(STR(MAX_OFFSET));
+	Properties p = Properties();	
+	int offset = (accel) ? p.getValueByName(STR(MAX_ACCEL_OFFSET)) : p.getValueByName(STR(MAX_OFFSET));
 	if (value > 0){
-		for (int i = 0; i < offset; i++){
-			if (value >= i*offset && value <= i*offset + 9){
+		for (int i = 0; i < (100 / offset); i++){
+			if (value >= i*offset && value <= i*offset + offset - 1){
 				return i + 1;
 			}
 		}
 	}
 	else if(value < 0){
-		for (int i = 0; i > -offset; i--){
-			if (value >= i*offset && value <= i*offset + 9){
+		for (int i = 0; i > -(100 / offset); i--){
+			if (value >= -i*offset && value <= -(i*offset + offset - 1)){
 				return i - 1;
 			}
 		}

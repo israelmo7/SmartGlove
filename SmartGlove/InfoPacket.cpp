@@ -9,7 +9,7 @@ InfoPacket::InfoPacket()
 	{
 		this->_pressFingers[i] = 0;
 	}
-	this->_gyroFingers.setValues("+00+00+00");
+	this->_gyroFingers.setValues("         ");
 }
 /*
 Ctor.

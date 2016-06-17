@@ -232,15 +232,16 @@ int Interpreter::valueRange(int value, bool accel)
 	int offset = (accel) ? p.getValueByName(STR(MAX_ACCEL_OFFSET)) : p.getValueByName(STR(MAX_OFFSET));
 
 	if (value > 0){
-		for (int i = 0; i < offset; i++){
+
+		for (int i = 0; i < (100 / offset); i++){
 			if (value >= i*offset && value <= i*offset + offset - 1){
 				return i + 1;
 			}
 		}
 	}
 	else if (value < 0){
-		for (int i = 0; i > -offset; i--){
-			if (value >= i*offset && value <= i*offset + offset - 1){
+		for (int i = 0; i > -(100 / offset); i--){
+			if (value <= -i*offset && value >= -(i*offset + offset - 1)){
 				return i - 1;
 			}
 		}
