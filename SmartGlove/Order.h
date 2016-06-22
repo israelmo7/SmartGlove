@@ -33,7 +33,7 @@ public:
 	int fileLineToStringArray (string line, string* save);
 	bool sameChecks(vector<string> a, string* b);
 	~Order();
-
+	void destroy();
 private:
 
 	vector<Gesture*> _lines; // The file lines.

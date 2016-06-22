@@ -65,7 +65,9 @@ def main():
 	values0 = ("11", "25", "05", "25", "05", "-11+55+05")
 	values00 = ("11", "25", "05", "25", "05", "-11+55+05")
 	values000 = ("11", "25", "05", "25", "05", "+51+55+05")
-	arr = ["".join(values1), "".join(values2), "".join(values3), "".join(values4), "".join(values5), "".join(values6), "".join(values7), "".join(values8), "".join(values9), "".join(values10), "".join(values11), "".join(values12), "".join(values13), "".join(values14), "".join(values15), "".join(values0), "".join(values00), "".join(values000)]
+	values0000 = ("11", "25", "05", "25", "05", "+51+55+05")
+	#
+	arr = ["".join(values1), "".join(values2), "".join(values3), "".join(values4), "".join(values5), "".join(values6), "".join(values7), "".join(values8), "".join(values9), "".join(values10), "".join(values11), "".join(values12), "".join(values13), "".join(values14), "".join(values15), "".join(values0), "".join(values00), "".join(values000), "".join(values0000)]
 	
 	for i in arr:
 		my_soc.send(i)

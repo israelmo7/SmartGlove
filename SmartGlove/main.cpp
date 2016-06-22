@@ -28,10 +28,9 @@ int main()
 		
 
 	iResult = recv(ClientSocket, recvbuf, DEFAULT_BUFLEN, 0); // Recv Data from Client.
-	Order().runCommand(MOUSEMODE, recvbuf, ClientSocket);
+	commanderOrder.runCommand(MOUSEMODE, recvbuf, ClientSocket);
 	// Receive until the peer shuts down the connection
 	do {
-
 		recvbuf[DEFAULT_BUFLEN] = NULL;
 		if (iResult > 0) 
 		{
@@ -82,8 +81,8 @@ int main()
 		iResult = recv(ClientSocket, recvbuf, DEFAULT_BUFLEN, 0); // Recv Data from Client.
 		cnt++;
 	} while (true);
-
-
+	
+	//commanderOrder.destroy();
 	connection.closeSocket();
 	system("pause");
 	return 0;

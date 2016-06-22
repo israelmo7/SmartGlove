@@ -47,9 +47,35 @@ Order::Order()
 */
 Order::~Order()
 {
-	//delete &_lines;
+	delete _lines[0];
+	delete _lines[1];
+	delete _lines[2];
+	delete _lines[3];
+	delete _lines[4];
+	delete _lines[5];
+	delete _lines[6];
+	_lines.resize(0);
 }
 
+//checking:
+void Order::destroy()
+{
+	/*int i = 0;
+	while (i != _lines.size()){
+		_
+	}*/
+	//cout << &this->_lines << endl;
+	delete this->_lines[0];
+	delete this->_lines[1];
+	delete this->_lines[2];
+	delete this->_lines[3];
+	delete this->_lines[4];
+	delete this->_lines[5];
+	delete this->_lines[6];
+	//vector<Gesture*> temp;
+	//_lines.clear();
+	//temp.swap(_lines);
+}
 
 void Order::TheComparation(string* infoPackets, string data, SOCKET s)
 {
