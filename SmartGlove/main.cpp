@@ -23,15 +23,22 @@ int main()
 	Interpreter interPreter = Interpreter();
 	bool lastOne;
 	char recvbuf[DEFAULT_BUFLEN+1]; // More one for the NULL byte.
-	int iResult, cnt = 0;
+	int iResult;
 	SOCKET ClientSocket = connection.getSocket();
 		
 
+<<<<<<< HEAD
 	iResult = recv(ClientSocket, recvbuf, DEFAULT_BUFLEN, 0); // Recv Data from Client.
 	commanderOrder.runCommand(MOUSEMODE, recvbuf, ClientSocket);
 	// Receive until the peer shuts down the connection
 	do {
+=======
+	// Receive until the peer shuts down the connection
+	do {
+		iResult = recv(ClientSocket, recvbuf, DEFAULT_BUFLEN, 0); // Recv Data from Client.
+>>>>>>> origin/israel
 		recvbuf[DEFAULT_BUFLEN] = NULL;
+		commanderOrder.runCommand(MOUSEMODE, recvbuf, ClientSocket);
 		if (iResult > 0) 
 		{
 			cout << recvbuf << endl;
@@ -41,16 +48,11 @@ int main()
 
 			if (interPreter.addInfoPacket(temPacket)) // Check if the Gesture is done.
 			{
-				if (cnt % 2 == 0){
-					cout << "In !\n";
-					string toSend[FULL_SIZE];
-					interPreter.saveTheRanges(toSend); // Save the "ranges" in 'toSend'.
-					commanderOrder.TheComparation(toSend, recvbuf, ClientSocket);
-					interPreter.clearAll();				// Clear the InterPreter.
-				}
-				else{
-					interPreter.clearAll();				// Clear the InterPreter.
-				}
+				//cout << "In !\n";
+				string toSend[FULL_SIZE];
+				interPreter.saveTheRanges(toSend); // Save the "ranges" in 'toSend'.
+				commanderOrder.TheComparation(toSend, recvbuf, ClientSocket);
+				interPreter.clearAll();				// Clear the InterPreter.
 			}
 			interPreter.InfoPacketsDetails();
 			interPreter.showSeq();
@@ -78,8 +80,6 @@ int main()
 			connection.closeSocket();
 			return 1;
 		}
-		iResult = recv(ClientSocket, recvbuf, DEFAULT_BUFLEN, 0); // Recv Data from Client.
-		cnt++;
 	} while (true);
 	
 	//commanderOrder.destroy();
