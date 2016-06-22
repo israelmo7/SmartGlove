@@ -5,10 +5,10 @@
 #define ABS(x) ((x < 0)?x*-1:x)
 #define BIGGER(a,b) ((a > b)? a:b)
 #define SMALLER(a,b) ((a < b)? a:b)
-#define X 1
-#define Y 0
+#define X 0
+#define Y 1
 #define Z 2
-#define OFFSET 5
+#define OFFSET 3
 
 
 int WIDTH_SCREENm = 0;
@@ -43,7 +43,6 @@ Mouse::Mouse(SOCKET s, string lastRecv)
 
 			flag = changePosition(g,packet);
 
-			
 			this->_lastPacket = packet;
 
 		}
@@ -63,23 +62,31 @@ Mouse::Mouse(SOCKET s, string lastRecv)
 
 	cout << "Exit from 'Mouse Mode' \n";
 }
-bool Mouse::changePosition(Gesture g, InfoPacket packet) 
+bool Mouse::changePosition(Gesture g, InfoPacket packet)
 {
-	int fingersInt[3] = { atoi(g._fingers[0].c_str()), atoi(g._fingers[1].c_str()), atoi(g._fingers[2].c_str()) };
-	bool fingersRange[3] = { (valueRange(packet.getPress(0).getValue()) == valueRange(this->_lastPacket.getPress(0).getValue())),
+	int fingersInt[3] = 
+	{ 
+		atoi(g._fingers[0].c_str()), // Save fingerOne State as Int
+		atoi(g._fingers[1].c_str()), // Save fingerTwo State as Int
+		atoi(g._fingers[2].c_str())  // Save fingerThree State as Int
+	};
+	bool fingersRange[3] = 
+	{ 
+		(valueRange(packet.getPress(0).getValue()) == valueRange(this->_lastPacket.getPress(0).getValue())),
 		(valueRange(packet.getPress(1).getValue()) == valueRange(this->_lastPacket.getPress(1).getValue())),
-		(valueRange(packet.getPress(2).getValue()) == valueRange(this->_lastPacket.getPress(2).getValue())) };
-	int accelInt[2] = { atoi(g._acceleration[0].c_str()), atoi(g._acceleration[1].c_str()) };
-	cout << packet.getGyro().getVal(0) << " " << this->_lastPacket.getGyro().getVal(0) << endl;
-	cout << packet.getGyro().getVal(1) << " " << this->_lastPacket.getGyro().getVal(1) << endl;
-	cout << (valueRange(packet.getGyro().getVal(0), true) == valueRange(this->_lastPacket.getGyro().getVal(0))) << endl;
-	cout << (valueRange(packet.getGyro().getVal(1), true) == valueRange(this->_lastPacket.getGyro().getVal(1))) << endl;
-	bool accelRange[2] = { (valueRange(packet.getGyro().getVal(0), true) == valueRange(this->_lastPacket.getGyro().getVal(0), true)),
-		(valueRange(packet.getGyro().getVal(1), true) == valueRange(this->_lastPacket.getGyro().getVal(1), true)) };
+		(valueRange(packet.getPress(2).getValue()) == valueRange(this->_lastPacket.getPress(2).getValue())) 
+	};
+	int accelInt[3];
+	packet.getGyro().getVal(accelInt);
+	bool accelRange[2] = 
+	{ 
+		(valueRange(packet.getGyro().getVal(0), true) == valueRange(this->_lastPacket.getGyro().getVal(0), true)),
+		(valueRange(packet.getGyro().getVal(1), true) == valueRange(this->_lastPacket.getGyro().getVal(1), true)) 
+	};
 	
 	//Exit Mouse Mode condition:
-	if (fingersInt[0] > 0 && !fingersRange[0])
-		return false;
+	/*if (fingersInt[0] > 0 && !fingersRange[0])
+		return false;*/
 
 	POINT p;
 	if (!GetCursorPos(&p))
@@ -87,51 +94,50 @@ bool Mouse::changePosition(Gesture g, InfoPacket packet)
 		cout << "Error: cant find mouse position \n";
 		return true;
 	}
-	if (!fingersRange[1]){
-		if (fingersInt[1] < 0)
-			click(); // left click - sends true as default.
-		else if (fingersInt[1] > 0)
-			release(); // left release - sends true as default.
-	}
+//	if (!fingersRange[1]){
+	//	if (fingersInt[1] < 0)
+	//		click(); // left click - sends true as default.
+	//	else if (fingersInt[1] > 0)
+	//		release(); // left release - sends true as default.
+	//}
 
-	if (!fingersRange[2]){
-		if (fingersInt[2] < 0)
-			click(false); //right click.
-		else if (fingersInt[2] > 0)
-			release(false); //right release.
-	}
+	//if (!fingersRange[2]){
+	//	if (fingersInt[2] < 0)
+	//		click(false); //right click.
+	//	else if (fingersInt[2] > 0)
+	//		release(false); //right release.
+	//}
+	accelInt[X] -= 500;
+	accelInt[Y] -= 500;
+
 	int step = STEPMOVEMOUSE;
-
-	if (atoi(g._acceleration[X].c_str()))
+	if (ABS(accelInt[X]) > OFFSET)
 	{
-		cout << g._acceleration[X] << "\n";
-		if (accelRange[X] == accelRange[X]){
-			if (accelInt[X] < OFFSET)
-			{
-				cout << "X+ \n";
-				p.x = (p.x + step > WIDTH_SCREENm) ? WIDTH_SCREENm : p.x + step;
-			}
-			else if (accelInt[X] > OFFSET)
-			{
-				cout << "X- \n";
-				p.x = (p.x - step < 0) ? 0 : p.x - step;
-			}
+		cout << "x: " << accelInt[X] << "\n";		
+		if (accelInt[X] > 0)
+		{
+			cout << "(X+) \n";
+			p.x = (p.x + step > WIDTH_SCREENm) ? WIDTH_SCREENm : p.x + step;
+		}
+		else
+		{
+			cout << "(X-) \n";
+			p.x = (p.x - step < 0) ? 0 : p.x - step;
 		}
 	}
-	if (atoi(g._acceleration[Y].c_str()))
+	if (ABS(accelInt[Y]) > OFFSET)
 	{
-		if (accelRange[Y] == accelRange[Y]){
-			if (accelInt[Y] < OFFSET)
-			{
-				cout << "Y+ \n";
-				p.y = (p.y - step < 0) ? 0 : p.y - step;
+		cout << "y: " << accelInt[Y] << "\n";
+		if (accelInt[Y] > 0)
+		{
+			cout << "(Y-) \n";
+			p.y = (p.y - step < 0) ? 0 : p.y - step;
 
-			}
-			else if (accelInt[Y] > OFFSET)
-			{
-				cout << "Y- \n";
-				p.y = (p.y + step > HEIGHT_SCREENm) ? HEIGHT_SCREENm : p.y + step;
-			}
+		}
+		else
+		{
+			cout << "(Y+) \n";
+			p.y = (p.y + step > HEIGHT_SCREENm) ? HEIGHT_SCREENm : p.y + step;
 		}
 	}
 	if (!SetCursorPos(p.x, p.y))
